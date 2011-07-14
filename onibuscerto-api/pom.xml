@@ -11,4 +11,12 @@
 
     <artifactId>onibuscerto-api</artifactId>
     <name>onibuscerto-api</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j</artifactId>
+            <version>1.4.M06</version>
+        </dependency>
+    </dependencies>
 </project>
