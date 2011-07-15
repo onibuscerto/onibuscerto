@@ -14,12 +14,12 @@ public class StopFactoryImpl implements StopFactory {
         this.graphDb = graphDb;
 
         Relationship rel = graphDb.getReferenceNode().getSingleRelationship(
-                Relationships.STOP_FACTORY, Direction.OUTGOING);
+                Relationships.STOPS, Direction.OUTGOING);
 
         if (rel == null) {
             stopFactoryNode = graphDb.createNode();
             graphDb.getReferenceNode().createRelationshipTo(
-                    stopFactoryNode, Relationships.STOP_FACTORY);
+                    stopFactoryNode, Relationships.STOPS);
         } else {
             stopFactoryNode = rel.getEndNode();
         }
@@ -27,6 +27,8 @@ public class StopFactoryImpl implements StopFactory {
 
     @Override
     public Stop createStop() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Node node = graphDb.createNode();
+        stopFactoryNode.createRelationshipTo(node, Relationships.STOP);
+        return new StopImpl(node);
     }
 }
