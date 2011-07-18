@@ -4,6 +4,7 @@ import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.Transaction;
 
 public class StopFactoryImpl implements StopFactory {
 
@@ -27,8 +28,14 @@ public class StopFactoryImpl implements StopFactory {
 
     @Override
     public Stop createStop() {
-        Node node = graphDb.createNode();
-        stopFactoryNode.createRelationshipTo(node, Relationships.STOP);
-        return new StopImpl(node);
+        Transaction tx = graphDb.beginTx();
+        try {
+            Node node = graphDb.createNode();
+            stopFactoryNode.createRelationshipTo(node, Relationships.STOP);
+            tx.success();
+            return new StopImpl(node);
+        } finally {
+            tx.finish();
+        }
     }
 }
