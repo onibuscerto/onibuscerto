@@ -19,6 +19,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>neo4j-public-repository</id>
+            <url>http://m2.neo4j.org</url>
+        </repository>
+    </repositories>
+
     <build>
         <plugins>
             <plugin>
