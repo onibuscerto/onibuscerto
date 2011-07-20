@@ -6,12 +6,12 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
 
-public class StopFactoryImpl implements StopFactory {
+class StopFactoryImpl implements StopFactory {
 
     private final GraphDatabaseService graphDb;
     private final Node stopFactoryNode;
 
-    public StopFactoryImpl(GraphDatabaseService graphDb) {
+    StopFactoryImpl(GraphDatabaseService graphDb) {
         this.graphDb = graphDb;
 
         Relationship rel = graphDb.getReferenceNode().getSingleRelationship(

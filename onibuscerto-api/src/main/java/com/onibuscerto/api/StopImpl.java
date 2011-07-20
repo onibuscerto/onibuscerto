@@ -2,7 +2,7 @@ package com.onibuscerto.api;
 
 import org.neo4j.graphdb.Node;
 
-public class StopImpl implements Stop {
+class StopImpl implements Stop {
 
     private final Node underlyingNode;
     private static final String KEY_ID = "stop_id";
