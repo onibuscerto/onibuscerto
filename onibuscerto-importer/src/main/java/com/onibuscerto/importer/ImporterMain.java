@@ -4,9 +4,11 @@ import au.com.bytecode.opencsv.CSVReader;
 import com.onibuscerto.api.DatabaseController;
 import com.onibuscerto.api.entities.Route;
 import com.onibuscerto.api.entities.Stop;
+import com.onibuscerto.api.entities.StopTime;
 import com.onibuscerto.api.entities.Trip;
 import com.onibuscerto.api.factories.RouteFactory;
 import com.onibuscerto.api.factories.StopFactory;
+import com.onibuscerto.api.factories.StopTimeFactory;
 import com.onibuscerto.api.factories.TripFactory;
 import java.io.FileReader;
 import java.io.IOException;
@@ -27,6 +29,7 @@ public class ImporterMain {
             importStops(databaseController, TRANSIT_FEED_PATH + "/stops.txt");
             importRoutes(databaseController, TRANSIT_FEED_PATH + "/routes.txt");
             importTrips(databaseController, TRANSIT_FEED_PATH + "/trips.txt");
+            importStopTimes(databaseController, TRANSIT_FEED_PATH + "stop_times.txt");
             databaseController.endTransaction(true);
         } catch (IOException ex) {
             Logger.getLogger(ImporterMain.class.getName()).log(Level.SEVERE, null, ex);
@@ -105,6 +108,36 @@ public class ImporterMain {
 
             Logger.getLogger(ImporterMain.class.getName()).log(Level.INFO,
                     "Inseri trip " + trip.getId());
+
+            hashMap.clear();
+        }
+    }
+
+    private static void importStopTimes(DatabaseController databaseController,
+            String stopTimesFile) throws IOException {
+        StopTimeFactory stopTimeFactory = databaseController.getStopTimeFactory();
+        CSVReader reader = new CSVReader(new FileReader(stopTimesFile));
+        String columnNames[] = reader.readNext();
+        String lineValues[];
+        HashMap<String, String> hashMap = new HashMap<String, String>();
+
+        while ((lineValues = reader.readNext()) != null) {
+            for (int i = 0; i < lineValues.length; i++) {
+                hashMap.put(columnNames[i], lineValues[i]);
+            }
+
+            StopTime stopTime = stopTimeFactory.createStopTime();
+            stopTime.setTrip(databaseController.getTripFactory().getTripById(
+                    hashMap.get("trip_id")));
+            stopTime.setArrivalTime(Integer.parseInt(hashMap.get("arrival_time")));
+            stopTime.setDepartureTime(Integer.parseInt(hashMap.get("departure_time")));
+            stopTime.setStop(databaseController.getStopFactory().getStopById(
+                    hashMap.get("stop_id")));
+            stopTime.setSequence(Integer.parseInt(hashMap.get("stop_sequence")));
+
+            Logger.getLogger(ImporterMain.class.getName()).log(Level.INFO,
+                    "Inseri StopTime da trip " + stopTime.getTrip().getId()
+                    + " numero de sequencia " + stopTime.getSequence());
 
             hashMap.clear();
         }
