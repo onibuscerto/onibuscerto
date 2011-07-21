@@ -44,6 +44,8 @@ public class DatabaseController {
     public void endTransaction(boolean wasSuccessful) {
         if (wasSuccessful) {
             currentTransaction.success();
+        } else {
+            currentTransaction.failure();
         }
 
         currentTransaction.finish();
