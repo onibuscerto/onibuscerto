@@ -1,0 +1,36 @@
+package com.onibuscerto.api;
+
+import java.util.Collection;
+
+public interface Route {
+
+    public String getId();
+
+    public void setId(String id);
+
+    public String getShortName();
+
+    public void setShortname(String shortName);
+
+    public String getLongName();
+
+    public void setLongName(String longName);
+
+    public Type getType();
+
+    public void setType(Type type);
+
+    public Collection<Trip> getTrips();
+
+    public enum Type {
+
+        STREETCAR,
+        SUBWAY,
+        RAIL,
+        BUS,
+        FERRY,
+        CABLE_CAR,
+        GONDOLA,
+        FUNICULAR
+    };
+}
