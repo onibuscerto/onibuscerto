@@ -43,10 +43,11 @@ class StopFactoryImpl implements StopFactory {
         Transaction tx = graphDb.beginTx();
         try {
             Node node = graphDb.createNode();
+            Stop stop = new StopImpl(node, id);
             stopIndex.add(node, StopImpl.KEY_ID, id);
             stopFactoryNode.createRelationshipTo(node, Relationships.STOP);
             tx.success();
-            return new StopImpl(node, id);
+            return stop;
         } finally {
             tx.finish();
         }
