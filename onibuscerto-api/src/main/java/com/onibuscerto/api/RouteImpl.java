@@ -62,12 +62,12 @@ class RouteImpl implements Route {
 
     @Override
     public Type getType() {
-        return (Type) underlyingNode.getProperty(KEY_TYPE);
+        return Type.fromInt((Integer) underlyingNode.getProperty(KEY_TYPE));
     }
 
     @Override
     public void setType(Type type) {
-        underlyingNode.setProperty(KEY_TYPE, type);
+        underlyingNode.setProperty(KEY_TYPE, type.toInt());
     }
 
     private Collection<Node> getTripNodes() {

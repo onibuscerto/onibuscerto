@@ -22,13 +22,32 @@ public interface Route {
 
     public enum Type {
 
-        STREETCAR,
-        SUBWAY,
-        RAIL,
-        BUS,
-        FERRY,
-        CABLE_CAR,
-        GONDOLA,
-        FUNICULAR
+        STREETCAR(0),
+        SUBWAY(1),
+        RAIL(2),
+        BUS(3),
+        FERRY(4),
+        CABLE_CAR(5),
+        GONDOLA(6),
+        FUNICULAR(7);
+        private int code;
+
+        private Type(int code) {
+            this.code = code;
+        }
+
+        public int toInt() {
+            return code;
+        }
+
+        public static Type fromInt(int code) {
+            for (Type type : Type.values()) {
+                if (type.code == code) {
+                    return type;
+                }
+            }
+
+            return null;
+        }
     };
 }
