@@ -15,9 +15,14 @@ import org.neo4j.graphdb.Traverser;
 class TripImpl implements Trip {
 
     private final Node underlyingNode;
-    private static final String KEY_ID = "trip_id";
+    static final String KEY_ID = "trip_id";
 
-    public TripImpl(Node underlyingNode) {
+    TripImpl(Node underlyingNode, String id) {
+        this(underlyingNode);
+        setId(id);
+    }
+
+    TripImpl(Node underlyingNode) {
         this.underlyingNode = underlyingNode;
     }
 
@@ -57,7 +62,7 @@ class TripImpl implements Trip {
     }
 
     @Override
-    public void setId(String id) {
+    public final void setId(String id) {
         underlyingNode.setProperty(KEY_ID, id);
     }
 

@@ -7,11 +7,14 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
+import org.neo4j.graphdb.index.Index;
 
 class TripFactoryImpl implements TripFactory {
 
     private final GraphDatabaseService graphDb;
     private final Node tripFactoryNode;
+    private final Index<Node> tripIndex;
+    private static final String TRIP_INDEX = "trip_index";
 
     TripFactoryImpl(GraphDatabaseService graphDb) {
         this.graphDb = graphDb;
@@ -26,6 +29,8 @@ class TripFactoryImpl implements TripFactory {
         } else {
             tripFactoryNode = rel.getEndNode();
         }
+
+        tripIndex = graphDb.index().forNodes(TRIP_INDEX);
     }
 
     @Override
@@ -33,9 +38,11 @@ class TripFactoryImpl implements TripFactory {
         Transaction tx = graphDb.beginTx();
         try {
             Node node = graphDb.createNode();
+            Trip trip = new TripImpl(node, id);
+            tripIndex.add(node, TripImpl.KEY_ID, id);
             tripFactoryNode.createRelationshipTo(node, Relationships.TRIP);
             tx.success();
-            return new TripImpl(node);
+            return trip;
         } finally {
             tx.finish();
         }
@@ -43,6 +50,12 @@ class TripFactoryImpl implements TripFactory {
 
     @Override
     public Trip getTripById(String id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Node node = tripIndex.get(TripImpl.KEY_ID, id).getSingle();
+
+        if (node == null) {
+            return null;
+        }
+
+        return new TripImpl(node);
     }
 }
