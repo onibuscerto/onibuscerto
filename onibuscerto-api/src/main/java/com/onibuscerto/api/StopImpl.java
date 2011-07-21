@@ -62,4 +62,19 @@ class StopImpl implements Stop {
     public void setLongitude(double longitude) {
         underlyingNode.setProperty(KEY_LONGITUDE, longitude);
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof StopImpl) {
+            return getUnderlyingNode().equals(
+                    ((StopImpl) object).getUnderlyingNode());
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return getUnderlyingNode().hashCode();
+    }
 }

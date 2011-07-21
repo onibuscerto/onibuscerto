@@ -89,4 +89,19 @@ class RouteImpl implements Route {
 
         return trips;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof RouteImpl) {
+            return getUnderlyingNode().equals(
+                    ((RouteImpl) object).getUnderlyingNode());
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return getUnderlyingNode().hashCode();
+    }
 }

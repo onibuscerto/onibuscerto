@@ -45,6 +45,21 @@ public class StopTest {
     }
 
     @Test
+    public void testGetById() {
+        String stopId = "stop42";
+        Stop stop = databaseController.getStopFactory().createStop(stopId);
+        Stop stopById = databaseController.getStopFactory().getStopById(stopId);
+        assertEquals(stopById, stop);
+    }
+
+    @Test
+    public void testGetByIdNotFound() {
+        String stopId = "stop42";
+        Stop stopById = databaseController.getStopFactory().getStopById(stopId);
+        assertEquals(stopById, null);
+    }
+
+    @Test
     public void testSetGetName() {
         Stop stop = databaseController.getStopFactory().createStop("stop42");
         String expResult = "alsgj42n";

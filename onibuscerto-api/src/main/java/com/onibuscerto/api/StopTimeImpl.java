@@ -113,4 +113,19 @@ public class StopTimeImpl implements StopTime {
     public StopTime getPrevious() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof StopTimeImpl) {
+            return getUnderlyingNode().equals(
+                    ((StopTimeImpl) object).getUnderlyingNode());
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return getUnderlyingNode().hashCode();
+    }
 }
