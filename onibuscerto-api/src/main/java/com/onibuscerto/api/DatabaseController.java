@@ -7,7 +7,7 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.kernel.EmbeddedGraphDatabase;
 
-public class DatabaseController {
+public final class DatabaseController {
 
     private static final String DEFAULT_DATABASE_PATH = "target/db";
     protected GraphDatabaseService graphDb;
@@ -18,6 +18,12 @@ public class DatabaseController {
 
     public DatabaseController(GraphDatabaseService graphDb) {
         this.graphDb = graphDb;
+
+        beginTransaction();
+        stopFactory = new StopFactoryImpl(graphDb);
+        routeFactory = new RouteFactoryImpl(graphDb);
+        tripFactory = new TripFactoryImpl(graphDb);
+        endTransaction(true);
     }
 
     public DatabaseController(String databasePath) {
@@ -54,26 +60,14 @@ public class DatabaseController {
     }
 
     public StopFactory getStopFactory() {
-        if (stopFactory == null) {
-            stopFactory = new StopFactoryImpl(graphDb);
-        }
-
         return stopFactory;
     }
 
     public RouteFactory getRouteFactory() {
-        if (routeFactory == null) {
-            routeFactory = new RouteFactoryImpl(graphDb);
-        }
-
         return routeFactory;
     }
 
     public TripFactory getTripFactory() {
-        if (tripFactory == null) {
-            tripFactory = new TripFactoryImpl(graphDb);
-        }
-
         return tripFactory;
     }
 }

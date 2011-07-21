@@ -3,20 +3,31 @@ package com.onibuscerto.api.test;
 import com.onibuscerto.api.DatabaseController;
 import com.onibuscerto.api.entities.Stop;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.BeforeClass;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.test.ImpermanentGraphDatabase;
 
 public class StopTest {
 
-    private DatabaseController databaseController;
+    private static DatabaseController databaseController;
+
+    @BeforeClass
+    public static void setUpOnce() throws Exception {
+        GraphDatabaseService graphDb = new ImpermanentGraphDatabase();
+        databaseController = new DatabaseController(graphDb);
+    }
+
+    @AfterClass
+    public static void tearDownClass() throws Exception {
+        databaseController.close();
+    }
 
     @Before
     public void setUp() throws Exception {
-        GraphDatabaseService graphDb = new ImpermanentGraphDatabase();
-        databaseController = new DatabaseController(graphDb);
         databaseController.beginTransaction();
     }
 
@@ -24,7 +35,6 @@ public class StopTest {
     public void tearDown() throws Exception {
         // Faz um rollback após o teste
         databaseController.endTransaction(false);
-        databaseController.close();
     }
 
     @Test
