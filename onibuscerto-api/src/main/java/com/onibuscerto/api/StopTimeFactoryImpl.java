@@ -17,12 +17,12 @@ public class StopTimeFactoryImpl implements StopTimeFactory {
         this.graphDb = graphDb;
 
         Relationship rel = graphDb.getReferenceNode().getSingleRelationship(
-                Relationships.STOP_TIMES, Direction.OUTGOING);
+                Relationships.STOPTIMES, Direction.OUTGOING);
 
         if (rel == null) {
             stopTimeFactoryNode = graphDb.createNode();
             graphDb.getReferenceNode().createRelationshipTo(
-                    stopTimeFactoryNode, Relationships.STOP_TIMES);
+                    stopTimeFactoryNode, Relationships.STOPTIMES);
         } else {
             stopTimeFactoryNode = rel.getEndNode();
         }
@@ -34,7 +34,7 @@ public class StopTimeFactoryImpl implements StopTimeFactory {
         try {
             Node node = graphDb.createNode();
             stopTimeFactoryNode.createRelationshipTo(
-                    node, Relationships.STOP_TIME);
+                    node, Relationships.STOPTIME);
             tx.success();
             return new StopTimeImpl(node);
         } finally {

@@ -65,7 +65,7 @@ class TripImpl implements Trip {
         Traverser traverser = underlyingNode.traverse(
                 Traverser.Order.BREADTH_FIRST, StopEvaluator.DEPTH_ONE,
                 ReturnableEvaluator.ALL_BUT_START_NODE,
-                Relationships.TRIP_TO_STOP_TIME, Direction.OUTGOING);
+                Relationships.TRIP_TO_STOPTIME, Direction.OUTGOING);
         return traverser.getAllNodes();
     }
 

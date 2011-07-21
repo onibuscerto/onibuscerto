@@ -25,7 +25,7 @@ public class StopTimeImpl implements StopTime {
     @Override
     public Trip getTrip() {
         Relationship rel = underlyingNode.getSingleRelationship(
-                Relationships.TRIP_TO_STOP_TIME, Direction.INCOMING);
+                Relationships.TRIP_TO_STOPTIME, Direction.INCOMING);
 
         if (rel == null) {
             return null;
@@ -37,7 +37,7 @@ public class StopTimeImpl implements StopTime {
     @Override
     public void setTrip(Trip trip) {
         Relationship rel = underlyingNode.getSingleRelationship(
-                Relationships.TRIP_TO_STOP_TIME, Direction.INCOMING);
+                Relationships.TRIP_TO_STOPTIME, Direction.INCOMING);
         TripImpl tripImpl = (TripImpl) trip;
 
         if (rel != null) {
@@ -45,13 +45,13 @@ public class StopTimeImpl implements StopTime {
         }
 
         tripImpl.getUnderlyingNode().createRelationshipTo(
-                underlyingNode, Relationships.TRIP_TO_STOP_TIME);
+                underlyingNode, Relationships.TRIP_TO_STOPTIME);
     }
 
     @Override
     public Stop getStop() {
         Relationship rel = underlyingNode.getSingleRelationship(
-                Relationships.STOP_TO_STOP_TIME, Direction.INCOMING);
+                Relationships.STOP_TO_STOPTIME, Direction.INCOMING);
 
         if (rel == null) {
             return null;
@@ -63,7 +63,7 @@ public class StopTimeImpl implements StopTime {
     @Override
     public void setStop(Stop stop) {
         Relationship rel = underlyingNode.getSingleRelationship(
-                Relationships.STOP_TO_STOP_TIME, Direction.INCOMING);
+                Relationships.STOP_TO_STOPTIME, Direction.INCOMING);
         StopImpl stopImpl = (StopImpl) stop;
 
         if (rel != null) {
@@ -71,12 +71,12 @@ public class StopTimeImpl implements StopTime {
         }
 
         stopImpl.getUnderlyingNode().createRelationshipTo(
-                underlyingNode, Relationships.STOP_TO_STOP_TIME);
+                underlyingNode, Relationships.STOP_TO_STOPTIME);
     }
 
     @Override
     public int getArrivalTime() {
-        return (int) underlyingNode.getProperty(KEY_ARRIVAL_TIME);
+        return (Integer) underlyingNode.getProperty(KEY_ARRIVAL_TIME);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class StopTimeImpl implements StopTime {
 
     @Override
     public int getDepartureTime() {
-        return (int) underlyingNode.getProperty(KEY_DEPARTURE_TIME);
+        return (Integer) underlyingNode.getProperty(KEY_DEPARTURE_TIME);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class StopTimeImpl implements StopTime {
 
     @Override
     public int getSequence() {
-        return (int) underlyingNode.getProperty(KEY_SEQUENCE);
+        return (Integer) underlyingNode.getProperty(KEY_SEQUENCE);
     }
 
     @Override

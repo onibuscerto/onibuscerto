@@ -10,9 +10,9 @@ enum Relationships implements RelationshipType {
     ROUTE,
     TRIPS,
     TRIP,
-    STOP_TIMES,
-    STOP_TIME,
-    TRIP_TO_STOP_TIME,
-    STOP_TO_STOP_TIME,
+    STOPTIMES,
+    STOPTIME,
+    TRIP_TO_STOPTIME,
+    STOP_TO_STOPTIME,
     ROUTE_TO_TRIP
 }
