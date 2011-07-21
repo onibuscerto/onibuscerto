@@ -101,7 +101,7 @@ public class ImporterMain {
 
             Trip trip = tripFactory.createTrip(hashMap.get("trip_id"));
             trip.setRoute(databaseController.getRouteFactory().getRouteById(
-                    hashMap.get("trip_id")));
+                    hashMap.get("route_id")));
 
             Logger.getLogger(ImporterMain.class.getName()).log(Level.INFO,
                     "Inseri trip " + trip.getId());
