@@ -29,7 +29,7 @@ public class StopTimeFactoryImpl implements StopTimeFactory {
     }
 
     @Override
-    public StopTime createStopTime(String id) {
+    public StopTime createStopTime() {
         Transaction tx = graphDb.beginTx();
         try {
             Node node = graphDb.createNode();
@@ -40,10 +40,5 @@ public class StopTimeFactoryImpl implements StopTimeFactory {
         } finally {
             tx.finish();
         }
-    }
-
-    @Override
-    public StopTime getStopTimeById(String id) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
