@@ -84,4 +84,19 @@ class TripImpl implements Trip {
 
         return stopTimes;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof TripImpl) {
+            return getUnderlyingNode().equals(
+                    ((TripImpl) object).getUnderlyingNode());
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return getUnderlyingNode().hashCode();
+    }
 }
