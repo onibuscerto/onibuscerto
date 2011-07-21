@@ -36,8 +36,7 @@ class RouteImpl implements Route {
         return (String) underlyingNode.getProperty(KEY_ID);
     }
 
-    @Override
-    public final void setId(String id) {
+    private final void setId(String id) {
         underlyingNode.setProperty(KEY_ID, id);
     }
 

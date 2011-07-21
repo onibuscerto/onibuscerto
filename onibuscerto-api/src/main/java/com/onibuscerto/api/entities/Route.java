@@ -6,8 +6,6 @@ public interface Route {
 
     public String getId();
 
-    public void setId(String id);
-
     public String getShortName();
 
     public void setShortname(String shortName);

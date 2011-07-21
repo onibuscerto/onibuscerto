@@ -10,7 +10,5 @@ public interface Trip {
 
     public String getId();
 
-    public void setId(String id);
-
     public Collection<StopTime> getStopTimes();
 }
