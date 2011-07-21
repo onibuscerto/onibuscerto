@@ -45,6 +45,14 @@ public class StopTest {
     }
 
     @Test
+    public void testCreateStopDuplicate() {
+        String stopId = "stop42";
+        Stop stop1 = databaseController.getStopFactory().createStop(stopId);
+        Stop stop2 = databaseController.getStopFactory().createStop(stopId);
+        assertEquals(stop1, stop2);
+    }
+
+    @Test
     public void testGetById() {
         String stopId = "stop42";
         Stop stop = databaseController.getStopFactory().createStop(stopId);
