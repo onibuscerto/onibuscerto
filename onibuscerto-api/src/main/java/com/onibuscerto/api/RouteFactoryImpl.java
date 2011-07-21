@@ -7,11 +7,14 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
+import org.neo4j.graphdb.index.Index;
 
 class RouteFactoryImpl implements RouteFactory {
 
     private final GraphDatabaseService graphDb;
     private final Node routeFactoryNode;
+    private final Index<Node> routeIndex;
+    private static final String ROUTE_INDEX = "route_index";
 
     RouteFactoryImpl(GraphDatabaseService graphDb) {
         this.graphDb = graphDb;
@@ -27,6 +30,7 @@ class RouteFactoryImpl implements RouteFactory {
             routeFactoryNode = rel.getEndNode();
         }
 
+        routeIndex = graphDb.index().forNodes(ROUTE_INDEX);
     }
 
     @Override
@@ -34,9 +38,11 @@ class RouteFactoryImpl implements RouteFactory {
         Transaction tx = graphDb.beginTx();
         try {
             Node node = graphDb.createNode();
+            Route route = new RouteImpl(node, id);
+            routeIndex.add(node, RouteImpl.KEY_ID, id);
             routeFactoryNode.createRelationshipTo(node, Relationships.ROUTE);
             tx.success();
-            return new RouteImpl(node);
+            return route;
         } finally {
             tx.finish();
         }
@@ -44,6 +50,12 @@ class RouteFactoryImpl implements RouteFactory {
 
     @Override
     public Route getRouteById(String id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Node node = routeIndex.get(RouteImpl.KEY_ID, id).getSingle();
+
+        if (node == null) {
+            return null;
+        }
+
+        return new RouteImpl(node);
     }
 }

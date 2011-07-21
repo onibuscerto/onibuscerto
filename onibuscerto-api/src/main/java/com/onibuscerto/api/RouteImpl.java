@@ -13,12 +13,17 @@ import org.neo4j.graphdb.Traverser;
 class RouteImpl implements Route {
 
     private final Node underlyingNode;
-    private static final String KEY_ID = "route_id";
+    static final String KEY_ID = "route_id";
     private static final String KEY_SHORT_NAME = "route_short_name";
     private static final String KEY_LONG_NAME = "route_long_name";
     private static final String KEY_TYPE = "route_type";
 
-    public RouteImpl(Node underlyingNode) {
+    RouteImpl(Node underlyingNode, String id) {
+        this(underlyingNode);
+        setId(id);
+    }
+
+    RouteImpl(Node underlyingNode) {
         this.underlyingNode = underlyingNode;
     }
 
@@ -32,7 +37,7 @@ class RouteImpl implements Route {
     }
 
     @Override
-    public void setId(String id) {
+    public final void setId(String id) {
         underlyingNode.setProperty(KEY_ID, id);
     }
 
