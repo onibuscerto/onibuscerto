@@ -2,8 +2,8 @@ package com.onibuscerto.importer;
 
 import au.com.bytecode.opencsv.CSVReader;
 import com.onibuscerto.api.DatabaseController;
-import com.onibuscerto.api.Stop;
-import com.onibuscerto.api.StopFactory;
+import com.onibuscerto.api.entities.Stop;
+import com.onibuscerto.api.factories.StopFactory;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.logging.Level;
