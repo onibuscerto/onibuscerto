@@ -6,6 +6,8 @@ public interface Trip {
 
     public Route getRoute();
 
+    public void setRoute(Route route);
+
     public String getId();
 
     public void setId(String id);

@@ -4,6 +4,11 @@ import java.util.Collection;
 import org.neo4j.graphdb.Node;
 import com.onibuscerto.api.entities.Route;
 import com.onibuscerto.api.entities.Trip;
+import java.util.LinkedList;
+import org.neo4j.graphdb.Direction;
+import org.neo4j.graphdb.ReturnableEvaluator;
+import org.neo4j.graphdb.StopEvaluator;
+import org.neo4j.graphdb.Traverser;
 
 class RouteImpl implements Route {
 
@@ -61,8 +66,23 @@ class RouteImpl implements Route {
         underlyingNode.setProperty(KEY_TYPE, type);
     }
 
+    private Collection<Node> getTripNodes() {
+        Traverser traverser = underlyingNode.traverse(
+                Traverser.Order.BREADTH_FIRST, StopEvaluator.DEPTH_ONE,
+                ReturnableEvaluator.ALL_BUT_START_NODE,
+                Relationships.ROUTE_TO_TRIP, Direction.OUTGOING);
+        return traverser.getAllNodes();
+    }
+
     @Override
     public Collection<Trip> getTrips() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Collection<Node> tripNodes = getTripNodes();
+        Collection<Trip> trips = new LinkedList<Trip>();
+
+        for (Node node : tripNodes) {
+            trips.add(new TripImpl(node));
+        }
+
+        return trips;
     }
 }
