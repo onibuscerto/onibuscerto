@@ -29,7 +29,7 @@ class TripFactoryImpl implements TripFactory {
     }
 
     @Override
-    public Trip createTrip() {
+    public Trip createTrip(String id) {
         Transaction tx = graphDb.beginTx();
         try {
             Node node = graphDb.createNode();

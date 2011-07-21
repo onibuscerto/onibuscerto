@@ -29,7 +29,7 @@ public class StopTimeFactoryImpl implements StopTimeFactory {
     }
 
     @Override
-    public StopTime createStopTime() {
+    public StopTime createStopTime(String id) {
         Transaction tx = graphDb.beginTx();
         try {
             Node node = graphDb.createNode();

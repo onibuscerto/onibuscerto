@@ -34,7 +34,7 @@ class StopFactoryImpl implements StopFactory {
     }
 
     @Override
-    public Stop createStop() {
+    public Stop createStop(String id) {
         Transaction tx = graphDb.beginTx();
         try {
             Node node = graphDb.createNode();

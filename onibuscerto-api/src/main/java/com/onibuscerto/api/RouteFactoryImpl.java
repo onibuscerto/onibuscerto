@@ -30,7 +30,7 @@ class RouteFactoryImpl implements RouteFactory {
     }
 
     @Override
-    public Route createRoute() {
+    public Route createRoute(String id) {
         Transaction tx = graphDb.beginTx();
         try {
             Node node = graphDb.createNode();

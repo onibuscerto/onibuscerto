@@ -4,7 +4,7 @@ import com.onibuscerto.api.entities.StopTime;
 
 public interface StopTimeFactory {
 
-    public StopTime createStopTime();
+    public StopTime createStopTime(String id);
 
     public StopTime getStopTimeById(String id);
 }

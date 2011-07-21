@@ -40,7 +40,7 @@ public class ImporterMain {
         String lineValues[];
 
         while ((lineValues = reader.readNext()) != null) {
-            Stop stop = stopFactory.createStop();
+            Stop stop = stopFactory.createStop(null);
 
             for (int i = 0; i < lineValues.length; i++) {
                 if (columnNames[i].equals("stop_id")) {
@@ -67,7 +67,7 @@ public class ImporterMain {
         String lineValues[];
 
         while ((lineValues = reader.readNext()) != null) {
-            Route route = routeFactory.createRoute();
+            Route route = routeFactory.createRoute(null);
 
             for (int i = 0; i < lineValues.length; i++) {
                 if (columnNames[i].equals("route_id")) {

@@ -5,7 +5,7 @@ import java.util.Collection;
 
 public interface StopFactory {
 
-    public Stop createStop();
+    public Stop createStop(String id);
 
     public Collection<Stop> getAllStops();
 

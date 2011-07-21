@@ -38,16 +38,15 @@ public class StopTest {
     }
 
     @Test
-    public void testSetGetId() {
-        Stop stop = databaseController.getStopFactory().createStop();
-        String expResult = "alsgj42n";
-        stop.setId(expResult);
-        assertEquals(stop.getId(), expResult);
+    public void testCreateStop() {
+        String stopId = "stop42";
+        Stop stop = databaseController.getStopFactory().createStop(stopId);
+        assertEquals(stop.getId(), stopId);
     }
 
     @Test
     public void testSetGetName() {
-        Stop stop = databaseController.getStopFactory().createStop();
+        Stop stop = databaseController.getStopFactory().createStop("stop42");
         String expResult = "alsgj42n";
         stop.setName(expResult);
         assertEquals(stop.getName(), expResult);
@@ -55,7 +54,7 @@ public class StopTest {
 
     @Test
     public void testSetGetLatitude() {
-        Stop stop = databaseController.getStopFactory().createStop();
+        Stop stop = databaseController.getStopFactory().createStop("stop42");
         double expResult = 3.1415;
         stop.setLatitude(expResult);
         assertEquals(stop.getLatitude(), expResult, 1E-9);
@@ -63,7 +62,7 @@ public class StopTest {
 
     @Test
     public void testSetGetLongitude() {
-        Stop stop = databaseController.getStopFactory().createStop();
+        Stop stop = databaseController.getStopFactory().createStop("stop42");
         double expResult = 3.1415;
         stop.setLongitude(expResult);
         assertEquals(stop.getLongitude(), expResult, 1E-9);
