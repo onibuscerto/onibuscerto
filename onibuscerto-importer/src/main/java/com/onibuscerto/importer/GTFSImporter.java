@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 
 public class GTFSImporter {
 
-    private static DatabaseController databaseController;
+    private DatabaseController databaseController;
 
     public GTFSImporter(DatabaseController databaseController) {
         this.databaseController = databaseController;
@@ -40,7 +40,7 @@ public class GTFSImporter {
         databaseController.close();
     }
 
-    private static void importStops(String stopsFile)
+    private void importStops(String stopsFile)
             throws IOException {
         StopFactory stopFactory = databaseController.getStopFactory();
         CSVReader reader = new CSVReader(new FileReader(stopsFile));
@@ -65,7 +65,7 @@ public class GTFSImporter {
         }
     }
 
-    private static void importRoutes(String routesFile) throws IOException {
+    private void importRoutes(String routesFile) throws IOException {
         RouteFactory routeFactory = databaseController.getRouteFactory();
         CSVReader reader = new CSVReader(new FileReader(routesFile));
         String columnNames[] = reader.readNext();
@@ -90,7 +90,7 @@ public class GTFSImporter {
         }
     }
 
-    private static void importTrips(String tripsFile) throws IOException {
+    private void importTrips(String tripsFile) throws IOException {
         TripFactory tripFactory = databaseController.getTripFactory();
         CSVReader reader = new CSVReader(new FileReader(tripsFile));
         String columnNames[] = reader.readNext();
@@ -113,7 +113,7 @@ public class GTFSImporter {
         }
     }
 
-    private static void importStopTimes(String stopTimesFile) throws IOException {
+    private void importStopTimes(String stopTimesFile) throws IOException {
         StopTimeFactory stopTimeFactory = databaseController.getStopTimeFactory();
         CSVReader reader = new CSVReader(new FileReader(stopTimesFile));
         String columnNames[] = reader.readNext();
@@ -142,7 +142,7 @@ public class GTFSImporter {
         }
     }
 
-    private static Route.Type getTypeFromCode(String code) {
+    private Route.Type getTypeFromCode(String code) {
         Route.Type type = null;
         switch (Integer.parseInt(code)) {
             case 0:
@@ -172,7 +172,7 @@ public class GTFSImporter {
         return type;
     }
 
-    private static int getSecondsFromTime(String time) {
+    private int getSecondsFromTime(String time) {
         int seconds = 0;
         String[] parts = time.split(":");
         seconds += Integer.parseInt(parts[0]) * 3600;
