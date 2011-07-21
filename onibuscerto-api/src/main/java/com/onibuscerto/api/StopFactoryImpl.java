@@ -12,11 +12,14 @@ import org.neo4j.graphdb.ReturnableEvaluator;
 import org.neo4j.graphdb.StopEvaluator;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.Traverser;
+import org.neo4j.graphdb.index.Index;
 
 class StopFactoryImpl implements StopFactory {
 
     private final GraphDatabaseService graphDb;
     private final Node stopFactoryNode;
+    private final Index<Node> stopIndex;
+    private static final String STOP_INDEX = "stop_index";
 
     StopFactoryImpl(GraphDatabaseService graphDb) {
         this.graphDb = graphDb;
@@ -31,6 +34,8 @@ class StopFactoryImpl implements StopFactory {
         } else {
             stopFactoryNode = rel.getEndNode();
         }
+
+        stopIndex = graphDb.index().forNodes(STOP_INDEX);
     }
 
     @Override
@@ -38,9 +43,10 @@ class StopFactoryImpl implements StopFactory {
         Transaction tx = graphDb.beginTx();
         try {
             Node node = graphDb.createNode();
+            stopIndex.add(node, StopImpl.KEY_ID, id);
             stopFactoryNode.createRelationshipTo(node, Relationships.STOP);
             tx.success();
-            return new StopImpl(node);
+            return new StopImpl(node, id);
         } finally {
             tx.finish();
         }
@@ -68,6 +74,12 @@ class StopFactoryImpl implements StopFactory {
 
     @Override
     public Stop getStopById(String id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Node node = stopIndex.get(StopImpl.KEY_ID, id).getSingle();
+
+        if (node == null) {
+            return null;
+        }
+
+        return new StopImpl(node);
     }
 }

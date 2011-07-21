@@ -6,12 +6,17 @@ import org.neo4j.graphdb.Node;
 class StopImpl implements Stop {
 
     private final Node underlyingNode;
-    private static final String KEY_ID = "stop_id";
+    static final String KEY_ID = "stop_id";
     private static final String KEY_NAME = "stop_name";
     private static final String KEY_LATITUDE = "stop_lat";
     private static final String KEY_LONGITUDE = "stop_lon";
 
-    public StopImpl(Node underlyingNode) {
+    StopImpl(Node underlyingNode, String id) {
+        this(underlyingNode);
+        setId(id);
+    }
+
+    StopImpl(Node underlyingNode) {
         this.underlyingNode = underlyingNode;
     }
 
@@ -25,7 +30,7 @@ class StopImpl implements Stop {
     }
 
     @Override
-    public void setId(String id) {
+    public final void setId(String id) {
         underlyingNode.setProperty(KEY_ID, id);
     }
 
