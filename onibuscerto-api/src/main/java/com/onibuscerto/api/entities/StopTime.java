@@ -4,7 +4,11 @@ public interface StopTime {
 
     public Trip getTrip();
 
+    public void setTrip(Trip trip);
+
     public Stop getStop();
+
+    public void setStop(Stop stop);
 
     public int getArrivalTime();
 
