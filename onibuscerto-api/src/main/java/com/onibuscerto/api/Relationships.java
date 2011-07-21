@@ -7,5 +7,7 @@ enum Relationships implements RelationshipType {
     STOPS,
     STOP,
     ROUTES,
-    ROUTE
+    ROUTE,
+    TRIPS,
+    TRIP
 }
