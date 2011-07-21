@@ -5,19 +5,18 @@ import org.neo4j.graphdb.Node;
 import com.onibuscerto.api.entities.Route;
 import com.onibuscerto.api.entities.Trip;
 
-
 class RouteImpl implements Route {
-    
+
     private final Node underlyingNode;
     private static final String KEY_ID = "route_id";
-    private static final String KEY_SHORT_NAME = "route_short_name";    
+    private static final String KEY_SHORT_NAME = "route_short_name";
     private static final String KEY_LONG_NAME = "route_long_name";
     private static final String KEY_TYPE = "route_type";
-    
+
     public RouteImpl(Node underlyingNode) {
         this.underlyingNode = underlyingNode;
     }
-    
+
     public Node getUnderlyingNode() {
         return underlyingNode;
     }
@@ -65,6 +64,5 @@ class RouteImpl implements Route {
     @Override
     public Collection<Trip> getTrips() {
         throw new UnsupportedOperationException("Not supported yet.");
-    }    
-            
+    }
 }
