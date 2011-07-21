@@ -29,7 +29,7 @@ public class ImporterMain {
             importStops(databaseController, TRANSIT_FEED_PATH + "/stops.txt");
             importRoutes(databaseController, TRANSIT_FEED_PATH + "/routes.txt");
             importTrips(databaseController, TRANSIT_FEED_PATH + "/trips.txt");
-            importStopTimes(databaseController, TRANSIT_FEED_PATH + "stop_times.txt");
+            importStopTimes(databaseController, TRANSIT_FEED_PATH + "/stop_times.txt");
             databaseController.endTransaction(true);
         } catch (IOException ex) {
             Logger.getLogger(ImporterMain.class.getName()).log(Level.SEVERE, null, ex);
@@ -80,7 +80,8 @@ public class ImporterMain {
             Route route = routeFactory.createRoute(hashMap.get("route_id"));
             route.setShortname(hashMap.get("route_short_name"));
             route.setLongName(hashMap.get("route_long_name"));
-            route.setType(getTypeFromCode(hashMap.get("route_type")));
+            route.setType(Route.Type.fromInt(Integer.parseInt(
+                    hashMap.get("route_type"))));
 
             Logger.getLogger(ImporterMain.class.getName()).log(Level.INFO,
                     "Inseri route " + route.getShortName() + " (" + route.getId() + ")");
@@ -129,8 +130,8 @@ public class ImporterMain {
             StopTime stopTime = stopTimeFactory.createStopTime();
             stopTime.setTrip(databaseController.getTripFactory().getTripById(
                     hashMap.get("trip_id")));
-            stopTime.setArrivalTime(Integer.parseInt(hashMap.get("arrival_time")));
-            stopTime.setDepartureTime(Integer.parseInt(hashMap.get("departure_time")));
+            stopTime.setArrivalTime(getSecondsFromTime(hashMap.get("arrival_time")));
+            stopTime.setDepartureTime(getSecondsFromTime(hashMap.get("departure_time")));
             stopTime.setStop(databaseController.getStopFactory().getStopById(
                     hashMap.get("stop_id")));
             stopTime.setSequence(Integer.parseInt(hashMap.get("stop_sequence")));
@@ -171,5 +172,14 @@ public class ImporterMain {
                 type = Route.Type.FUNICULAR;
         }
         return type;
+    }
+    
+    private static int getSecondsFromTime(String time) {
+        int seconds = 0;
+        String[] parts = time.split(":");
+        seconds += Integer.parseInt(parts[0])*3600;
+        seconds += Integer.parseInt(parts[1])*60;
+        seconds += Integer.parseInt(parts[2]);
+        return seconds;
     }
 }
