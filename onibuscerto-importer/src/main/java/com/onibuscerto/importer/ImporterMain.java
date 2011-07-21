@@ -8,9 +8,9 @@ import com.onibuscerto.api.factories.RouteFactory;
 import com.onibuscerto.api.factories.StopFactory;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.neo4j.graphdb.GraphDatabaseService;
 
 public class ImporterMain {
 
@@ -38,24 +38,22 @@ public class ImporterMain {
         CSVReader reader = new CSVReader(new FileReader(stopsFile));
         String columnNames[] = reader.readNext();
         String lineValues[];
+        HashMap<String, String> hashMap = new HashMap<String, String>();
 
         while ((lineValues = reader.readNext()) != null) {
-            Stop stop = stopFactory.createStop(null);
-
             for (int i = 0; i < lineValues.length; i++) {
-                if (columnNames[i].equals("stop_id")) {
-                    stop.setId(lineValues[i]);
-                } else if (columnNames[i].equals("stop_name")) {
-                    stop.setName(lineValues[i]);
-                } else if (columnNames[i].equals("stop_lat")) {
-                    stop.setLatitude(Double.parseDouble(lineValues[i]));
-                } else if (columnNames[i].equals("stop_lon")) {
-                    stop.setLongitude(Double.parseDouble(lineValues[i]));
-                }
+                hashMap.put(columnNames[i], lineValues[i]);
             }
+            
+            Stop stop = stopFactory.createStop(hashMap.get("stop_id"));
+            stop.setName(hashMap.get("stop_name"));
+            stop.setLatitude(Double.parseDouble(hashMap.get("stop_lat")));
+            stop.setLongitude(Double.parseDouble(hashMap.get("stop_lon")));
 
             Logger.getLogger(ImporterMain.class.getName()).log(Level.INFO,
                     "Inseri stop " + stop.getName() + " (" + stop.getId() + ")");
+            
+            hashMap.clear();
         }
     }
 
@@ -65,23 +63,22 @@ public class ImporterMain {
         CSVReader reader = new CSVReader(new FileReader(routesFile));
         String columnNames[] = reader.readNext();
         String lineValues[];
+        HashMap<String, String> hashMap = new HashMap<String, String>();
 
         while ((lineValues = reader.readNext()) != null) {
-            Route route = routeFactory.createRoute(null);
-
             for (int i = 0; i < lineValues.length; i++) {
-                if (columnNames[i].equals("route_id")) {
-                    route.setId(lineValues[i]);
-                } else if (columnNames[i].equals("route_short_name")) {
-                    route.setShortname(lineValues[i]);
-                } else if (columnNames[i].equals("route_long_name")) {
-                    route.setLongName(lineValues[i]);
-                } else if (columnNames[i].equals("route_type")) {
-                    route.setType(getTypeFromCode(lineValues[i]));
-                }
+                hashMap.put(columnNames[i], lineValues[i]);
             }
+            
+            Route route = routeFactory.createRoute(hashMap.get("route_id"));
+            route.setShortname(hashMap.get("route_short_name"));
+            route.setLongName(hashMap.get("route_long_name"));
+            route.setType(getTypeFromCode(hashMap.get("route_type")));
+
             Logger.getLogger(ImporterMain.class.getName()).log(Level.INFO,
                     "Inseri route " + route.getShortName() + " (" + route.getId() + ")");
+            
+            hashMap.clear();
         }
     }
 
