@@ -5,5 +5,7 @@ import org.neo4j.graphdb.RelationshipType;
 enum Relationships implements RelationshipType {
 
     STOPS,
-    STOP
+    STOP,
+    ROUTES,
+    ROUTE
 }
