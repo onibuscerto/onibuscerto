@@ -16,8 +16,12 @@ public class DatabaseController {
     protected TripFactory tripFactory;
     protected Transaction currentTransaction;
 
+    public DatabaseController(GraphDatabaseService graphDb) {
+        this.graphDb = graphDb;
+    }
+
     public DatabaseController(String databasePath) {
-        graphDb = new EmbeddedGraphDatabase(databasePath);
+        this(new EmbeddedGraphDatabase(databasePath));
     }
 
     public DatabaseController() {
