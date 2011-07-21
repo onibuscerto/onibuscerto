@@ -1,5 +1,7 @@
 package com.onibuscerto.api;
 
+import com.onibuscerto.api.factories.StopFactory;
+import com.onibuscerto.api.entities.Stop;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;

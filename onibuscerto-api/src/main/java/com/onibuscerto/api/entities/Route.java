@@ -1,4 +1,4 @@
-package com.onibuscerto.api;
+package com.onibuscerto.api.entities;
 
 import java.util.Collection;
 

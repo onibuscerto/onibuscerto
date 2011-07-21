@@ -1,5 +1,6 @@
 package com.onibuscerto.api;
 
+import com.onibuscerto.api.entities.Stop;
 import org.neo4j.graphdb.Node;
 
 class StopImpl implements Stop {

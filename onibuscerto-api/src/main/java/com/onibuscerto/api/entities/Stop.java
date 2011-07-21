@@ -1,4 +1,4 @@
-package com.onibuscerto.api;
+package com.onibuscerto.api.entities;
 
 public interface Stop {
 
