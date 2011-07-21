@@ -40,4 +40,9 @@ class TripFactoryImpl implements TripFactory {
             tx.finish();
         }
     }
+
+    @Override
+    public Trip getTripById(String id) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

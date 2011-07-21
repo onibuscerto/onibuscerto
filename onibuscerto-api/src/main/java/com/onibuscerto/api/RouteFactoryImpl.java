@@ -41,4 +41,9 @@ class RouteFactoryImpl implements RouteFactory {
             tx.finish();
         }
     }
+
+    @Override
+    public Route getRouteById(String id) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

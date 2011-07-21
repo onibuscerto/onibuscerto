@@ -41,4 +41,9 @@ public class StopTimeFactoryImpl implements StopTimeFactory {
             tx.finish();
         }
     }
+
+    @Override
+    public StopTime getStopTimeById(String id) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
