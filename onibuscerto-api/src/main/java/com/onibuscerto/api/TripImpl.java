@@ -4,9 +4,13 @@ import com.onibuscerto.api.entities.Route;
 import com.onibuscerto.api.entities.StopTime;
 import com.onibuscerto.api.entities.Trip;
 import java.util.Collection;
+import java.util.LinkedList;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.ReturnableEvaluator;
+import org.neo4j.graphdb.StopEvaluator;
+import org.neo4j.graphdb.Traverser;
 
 class TripImpl implements Trip {
 
@@ -15,6 +19,10 @@ class TripImpl implements Trip {
 
     public TripImpl(Node underlyingNode) {
         this.underlyingNode = underlyingNode;
+    }
+
+    public Node getUnderlyingNode() {
+        return underlyingNode;
     }
 
     @Override
@@ -53,8 +61,23 @@ class TripImpl implements Trip {
         underlyingNode.setProperty(KEY_ID, id);
     }
 
+    private Collection<Node> getStopTimeNodes() {
+        Traverser traverser = underlyingNode.traverse(
+                Traverser.Order.BREADTH_FIRST, StopEvaluator.DEPTH_ONE,
+                ReturnableEvaluator.ALL_BUT_START_NODE,
+                Relationships.TRIP_TO_STOP_TIME, Direction.OUTGOING);
+        return traverser.getAllNodes();
+    }
+
     @Override
     public Collection<StopTime> getStopTimes() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Collection<Node> stopTimeNodes = getStopTimeNodes();
+        Collection<StopTime> stopTimes = new LinkedList<StopTime>();
+
+        for (Node node : stopTimeNodes) {
+            stopTimes.add(new StopTimeImpl(node));
+        }
+
+        return stopTimes;
     }
 }
