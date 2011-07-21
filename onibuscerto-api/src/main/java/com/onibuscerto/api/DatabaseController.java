@@ -2,6 +2,7 @@ package com.onibuscerto.api;
 
 import com.onibuscerto.api.factories.RouteFactory;
 import com.onibuscerto.api.factories.StopFactory;
+import com.onibuscerto.api.factories.StopTimeFactory;
 import com.onibuscerto.api.factories.TripFactory;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
@@ -14,6 +15,7 @@ public final class DatabaseController {
     protected StopFactory stopFactory;
     protected RouteFactory routeFactory;
     protected TripFactory tripFactory;
+    protected StopTimeFactory stopTimeFactory;
     protected Transaction currentTransaction;
 
     public DatabaseController(GraphDatabaseService graphDb) {
@@ -23,6 +25,7 @@ public final class DatabaseController {
         stopFactory = new StopFactoryImpl(graphDb);
         routeFactory = new RouteFactoryImpl(graphDb);
         tripFactory = new TripFactoryImpl(graphDb);
+        stopTimeFactory = new StopTimeFactoryImpl(graphDb);
         endTransaction(true);
     }
 
@@ -69,5 +72,9 @@ public final class DatabaseController {
 
     public TripFactory getTripFactory() {
         return tripFactory;
+    }
+    
+    public StopTimeFactory getStopTimeFactory() {
+        return stopTimeFactory;
     }
 }
