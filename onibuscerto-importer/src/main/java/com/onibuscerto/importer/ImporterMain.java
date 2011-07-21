@@ -2,12 +2,15 @@ package com.onibuscerto.importer;
 
 import au.com.bytecode.opencsv.CSVReader;
 import com.onibuscerto.api.DatabaseController;
+import com.onibuscerto.api.entities.Route;
 import com.onibuscerto.api.entities.Stop;
+import com.onibuscerto.api.factories.RouteFactory;
 import com.onibuscerto.api.factories.StopFactory;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.neo4j.graphdb.GraphDatabaseService;
 
 public class ImporterMain {
 
@@ -54,5 +57,61 @@ public class ImporterMain {
             Logger.getLogger(ImporterMain.class.getName()).log(Level.INFO,
                     "Inseri stop " + stop.getName() + " (" + stop.getId() + ")");
         }
+    }
+
+    private static void importRoutes(DatabaseController databaseController,
+            String routesFile) throws IOException {
+        RouteFactory routeFactory = databaseController.getRouteFactory();
+        CSVReader reader = new CSVReader(new FileReader(routesFile));
+        String columnNames[] = reader.readNext();
+        String lineValues[];
+
+        while ((lineValues = reader.readNext()) != null) {
+            Route route = routeFactory.createRoute();
+
+            for (int i = 0; i < lineValues.length; i++) {
+                if (columnNames[i].equals("route_id")) {
+                    route.setId(lineValues[i]);
+                } else if (columnNames[i].equals("route_short_name")) {
+                    route.setShortname(lineValues[i]);
+                } else if (columnNames[i].equals("route_long_name")) {
+                    route.setLongName(lineValues[i]);
+                } else if (columnNames[i].equals("route_type")) {
+                    route.setType(getTypeFromCode(lineValues[i]));
+                }
+            }
+            Logger.getLogger(ImporterMain.class.getName()).log(Level.INFO,
+                    "Inseri route " + route.getShortName() + " (" + route.getId() + ")");
+        }
+    }
+
+    private static Route.Type getTypeFromCode(String code) {
+        Route.Type type = null;
+        switch (Integer.parseInt(code)) {
+            case 0:
+                type = Route.Type.STREETCAR;
+                break;
+            case 1:
+                type = Route.Type.SUBWAY;
+                break;
+            case 2:
+                type = Route.Type.RAIL;
+                break;
+            case 3:
+                type = Route.Type.BUS;
+                break;
+            case 4:
+                type = Route.Type.FERRY;
+                break;
+            case 5:
+                type = Route.Type.CABLE_CAR;
+                break;
+            case 6:
+                type = Route.Type.GONDOLA;
+                break;
+            case 7:
+                type = Route.Type.FUNICULAR;
+        }
+        return type;
     }
 }
