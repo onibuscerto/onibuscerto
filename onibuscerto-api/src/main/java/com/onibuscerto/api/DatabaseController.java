@@ -1,6 +1,8 @@
 package com.onibuscerto.api;
 
+import com.onibuscerto.api.factories.RouteFactory;
 import com.onibuscerto.api.factories.StopFactory;
+import com.onibuscerto.api.factories.TripFactory;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.kernel.EmbeddedGraphDatabase;
@@ -10,6 +12,8 @@ public class DatabaseController {
     private static final String DEFAULT_DATABASE_PATH = "target/db";
     protected GraphDatabaseService graphDb;
     protected StopFactory stopFactory;
+    protected RouteFactory routeFactory;
+    protected TripFactory tripFactory;
     protected Transaction currentTransaction;
 
     public DatabaseController(String databasePath) {
@@ -49,5 +53,21 @@ public class DatabaseController {
         }
 
         return stopFactory;
+    }
+
+    public RouteFactory getRouteFactory() {
+        if (routeFactory == null) {
+            routeFactory = new RouteFactoryImpl(graphDb);
+        }
+
+        return routeFactory;
+    }
+
+    public TripFactory getTripFactory() {
+        if (tripFactory == null) {
+            tripFactory = new TripFactoryImpl(graphDb);
+        }
+
+        return tripFactory;
     }
 }
