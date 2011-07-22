@@ -140,36 +140,6 @@ public class GTFSImporter {
         }
     }
 
-    private Route.Type getTypeFromCode(String code) {
-        Route.Type type = null;
-        switch (Integer.parseInt(code)) {
-            case 0:
-                type = Route.Type.STREETCAR;
-                break;
-            case 1:
-                type = Route.Type.SUBWAY;
-                break;
-            case 2:
-                type = Route.Type.RAIL;
-                break;
-            case 3:
-                type = Route.Type.BUS;
-                break;
-            case 4:
-                type = Route.Type.FERRY;
-                break;
-            case 5:
-                type = Route.Type.CABLE_CAR;
-                break;
-            case 6:
-                type = Route.Type.GONDOLA;
-                break;
-            case 7:
-                type = Route.Type.FUNICULAR;
-        }
-        return type;
-    }
-
     private int getSecondsFromTime(String time) {
         int seconds = 0;
         String[] parts = time.split(":");
