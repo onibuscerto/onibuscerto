@@ -12,7 +12,11 @@ import com.onibuscerto.api.factories.StopTimeFactory;
 import com.onibuscerto.api.factories.TripFactory;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,6 +35,7 @@ public class GTFSImporter {
             importRoutes(transitFeedPath + "/routes.txt");
             importTrips(transitFeedPath + "/trips.txt");
             importStopTimes(transitFeedPath + "/stop_times.txt");
+            linkStopTimes();
             databaseController.endTransaction(true);
         } catch (IOException ex) {
             Logger.getLogger(GTFSImporter.class.getName()).log(Level.SEVERE, null, ex);
@@ -137,6 +142,30 @@ public class GTFSImporter {
                     + " numero de sequencia " + stopTime.getSequence());
 
             hashMap.clear();
+        }
+    }
+
+    private void linkStopTimes() {
+        Collection<Trip> allTrips = databaseController.getTripFactory().getAllTrips();
+        LinkedList<StopTime> stopTimes;
+
+        for (Trip trip : allTrips) {
+            stopTimes = new LinkedList<StopTime>(trip.getStopTimes());
+            Collections.sort(stopTimes, new Comparator() {
+
+                @Override
+                public int compare(Object o1, Object o2) {
+                    StopTime st1 = (StopTime) o1;
+                    StopTime st2 = (StopTime) o2;
+                    return ((Integer) st1.getSequence()).compareTo(st2.getSequence());
+                }
+            });
+            while (stopTimes.isEmpty() == false) {
+                StopTime stopTime = stopTimes.pop();
+                if (stopTimes.isEmpty() == false) {
+                    stopTime.setNext(stopTimes.peekFirst());
+                }
+            }
         }
     }
 
