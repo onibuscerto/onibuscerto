@@ -2,6 +2,7 @@ package com.onibuscerto.api;
 
 import com.onibuscerto.api.factories.StopFactory;
 import com.onibuscerto.api.entities.Stop;
+import com.onibuscerto.api.exceptions.DuplicateEntityException;
 import java.util.Collection;
 import java.util.LinkedList;
 import org.neo4j.graphdb.Direction;
@@ -42,6 +43,10 @@ class StopFactoryImpl implements StopFactory {
     public Stop createStop(String id) {
         Transaction tx = graphDb.beginTx();
         try {
+            if (getStopById(id) != null) {
+                throw new DuplicateEntityException();
+            }
+
             Node node = graphDb.createNode();
             Stop stop = new StopImpl(node, id);
             stopIndex.add(node, StopImpl.KEY_ID, id);
