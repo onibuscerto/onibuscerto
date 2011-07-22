@@ -2,11 +2,16 @@ package com.onibuscerto.api;
 
 import com.onibuscerto.api.entities.Trip;
 import com.onibuscerto.api.factories.TripFactory;
+import java.util.Collection;
+import java.util.LinkedList;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.ReturnableEvaluator;
+import org.neo4j.graphdb.StopEvaluator;
 import org.neo4j.graphdb.Transaction;
+import org.neo4j.graphdb.Traverser;
 import org.neo4j.graphdb.index.Index;
 
 class TripFactoryImpl implements TripFactory {
@@ -46,6 +51,25 @@ class TripFactoryImpl implements TripFactory {
         } finally {
             tx.finish();
         }
+    }
+
+    private Collection<Node> getAllTripNodes() {
+        Traverser traverser = tripFactoryNode.traverse(
+                Traverser.Order.BREADTH_FIRST, StopEvaluator.DEPTH_ONE,
+                ReturnableEvaluator.ALL_BUT_START_NODE,
+                Relationships.TRIP, Direction.OUTGOING);
+        return traverser.getAllNodes();
+    }
+
+    @Override
+    public Collection<Trip> getAllTrips() {
+        Collection<Node> allTripNodes = getAllTripNodes();
+        Collection<Trip> allTrips = new LinkedList<Trip>();
+
+        for (Node node : allTripNodes) {
+            allTrips.add(new TripImpl(node));
+        }
+        return allTrips;
     }
 
     @Override
