@@ -162,9 +162,7 @@ public class GTFSImporter {
             });
             while (stopTimes.isEmpty() == false) {
                 StopTime stopTime = stopTimes.pop();
-                if (stopTimes.isEmpty() == false) {
-                    stopTime.setNext(stopTimes.peekFirst());
-                }
+                stopTime.setNext(stopTimes.peekFirst());
             }
         }
     }
