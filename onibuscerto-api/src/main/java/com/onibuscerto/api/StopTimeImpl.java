@@ -106,12 +106,73 @@ public class StopTimeImpl implements StopTime {
 
     @Override
     public StopTime getNext() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (hasNext()) {
+            Relationship rel = underlyingNode.getSingleRelationship(
+                    Relationships.NEXT_STOPTIME, Direction.OUTGOING);
+            return new StopTimeImpl(rel.getEndNode());
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void setNext(StopTime stopTime) {
+        Relationship rel = underlyingNode.getSingleRelationship(
+                Relationships.NEXT_STOPTIME, Direction.OUTGOING);
+
+        if (rel != null) {
+            rel.delete();
+        }
+
+        underlyingNode.createRelationshipTo(
+                ((StopTimeImpl) stopTime).getUnderlyingNode(),
+                Relationships.NEXT_STOPTIME);
+    }
+
+    @Override
+    public boolean hasNext() {
+        Relationship rel = underlyingNode.getSingleRelationship(
+                Relationships.NEXT_STOPTIME, Direction.OUTGOING);
+        if (rel != null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public StopTime getPrevious() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (hasPrevious()) {
+            Relationship rel = underlyingNode.getSingleRelationship(
+                    Relationships.NEXT_STOPTIME, Direction.INCOMING);
+            return new StopTimeImpl(rel.getStartNode());
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void setPrevious(StopTime stopTime) {
+        Relationship rel = underlyingNode.getSingleRelationship(
+                Relationships.NEXT_STOPTIME, Direction.INCOMING);
+
+        if (rel != null) {
+            rel.delete();
+        }
+
+        ((StopTimeImpl) stopTime).getUnderlyingNode().createRelationshipTo(
+                underlyingNode, Relationships.NEXT_STOPTIME);
+    }
+
+    @Override
+    public boolean hasPrevious() {
+        Relationship rel = underlyingNode.getSingleRelationship(
+                Relationships.NEXT_STOPTIME, Direction.INCOMING);
+        if (rel != null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override

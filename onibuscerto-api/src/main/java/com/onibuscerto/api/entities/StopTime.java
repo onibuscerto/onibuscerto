@@ -24,5 +24,13 @@ public interface StopTime {
 
     public StopTime getNext();
 
+    public void setNext(StopTime stopTime);
+
+    public boolean hasNext();
+
     public StopTime getPrevious();
+
+    public void setPrevious(StopTime stopTime);
+
+    public boolean hasPrevious();
 }
