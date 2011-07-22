@@ -36,8 +36,6 @@ public class GTFSImporter {
             Logger.getLogger(GTFSImporter.class.getName()).log(Level.SEVERE, null, ex);
             databaseController.endTransaction(false);
         }
-
-        databaseController.close();
     }
 
     private void importStops(String stopsFile)
