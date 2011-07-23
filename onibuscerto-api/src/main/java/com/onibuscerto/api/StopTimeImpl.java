@@ -123,10 +123,11 @@ public class StopTimeImpl implements StopTime {
         if (rel != null) {
             rel.delete();
         }
-
-        underlyingNode.createRelationshipTo(
-                ((StopTimeImpl) stopTime).getUnderlyingNode(),
-                Relationships.NEXT_STOPTIME);
+        if (stopTime != null) {
+            underlyingNode.createRelationshipTo(
+                    ((StopTimeImpl) stopTime).getUnderlyingNode(),
+                    Relationships.NEXT_STOPTIME);
+        }
     }
 
     @Override
@@ -160,8 +161,10 @@ public class StopTimeImpl implements StopTime {
             rel.delete();
         }
 
-        ((StopTimeImpl) stopTime).getUnderlyingNode().createRelationshipTo(
-                underlyingNode, Relationships.NEXT_STOPTIME);
+        if (stopTime != null) {
+            ((StopTimeImpl) stopTime).getUnderlyingNode().createRelationshipTo(
+                    underlyingNode, Relationships.NEXT_STOPTIME);
+        }
     }
 
     @Override
