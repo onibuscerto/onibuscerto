@@ -1,5 +1,7 @@
 package com.onibuscerto.importer;
 
+import com.onibuscerto.api.entities.Stop;
+import java.util.Collection;
 import org.neo4j.test.ImpermanentGraphDatabase;
 import org.neo4j.graphdb.GraphDatabaseService;
 import com.onibuscerto.api.DatabaseController;
@@ -21,6 +23,7 @@ public class GTFSImporterTest {
         GraphDatabaseService graphDb = new ImpermanentGraphDatabase();
         databaseController = new DatabaseController(graphDb);
         importer = new GTFSImporter(databaseController);
+        importer.importData(TRANSIT_FEED_PATH);
     }
 
     @AfterClass
@@ -30,14 +33,17 @@ public class GTFSImporterTest {
 
     @Before
     public void setUp() {
+        databaseController.beginTransaction();
     }
 
     @After
     public void tearDown() {
+        databaseController.endTransaction(false);
     }
 
     @Test
-    public void testImportData() {
-        importer.importData(TRANSIT_FEED_PATH);
+    public void testImportedStops() {
+        Collection<Stop> allStops = databaseController.getStopFactory().getAllStops();
+        assertEquals(allStops.size(), 9);
     }
 }
