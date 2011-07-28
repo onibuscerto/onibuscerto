@@ -1,9 +1,18 @@
 package com.onibuscerto.api;
 
+import com.onibuscerto.api.entities.Stop;
 import com.onibuscerto.api.factories.RouteFactory;
 import com.onibuscerto.api.factories.StopFactory;
 import com.onibuscerto.api.factories.StopTimeFactory;
 import com.onibuscerto.api.factories.TripFactory;
+import com.vividsolutions.jts.geom.Coordinate;
+import java.util.Collection;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.neo4j.gis.spatial.SimplePointLayer;
+import org.neo4j.gis.spatial.SpatialDatabaseRecord;
+import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.kernel.EmbeddedGraphDatabase;
@@ -73,8 +82,27 @@ public final class DatabaseController {
     public TripFactory getTripFactory() {
         return tripFactory;
     }
-    
+
     public StopTimeFactory getStopTimeFactory() {
         return stopTimeFactory;
+    }
+
+    //TODO: ver como fazer essa parte do spatial
+    public Collection<Stop> getAllStopsWithinDistance(double latitude,
+            double longitude, double distance) {
+
+        Collection<Stop> allStopsNearTarget;
+        SpatialDatabaseService db = new SpatialDatabaseService(graphDb);
+        SimplePointLayer layer = db.createSimplePointLayer("stops");
+        Collection<Stop> allStops = stopFactory.getAllStops();
+        db.getLayer("Stop");
+        for (Stop stop : allStops) {
+            layer.add(stop.getLatitude(), stop.getLongitude());
+        }
+
+        List<SpatialDatabaseRecord> results = layer.findClosestPointsTo(
+                new Coordinate(latitude, longitude), distance);
+
+        return null;
     }
 }
