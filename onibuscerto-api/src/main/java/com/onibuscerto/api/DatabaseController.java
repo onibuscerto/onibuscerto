@@ -12,12 +12,12 @@ import org.neo4j.kernel.EmbeddedGraphDatabase;
 public final class DatabaseController {
 
     private static final String DEFAULT_DATABASE_PATH = "target/db";
-    protected GraphDatabaseService graphDb;
-    protected StopFactory stopFactory;
-    protected RouteFactory routeFactory;
-    protected TripFactory tripFactory;
-    protected StopTimeFactory stopTimeFactory;
-    protected ConnectionFactory connectionFactory;
+    protected final GraphDatabaseService graphDb;
+    protected final StopFactory stopFactory;
+    protected final RouteFactory routeFactory;
+    protected final TripFactory tripFactory;
+    protected final StopTimeFactory stopTimeFactory;
+    protected final ConnectionFactory connectionFactory;
     protected Transaction currentTransaction;
 
     public DatabaseController(GraphDatabaseService graphDb) {
@@ -42,6 +42,10 @@ public final class DatabaseController {
 
     public void close() {
         graphDb.shutdown();
+    }
+
+    GraphDatabaseService getGraphDatabaseService() {
+        return graphDb;
     }
 
     public void beginTransaction() {
