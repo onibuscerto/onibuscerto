@@ -1,6 +1,7 @@
 package com.onibuscerto.api;
 
 import com.onibuscerto.api.entities.Trip;
+import com.onibuscerto.api.exceptions.DuplicateEntityException;
 import com.onibuscerto.api.factories.TripFactory;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -44,6 +45,9 @@ class TripFactoryImpl implements TripFactory {
     public Trip createTrip(String id) {
         Transaction tx = graphDb.beginTx();
         try {
+            if (getTripById(id) != null) {
+                throw new DuplicateEntityException();
+            }
             Node node = graphDb.createNode();
             Trip trip = new TripImpl(node, id);
             tripIndex.add(node, TripImpl.KEY_ID, id);

@@ -8,7 +8,7 @@ public interface Route {
 
     public String getShortName();
 
-    public void setShortname(String shortName);
+    public void setShortName(String shortName);
 
     public String getLongName();
 

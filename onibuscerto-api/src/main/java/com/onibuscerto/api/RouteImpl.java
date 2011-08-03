@@ -46,7 +46,7 @@ class RouteImpl implements Route {
     }
 
     @Override
-    public void setShortname(String shortName) {
+    public void setShortName(String shortName) {
         underlyingNode.setProperty(KEY_SHORT_NAME, shortName);
     }
 

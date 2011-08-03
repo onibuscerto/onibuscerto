@@ -1,9 +1,6 @@
 package com.onibuscerto.api.test;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+import com.onibuscerto.api.exceptions.DuplicateEntityException;
 import com.onibuscerto.api.entities.StopTime;
 import com.onibuscerto.api.entities.Route;
 import org.neo4j.test.ImpermanentGraphDatabase;
@@ -21,10 +18,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.junit.matchers.JUnitMatchers.*;
 
-/**
- *
- * @author Bruno
- */
 public class TripTest {
 
     @Rule
@@ -58,6 +51,14 @@ public class TripTest {
         String tripId = "trip42";
         Trip trip = databaseController.getTripFactory().createTrip(tripId);
         assertEquals(trip.getId(), tripId);
+    }
+
+    @Test
+    public void testCreateTripDuplicate() {
+        String tripId = "trip42";
+        Trip trip1 = databaseController.getTripFactory().createTrip(tripId);
+        exception.expect(DuplicateEntityException.class);
+        Trip trip2 = databaseController.getTripFactory().createTrip(tripId);
     }
 
     @Test
@@ -96,4 +97,3 @@ public class TripTest {
         assertThat(result, hasItems(st1, st2));
     }
 }
-
