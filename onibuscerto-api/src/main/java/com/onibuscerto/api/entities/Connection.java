@@ -18,18 +18,6 @@ public interface Connection {
     public Stop getTarget();
 
     /**
-     * Retorna o horário de partida desta conexão, a partir da origem.
-     * @return horário de partida
-     */
-    public int getDepartureTime();
-
-    /**
-     * Atribui o horário de partida desta conexão, a partir da origem.
-     * @param departureTime horário de partida
-     */
-    public void setDepartureTime(int departureTime);
-
-    /**
      * Retorna o tempo em minutos entre a origem e o destino da conexão.
      * @return custo em minutos
      */

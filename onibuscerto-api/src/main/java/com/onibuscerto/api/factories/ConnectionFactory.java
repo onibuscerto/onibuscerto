@@ -1,9 +1,13 @@
 package com.onibuscerto.api.factories;
 
-import com.onibuscerto.api.entities.Connection;
 import com.onibuscerto.api.entities.Stop;
+import com.onibuscerto.api.entities.TransportConnection;
+import com.onibuscerto.api.entities.Trip;
+import com.onibuscerto.api.entities.WalkingConnection;
 
 public interface ConnectionFactory {
 
-    public Connection createConnection(Stop source, Stop target);
+    public TransportConnection createTransportConnection(Trip trip, Stop source, Stop target);
+
+    public WalkingConnection createWalkingConnection(Stop source, Stop target);
 }
