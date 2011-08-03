@@ -20,8 +20,8 @@ class TransportConnectionImpl implements TransportConnection {
     }
 
     @Override
-    public Trip getTrip() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public String getTripId() {
+        return (String) this.underlyingRelationship.getProperty(KEY_TRIP);
     }
 
     private void setTrip(Trip trip) {

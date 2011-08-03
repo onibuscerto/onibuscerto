@@ -6,10 +6,10 @@ package com.onibuscerto.api.entities;
 public interface TransportConnection extends Connection {
 
     /**
-     * Retorna a Trip na qual esta conexão está contida.
-     * @return Trip à qual está conexão pertence
+     * Retorna o identificador da Trip na qual esta conexão está contida.
+     * @return identificador da Trip
      */
-    public Trip getTrip();
+    public String getTripId();
 
     /**
      * Retorna o horário de partida desta conexão, a partir da origem.
