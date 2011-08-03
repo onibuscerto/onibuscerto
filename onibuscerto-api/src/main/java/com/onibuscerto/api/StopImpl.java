@@ -34,7 +34,7 @@ class StopImpl implements Stop {
         return (String) underlyingNode.getProperty(KEY_ID);
     }
 
-    private final void setId(String id) {
+    private void setId(String id) {
         underlyingNode.setProperty(KEY_ID, id);
     }
 
