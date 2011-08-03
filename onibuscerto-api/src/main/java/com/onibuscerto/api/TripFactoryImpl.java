@@ -16,13 +16,15 @@ import org.neo4j.graphdb.index.Index;
 
 class TripFactoryImpl implements TripFactory {
 
+    private final DatabaseController databaseController;
     private final GraphDatabaseService graphDb;
     private final Node tripFactoryNode;
     private final Index<Node> tripIndex;
     private static final String TRIP_INDEX = "trip_index";
 
-    TripFactoryImpl(GraphDatabaseService graphDb) {
-        this.graphDb = graphDb;
+    TripFactoryImpl(DatabaseController databaseController) {
+        this.databaseController = databaseController;
+        this.graphDb = this.databaseController.getGraphDatabaseService();
 
         Relationship rel = graphDb.getReferenceNode().getSingleRelationship(
                 Relationships.TRIPS, Direction.OUTGOING);

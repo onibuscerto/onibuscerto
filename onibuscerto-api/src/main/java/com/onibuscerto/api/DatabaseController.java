@@ -24,11 +24,11 @@ public final class DatabaseController {
         this.graphDb = graphDb;
 
         beginTransaction();
-        stopFactory = new StopFactoryImpl(graphDb);
-        routeFactory = new RouteFactoryImpl(graphDb);
-        tripFactory = new TripFactoryImpl(graphDb);
-        stopTimeFactory = new StopTimeFactoryImpl(graphDb);
-        connectionFactory = new ConnectionFactoryImpl(graphDb);
+        stopFactory = new StopFactoryImpl(this);
+        routeFactory = new RouteFactoryImpl(this);
+        tripFactory = new TripFactoryImpl(this);
+        stopTimeFactory = new StopTimeFactoryImpl(this);
+        connectionFactory = new ConnectionFactoryImpl(this);
         endTransaction(true);
     }
 

@@ -11,13 +11,15 @@ import org.neo4j.graphdb.index.Index;
 
 class RouteFactoryImpl implements RouteFactory {
 
+    private final DatabaseController databaseController;
     private final GraphDatabaseService graphDb;
     private final Node routeFactoryNode;
     private final Index<Node> routeIndex;
     private static final String ROUTE_INDEX = "route_index";
 
-    RouteFactoryImpl(GraphDatabaseService graphDb) {
-        this.graphDb = graphDb;
+    RouteFactoryImpl(DatabaseController databaseController) {
+        this.databaseController = databaseController;
+        this.graphDb = this.databaseController.getGraphDatabaseService();
 
         Relationship rel = graphDb.getReferenceNode().getSingleRelationship(
                 Relationships.ROUTES, Direction.OUTGOING);

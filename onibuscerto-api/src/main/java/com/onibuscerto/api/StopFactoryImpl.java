@@ -17,13 +17,15 @@ import org.neo4j.graphdb.index.Index;
 
 class StopFactoryImpl implements StopFactory {
 
+    private final DatabaseController databaseController;
     private final GraphDatabaseService graphDb;
     private final Node stopFactoryNode;
     private final Index<Node> stopIndex;
     private static final String STOP_INDEX = "stop_index";
 
-    StopFactoryImpl(GraphDatabaseService graphDb) {
-        this.graphDb = graphDb;
+    StopFactoryImpl(DatabaseController databaseController) {
+        this.databaseController = databaseController;
+        this.graphDb = this.databaseController.getGraphDatabaseService();
 
         Relationship rel = graphDb.getReferenceNode().getSingleRelationship(
                 Relationships.STOPS, Direction.OUTGOING);

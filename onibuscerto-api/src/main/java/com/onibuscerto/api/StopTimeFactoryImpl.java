@@ -10,11 +10,13 @@ import org.neo4j.graphdb.Transaction;
 
 public class StopTimeFactoryImpl implements StopTimeFactory {
 
+    private final DatabaseController databaseController;
     private final GraphDatabaseService graphDb;
     private final Node stopTimeFactoryNode;
 
-    StopTimeFactoryImpl(GraphDatabaseService graphDb) {
-        this.graphDb = graphDb;
+    StopTimeFactoryImpl(DatabaseController databaseController) {
+        this.databaseController = databaseController;
+        this.graphDb = this.databaseController.getGraphDatabaseService();
 
         Relationship rel = graphDb.getReferenceNode().getSingleRelationship(
                 Relationships.STOPTIMES, Direction.OUTGOING);

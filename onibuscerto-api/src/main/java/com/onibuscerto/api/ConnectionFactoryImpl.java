@@ -12,10 +12,12 @@ import org.neo4j.graphdb.Transaction;
 
 class ConnectionFactoryImpl implements ConnectionFactory {
 
+    private final DatabaseController databaseController;
     private final GraphDatabaseService graphDb;
 
-    ConnectionFactoryImpl(GraphDatabaseService graphDb) {
-        this.graphDb = graphDb;
+    ConnectionFactoryImpl(DatabaseController databaseController) {
+        this.databaseController = databaseController;
+        this.graphDb = this.databaseController.getGraphDatabaseService();
     }
 
     @Override
