@@ -61,4 +61,21 @@ public class ConnectionTest {
         assertEquals(0, s2.getOutgoingConnections().size());
         assertThat(s1.getOutgoingConnections(), hasItem(c));
     }
+
+    @Test
+    public void testCreateWalkingConnection() {
+        Stop s1 = databaseController.getStopFactory().createStop("stop1");
+        Stop s2 = databaseController.getStopFactory().createStop("stop2");
+        Connection c = databaseController.getConnectionFactory().createWalkingConnection(s1, s2);
+
+        // Testa getIncomingConnections
+        assertEquals(0, s1.getIncomingConnections().size());
+        assertEquals(1, s2.getIncomingConnections().size());
+        assertThat(s2.getIncomingConnections(), hasItem(c));
+
+        // Testa getOutgoingConnections
+        assertEquals(1, s1.getOutgoingConnections().size());
+        assertEquals(0, s2.getOutgoingConnections().size());
+        assertThat(s1.getOutgoingConnections(), hasItem(c));
+    }
 }
