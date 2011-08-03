@@ -1,5 +1,6 @@
 package com.onibuscerto.api;
 
+import com.onibuscerto.api.factories.ConnectionFactory;
 import com.onibuscerto.api.factories.RouteFactory;
 import com.onibuscerto.api.factories.StopFactory;
 import com.onibuscerto.api.factories.StopTimeFactory;
@@ -16,6 +17,7 @@ public final class DatabaseController {
     protected RouteFactory routeFactory;
     protected TripFactory tripFactory;
     protected StopTimeFactory stopTimeFactory;
+    protected ConnectionFactory connectionFactory;
     protected Transaction currentTransaction;
 
     public DatabaseController(GraphDatabaseService graphDb) {
@@ -26,6 +28,7 @@ public final class DatabaseController {
         routeFactory = new RouteFactoryImpl(graphDb);
         tripFactory = new TripFactoryImpl(graphDb);
         stopTimeFactory = new StopTimeFactoryImpl(graphDb);
+        connectionFactory = new ConnectionFactoryImpl(graphDb);
         endTransaction(true);
     }
 
@@ -73,8 +76,12 @@ public final class DatabaseController {
     public TripFactory getTripFactory() {
         return tripFactory;
     }
-    
+
     public StopTimeFactory getStopTimeFactory() {
         return stopTimeFactory;
+    }
+
+    public ConnectionFactory getConnectionFactory() {
+        return connectionFactory;
     }
 }
