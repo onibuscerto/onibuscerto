@@ -13,8 +13,12 @@ class TransportConnectionImpl implements TransportConnection {
     private static final String KEY_TIME_COST = "tc_timecost";
 
     TransportConnectionImpl(Relationship relationship, Trip trip) {
-        this.underlyingRelationship = relationship;
+        this(relationship);
         setTrip(trip);
+    }
+
+    TransportConnectionImpl(Relationship relationship) {
+        this.underlyingRelationship = relationship;
     }
 
     public Relationship getUnderlyingRelationship() {
