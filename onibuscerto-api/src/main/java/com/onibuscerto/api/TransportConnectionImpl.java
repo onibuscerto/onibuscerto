@@ -9,6 +9,8 @@ class TransportConnectionImpl implements TransportConnection {
 
     private final Relationship underlyingRelationship;
     private static final String KEY_TRIP = "tc_trip";
+    private static final String KEY_DEPARTURE_TIME = "tc_departure";
+    private static final String KEY_TIME_COST = "tc_timecost";
 
     TransportConnectionImpl(Relationship relationship, Trip trip) {
         this.underlyingRelationship = relationship;
@@ -30,32 +32,32 @@ class TransportConnectionImpl implements TransportConnection {
 
     @Override
     public int getDepartureTime() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return (Integer) this.underlyingRelationship.getProperty(KEY_DEPARTURE_TIME);
     }
 
     @Override
     public void setDepartureTime(int departureTime) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.underlyingRelationship.setProperty(KEY_DEPARTURE_TIME, departureTime);
     }
 
     @Override
     public Stop getSource() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return new StopImpl(this.underlyingRelationship.getStartNode());
     }
 
     @Override
     public Stop getTarget() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return new StopImpl(this.underlyingRelationship.getEndNode());
     }
 
     @Override
     public int getTimeCost() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return (Integer) this.underlyingRelationship.getProperty(KEY_TIME_COST);
     }
 
     @Override
     public void setTimeCost(int timeCost) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.underlyingRelationship.setProperty(KEY_TIME_COST, timeCost);
     }
 
     @Override
