@@ -72,9 +72,9 @@ class StopImpl implements Stop {
         Collection<Connection> connections = new LinkedList<Connection>();
 
         for (Relationship relationship : relationships) {
-            if (relationship.getType() == Relationships.TRANSPORT_CONNECTION) {
+            if (relationship.getType().equals(Relationships.TRANSPORT_CONNECTION)) {
                 connections.add(new TransportConnectionImpl(relationship));
-            } else if (relationship.getType() == Relationships.WALKING_CONNECTION) {
+            } else if (relationship.getType().equals(Relationships.WALKING_CONNECTION)) {
                 connections.add(new WalkingConnectionImpl(relationship));
             }
         }
