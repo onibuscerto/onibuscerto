@@ -7,6 +7,8 @@ import org.neo4j.graphdb.Relationship;
 class WalkingConnectionImpl implements WalkingConnection {
 
     private final Relationship underlyingRelationship;
+    private static final String KEY_WALKING_DISTANCE = "wc_walkingdistance";
+    private static final String KEY_TIME_COST = "wc_timecost";
 
     WalkingConnectionImpl(Relationship relationship) {
         this.underlyingRelationship = relationship;
@@ -18,32 +20,32 @@ class WalkingConnectionImpl implements WalkingConnection {
 
     @Override
     public void setWalkingDistance(double distance) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.underlyingRelationship.setProperty(KEY_WALKING_DISTANCE, distance);
     }
 
     @Override
     public double getWalkingDistance() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return (Double) this.underlyingRelationship.getProperty(KEY_WALKING_DISTANCE);
     }
 
     @Override
     public Stop getSource() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return new StopImpl(this.underlyingRelationship.getStartNode());
     }
 
     @Override
     public Stop getTarget() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return new StopImpl(this.underlyingRelationship.getEndNode());
     }
 
     @Override
     public int getTimeCost() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return (Integer) this.underlyingRelationship.getProperty(KEY_TIME_COST);
     }
 
     @Override
     public void setTimeCost(int timeCost) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.underlyingRelationship.setProperty(KEY_TIME_COST, timeCost);
     }
 
     @Override
