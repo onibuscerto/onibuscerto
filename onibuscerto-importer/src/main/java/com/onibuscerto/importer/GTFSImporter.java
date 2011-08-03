@@ -81,7 +81,7 @@ public class GTFSImporter {
             }
 
             Route route = routeFactory.createRoute(hashMap.get("route_id"));
-            route.setShortname(hashMap.get("route_short_name"));
+            route.setShortName(hashMap.get("route_short_name"));
             route.setLongName(hashMap.get("route_long_name"));
             route.setType(Route.Type.fromInt(Integer.parseInt(
                     hashMap.get("route_type"))));

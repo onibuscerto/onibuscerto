@@ -1,6 +1,7 @@
 package com.onibuscerto.api;
 
 import com.onibuscerto.api.entities.Route;
+import com.onibuscerto.api.exceptions.DuplicateEntityException;
 import com.onibuscerto.api.factories.RouteFactory;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -39,6 +40,9 @@ class RouteFactoryImpl implements RouteFactory {
     public Route createRoute(String id) {
         Transaction tx = graphDb.beginTx();
         try {
+            if (getRouteById(id) != null) {
+                throw new DuplicateEntityException();
+            }
             Node node = graphDb.createNode();
             Route route = new RouteImpl(node, id);
             routeIndex.add(node, RouteImpl.KEY_ID, id);
