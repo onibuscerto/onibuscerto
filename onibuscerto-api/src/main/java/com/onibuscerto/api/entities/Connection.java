@@ -18,14 +18,14 @@ public interface Connection {
     public Stop getTarget();
 
     /**
-     * Retorna o tempo em minutos entre a origem e o destino da conexão.
-     * @return custo em minutos
+     * Retorna o tempo em segundos entre a origem e o destino da conexão.
+     * @return custo em segundos
      */
     public int getTimeCost();
 
     /**
-     * Atribui o tempo em minutos entre a origem e o destino da conexão.
-     * @param timeCost custo em minutos
+     * Atribui o tempo em segundos entre a origem e o destino da conexão.
+     * @param timeCost custo em segundos
      */
     public void setTimeCost(int timeCost);
 }
