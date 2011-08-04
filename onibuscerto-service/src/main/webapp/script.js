@@ -1,4 +1,5 @@
 var map;
+var poly;
 
 $(document).ready(function() {
     setupUI();
@@ -46,12 +47,16 @@ function setupCallbacks() {
                 path.push(new google.maps.LatLng(pos.latitude, pos.longitude));
             }
 
-            new google.maps.Polyline({
+            if (poly) {
+                poly.setMap(null);
+            }
+
+            poly = new google.maps.Polyline({
                 path: path,
                 strokeColor: "#0000CC",
-                opacity: 0.4,
-                map: map
+                opacity: 0.4
             });
+            poly.setMap(map);
         }, "json");
     });
 }
