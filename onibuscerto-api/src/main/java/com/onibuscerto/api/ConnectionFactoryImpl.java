@@ -1,5 +1,6 @@
 package com.onibuscerto.api;
 
+import com.onibuscerto.api.entities.Location;
 import com.onibuscerto.api.entities.Stop;
 import com.onibuscerto.api.entities.TransportConnection;
 import com.onibuscerto.api.entities.Trip;
@@ -36,7 +37,7 @@ class ConnectionFactoryImpl implements ConnectionFactory {
     }
 
     @Override
-    public WalkingConnection createWalkingConnection(Stop source, Stop target) {
+    public WalkingConnection createWalkingConnection(Location source, Location target) {
         Transaction tx = graphDb.beginTx();
         try {
             Node sourceNode = ((StopImpl) source).getUnderlyingNode();
