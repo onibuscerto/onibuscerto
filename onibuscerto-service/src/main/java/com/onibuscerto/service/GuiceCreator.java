@@ -4,6 +4,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.sitebricks.SitebricksModule;
+import com.onibuscerto.service.apps.RouteApp;
 
 public class GuiceCreator extends GuiceServletContextListener {
 
@@ -12,7 +13,7 @@ public class GuiceCreator extends GuiceServletContextListener {
         return Guice.createInjector(new SitebricksModule() {
            @Override
            protected void configureSitebricks() {
-               //scan(Foobar.class.getPackage());
+               scan(RouteApp.class.getPackage());
            }
         });
     }

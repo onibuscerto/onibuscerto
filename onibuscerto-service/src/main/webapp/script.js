@@ -38,13 +38,20 @@ function setupAutoComplete() {
 
 function setupCallbacks() {
     $("#route").click(function() {
-        // TODO: obter o caminho do service e mostrar no mapa
-        /*$.get("route", function(data) {
-            new google.maps.Marker({
-                position: new google.maps.LatLng(data.latitude, data.longitude),
-                map: map, 
-                title: "Hello World!"
-            });   
-        }, "json");*/
+        $.get("route/"+$("input#start").val()+"/"+$("input#end").val(), function(data) {
+            var path = [];
+
+            for (var i = 0; i < data.length; i++) {
+                var pos = data[i];
+                path.push(new google.maps.LatLng(pos.latitude, pos.longitude));
+            }
+
+            new google.maps.Polyline({
+                path: path,
+                strokeColor: "#0000CC",
+                opacity: 0.4,
+                map: map
+            });
+        }, "json");
     });
 }
