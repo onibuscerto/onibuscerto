@@ -33,7 +33,7 @@ class TripFactoryImpl implements TripFactory {
         if (rel == null) {
             tripFactoryNode = graphDb.createNode();
             graphDb.getReferenceNode().createRelationshipTo(
-                    tripFactoryNode, Relationships.STOPS);
+                    tripFactoryNode, Relationships.TRIPS);
         } else {
             tripFactoryNode = rel.getEndNode();
         }
