@@ -22,6 +22,12 @@ public interface StopTime {
 
     public void setSequence(int sequence);
 
+    public double getShapeDistTraveled();
+
+    public void setShapeDistTraveled(double shapeDistTraveled);
+    
+    public boolean hasShapeDistTraveled();
+
     public StopTime getNext();
 
     public void setNext(StopTime stopTime);

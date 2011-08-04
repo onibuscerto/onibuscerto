@@ -13,6 +13,7 @@ public class StopTimeImpl implements StopTime {
     private static final String KEY_ARRIVAL_TIME = "stop_time_arrival_time";
     private static final String KEY_DEPARTURE_TIME = "stop_time_departure_time";
     private static final String KEY_SEQUENCE = "stop_time_sequence";
+    private static final String KEY_SHAPE_DIST_TRAVELED = "stop_time_shape_dist_traveled";
 
     public StopTimeImpl(Node underlyingNode) {
         this.underlyingNode = underlyingNode;
@@ -102,6 +103,21 @@ public class StopTimeImpl implements StopTime {
     @Override
     public void setSequence(int sequence) {
         underlyingNode.setProperty(KEY_SEQUENCE, sequence);
+    }
+
+    @Override
+    public double getShapeDistTraveled() {
+        return (Double) underlyingNode.getProperty(KEY_SHAPE_DIST_TRAVELED);
+    }
+
+    @Override
+    public void setShapeDistTraveled(double shapeDistTraveled) {
+        underlyingNode.setProperty(KEY_SHAPE_DIST_TRAVELED, shapeDistTraveled);
+    }
+
+    @Override
+    public boolean hasShapeDistTraveled() {
+        return underlyingNode.getProperty(KEY_SHAPE_DIST_TRAVELED) != null;
     }
 
     @Override
