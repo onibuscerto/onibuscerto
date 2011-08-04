@@ -38,6 +38,14 @@ public class RouteApp {
         // Encontra o caminho e converte pra uma Collection de GlobalPositions
         Collection<Stop> path = databaseController.getShortestPath(srcNode, tgtNode, departureTime);
         Collection<GlobalPosition> ret = new LinkedList<GlobalPosition>();
+
+        if (path == null) {
+            // WTF, não tem caminho!
+            databaseController.endTransaction(false);
+            databaseController.close();
+            return null;
+        }
+
         for (Stop stop : path) {
             ret.add(new GlobalPosition(stop.getLatitude(), stop.getLongitude()));
         }
