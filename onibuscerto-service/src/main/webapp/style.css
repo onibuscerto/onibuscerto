@@ -1,0 +1,53 @@
+body {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
+}
+
+#header {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    height: 64px;
+    padding: 8px;
+    background-color: #eeeeee;
+    border-bottom: 2px solid #aca793;
+}
+
+#wrapper {
+    position: absolute;
+    top: 82px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+}
+
+#left {
+    position: absolute;
+    top:0px;
+    bottom:0px;
+    left:0px;
+    width: 326px;
+    padding: 5px;
+    overflow-y:auto;
+    background-color: #ffffff;
+    border-right: 2px solid #aca793;
+}
+
+#right {
+    position: absolute;
+    top:0px;
+    bottom:0px;
+    left: 338px;
+    right:0px;
+    overflow: auto;
+}
+
+label {
+    float: left;
+    width: 80px;
+    font-weight: bold;
+}
