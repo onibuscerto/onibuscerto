@@ -140,8 +140,11 @@ public class GTFSImporter {
                     hashMap.get("stop_id")));
             stopTime.setSequence(Integer.parseInt(hashMap.get("stop_sequence")));
             if (hashMap.containsKey("shape_dist_traveled")) {
-                stopTime.setShapeDistTraveled(Double.parseDouble(hashMap.get(
-                        "shape_dist_traveled")));
+                try {
+                    double dist = Double.parseDouble(hashMap.get("shape_dist_traveled"));
+                    stopTime.setShapeDistTraveled(dist);
+                } catch (NumberFormatException nfe) {
+                }
             }
 
             Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
