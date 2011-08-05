@@ -5,6 +5,7 @@ import com.onibuscerto.api.entities.Stop;
 import com.onibuscerto.api.entities.TransportConnection;
 import com.onibuscerto.api.factories.ConnectionFactory;
 import com.onibuscerto.api.factories.RouteFactory;
+import com.onibuscerto.api.factories.ShapePointFactory;
 import com.onibuscerto.api.factories.StopFactory;
 import com.onibuscerto.api.factories.StopTimeFactory;
 import com.onibuscerto.api.factories.TripFactory;
@@ -25,6 +26,7 @@ public final class DatabaseController {
     protected final TripFactory tripFactory;
     protected final StopTimeFactory stopTimeFactory;
     protected final ConnectionFactory connectionFactory;
+    protected final ShapePointFactory shapePointFactory;
     protected Transaction currentTransaction;
 
     public DatabaseController(GraphDatabaseService graphDb) {
@@ -36,6 +38,7 @@ public final class DatabaseController {
         tripFactory = new TripFactoryImpl(this);
         stopTimeFactory = new StopTimeFactoryImpl(this);
         connectionFactory = new ConnectionFactoryImpl(this);
+        shapePointFactory = new ShapePointFactoryImpl(this);
         endTransaction(true);
     }
 
@@ -149,5 +152,9 @@ public final class DatabaseController {
 
     public ConnectionFactory getConnectionFactory() {
         return connectionFactory;
+    }
+
+    public ShapePointFactory getShapePointFactory() {
+        return shapePointFactory;
     }
 }

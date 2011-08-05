@@ -1,7 +1,9 @@
 package com.onibuscerto.api;
 
 import com.onibuscerto.api.entities.ShapePoint;
+import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 
 public class ShapePointImpl implements ShapePoint {
 
@@ -16,13 +18,17 @@ public class ShapePointImpl implements ShapePoint {
         this.underlyingNode = underlyingNode;
     }
 
-    @Override
-    public int getShapeId() {
-        return (Integer) underlyingNode.getProperty(KEY_SHAPE_ID);
+    public Node getUnderlyingNode() {
+        return underlyingNode;
     }
 
     @Override
-    public void setShapeId(int shapeId) {
+    public String getShapeId() {
+        return (String) underlyingNode.getProperty(KEY_SHAPE_ID);
+    }
+
+    @Override
+    public void setShapeId(String shapeId) {
         underlyingNode.setProperty(KEY_SHAPE_ID, shapeId);
     }
 
@@ -64,5 +70,68 @@ public class ShapePointImpl implements ShapePoint {
     @Override
     public void setShapeDistTraveled(double shapeDistTraveled) {
         underlyingNode.setProperty(KEY_SHAPE_DIST_TRAVELED, shapeDistTraveled);
+    }
+
+    @Override
+    public ShapePoint getNext() {
+        if (hasNext()) {
+            Relationship rel = underlyingNode.getSingleRelationship(
+                    Relationships.NEXT_SHAPE_POINT, Direction.OUTGOING);
+            return new ShapePointImpl(rel.getEndNode());
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void setNext(ShapePoint shapePoint) {
+        Relationship rel = underlyingNode.getSingleRelationship(
+                Relationships.NEXT_SHAPE_POINT, Direction.OUTGOING);
+
+        if (rel != null) {
+            rel.delete();
+        }
+        if (shapePoint != null) {
+            underlyingNode.createRelationshipTo(
+                    ((ShapePointImpl) shapePoint).getUnderlyingNode(),
+                    Relationships.NEXT_SHAPE_POINT);
+        }
+    }
+
+    @Override
+    public boolean hasNext() {
+        Relationship rel = underlyingNode.getSingleRelationship(
+                Relationships.NEXT_SHAPE_POINT, Direction.OUTGOING);
+        if (rel != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isFirst() {
+        Relationship rel = underlyingNode.getSingleRelationship(
+                Relationships.NEXT_SHAPE_POINT, Direction.INCOMING);
+        if (rel == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof ShapePointImpl) {
+            return getUnderlyingNode().equals(
+                    ((ShapePointImpl) object).getUnderlyingNode());
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return getUnderlyingNode().hashCode();
     }
 }

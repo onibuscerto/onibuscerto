@@ -10,13 +10,13 @@ public interface ShapePoint {
      * Retorna o id da polilinha da qual o ponto faz parte.
      * @return id da polilinha
      */
-    public int getShapeId();
+    public String getShapeId();
 
     /**
      * Atribui o id da polilinha da qual o ponto faz parte.
      * @param shapeId id da polilinha
      */
-    public void setShapeId(int shapeId);
+    public void setShapeId(String shapeId);
 
     /**
      * Retorna a latitude do ponto.
@@ -67,4 +67,28 @@ public interface ShapePoint {
      * @param shapeDistTraveled distância percorrida
      */
     public void setShapeDistTraveled(double shapeDistTraveled);
+
+    /**
+     * Retorna o próximo ponto da polilinha.
+     * @return próximo ponto da polilinha
+     */
+    public ShapePoint getNext();
+
+    /**
+     * Atribui o próximo ponto da polilinha.
+     * @param stopTime próximo ponto da polilinha
+     */
+    public void setNext(ShapePoint stopTime);
+
+    /**
+     * Verifica se existem mais pontos na polilinha depois deste.
+     * @return true se este não for o último ponto da polilinha
+     */
+    public boolean hasNext();
+
+    /**
+     * Verifica se este é o primeiro ponto da polilinha.
+     * @return true se este for o primeiro ponto da polilinha
+     */
+    public boolean isFirst();
 }

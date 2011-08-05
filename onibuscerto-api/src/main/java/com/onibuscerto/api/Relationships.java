@@ -20,5 +20,7 @@ enum Relationships implements RelationshipType {
     WALKING_CONNECTION,
     SHAPE_POINTS,
     SHAPE_POINT,
-    NEXT_SHAPE_POINT
+    NEXT_SHAPE_POINT,
+    SHAPES,
+    SHAPE_FIRST_POINT
 }

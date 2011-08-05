@@ -5,4 +5,6 @@ import com.onibuscerto.api.entities.ShapePoint;
 public interface ShapePointFactory {
 
     public ShapePoint createShapePoint();
+    
+    public void setShapeFirstPoint(ShapePoint shapePoint);
 }

@@ -13,6 +13,7 @@ public class ShapePointFactoryImpl implements ShapePointFactory {
     private final DatabaseController databaseController;
     private final GraphDatabaseService graphDb;
     private final Node shapePointFactoryNode;
+    private final Node shapeStartNode;
 
     ShapePointFactoryImpl(DatabaseController databaseController) {
         this.databaseController = databaseController;
@@ -28,6 +29,18 @@ public class ShapePointFactoryImpl implements ShapePointFactory {
         } else {
             shapePointFactoryNode = rel.getEndNode();
         }
+        
+        rel = graphDb.getReferenceNode().getSingleRelationship(
+                Relationships.SHAPES, Direction.OUTGOING);
+        
+        if(rel == null) {
+            shapeStartNode = graphDb.createNode();
+            graphDb.getReferenceNode().createRelationshipTo(
+                    shapeStartNode, Relationships.SHAPES);
+        } else {
+            shapeStartNode = rel.getEndNode();
+        }
+        
     }
 
     @Override
@@ -42,6 +55,21 @@ public class ShapePointFactoryImpl implements ShapePointFactory {
             return shapePoint;
         } finally {
             tx.finish();
+        }
+    }
+    
+    public void setShapeFirstPoint(ShapePoint shapePoint) {
+        Relationship rel = ((ShapePointImpl) shapePoint).getUnderlyingNode().getSingleRelationship(
+                Relationships.SHAPE_FIRST_POINT, Direction.INCOMING);
+
+        if (rel != null) {
+            rel.delete();
+        }
+
+        if (shapePoint != null) {
+            shapeStartNode.createRelationshipTo(
+                    ((ShapePointImpl) shapePoint).getUnderlyingNode(),
+                    Relationships.SHAPE_FIRST_POINT);
         }
     }
 }
