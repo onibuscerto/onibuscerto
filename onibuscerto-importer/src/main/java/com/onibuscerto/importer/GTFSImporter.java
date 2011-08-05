@@ -144,12 +144,10 @@ public class GTFSImporter {
             stopTime.setStop(databaseController.getStopFactory().getStopById(
                     hashMap.get("stop_id")));
             stopTime.setSequence(Integer.parseInt(hashMap.get("stop_sequence")));
-            if (hashMap.containsKey("shape_dist_traveled")) {
-                try {
-                    double dist = Double.parseDouble(hashMap.get("shape_dist_traveled"));
-                    stopTime.setShapeDistTraveled(dist);
-                } catch (NumberFormatException nfe) {
-                }
+            if (hashMap.containsKey("shape_dist_traveled")
+                    && !hashMap.get("shape_dist_traveled").isEmpty()) {
+                double dist = Double.parseDouble(hashMap.get("shape_dist_traveled"));
+                stopTime.setShapeDistTraveled(dist);
             }
 
             Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
