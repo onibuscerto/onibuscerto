@@ -3,22 +3,26 @@ package com.onibuscerto.importer;
 import au.com.bytecode.opencsv.CSVReader;
 import com.onibuscerto.api.DatabaseController;
 import com.onibuscerto.api.entities.Route;
+import com.onibuscerto.api.entities.ShapePoint;
 import com.onibuscerto.api.entities.Stop;
 import com.onibuscerto.api.entities.StopTime;
 import com.onibuscerto.api.entities.TransportConnection;
 import com.onibuscerto.api.entities.Trip;
 import com.onibuscerto.api.factories.ConnectionFactory;
 import com.onibuscerto.api.factories.RouteFactory;
+import com.onibuscerto.api.factories.ShapePointFactory;
 import com.onibuscerto.api.factories.StopFactory;
 import com.onibuscerto.api.factories.StopTimeFactory;
 import com.onibuscerto.api.factories.TripFactory;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,6 +37,7 @@ public class GTFSImporter {
     public void importData(String transitFeedPath) {
         databaseController.beginTransaction();
         try {
+            importShapes(transitFeedPath + "/shapes.txt");
             importStops(transitFeedPath + "/stops.txt");
             importRoutes(transitFeedPath + "/routes.txt");
             importTrips(transitFeedPath + "/trips.txt");
@@ -155,6 +160,53 @@ public class GTFSImporter {
         }
     }
 
+    private void importShapes(String shapesFile) throws IOException {
+        ShapePointFactory shapePointFactory = databaseController.getShapePointFactory();
+        CSVReader reader = new CSVReader(new FileReader(shapesFile));
+        String columnNames[] = reader.readNext();
+        String lineValues[];
+        HashMap<String, String> hashMap = new HashMap<String, String>();
+        HashMap<String, ArrayList<ShapePoint>> shapes = new HashMap<String, ArrayList<ShapePoint>>();
+
+        while ((lineValues = reader.readNext()) != null) {
+            for (int i = 0; i < lineValues.length; i++) {
+                hashMap.put(columnNames[i], lineValues[i]);
+            }
+
+            ShapePoint shapePoint = shapePointFactory.createShapePoint();
+            shapePoint.setShapeId(hashMap.get("shape_id"));
+            shapePoint.setLatitude(Double.parseDouble(hashMap.get("shape_pt_lat")));
+            shapePoint.setLongitude(Double.parseDouble(hashMap.get("shape_pt_lon")));
+            shapePoint.setSequence(Integer.parseInt(hashMap.get("shape_pt_sequence")));
+            if (hashMap.containsKey("shape_dist_traveled")) {
+                shapePoint.setShapeDistTraveled(Double.parseDouble(hashMap.get(
+                        "shape_dist_traveled")));
+            }
+
+            if (shapes.containsKey(shapePoint.getShapeId()) == false) {
+                ArrayList<ShapePoint> shapePoints = new ArrayList<ShapePoint>();
+                shapePoints.add(shapePoint);
+                shapes.put(shapePoint.getShapeId(), shapePoints);
+            } else {
+                shapes.get((String) shapePoint.getShapeId()).add(shapePoint);
+            }
+
+            for (Entry<String, ArrayList<ShapePoint>> entry : shapes.entrySet()) {
+                linkShapePoints(entry.getValue());
+                shapePointFactory.setShapeFirstPoint(entry.getValue().get(0));
+            }
+
+            Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
+                    "Inseri ShapePoint da shape " + shapePoint.getShapeId()
+                    + " numero de sequencia " + shapePoint.getSequence());
+
+            hashMap.clear();
+
+        }
+
+
+    }
+
     private void linkStopTimes() {
         Collection<Trip> allTrips = databaseController.getTripFactory().getAllTrips();
         LinkedList<StopTime> stopTimes;
@@ -175,6 +227,22 @@ public class GTFSImporter {
                 stopTime.setNext(stopTimes.peekFirst());
             }
         }
+    }
+
+    private void linkShapePoints(ArrayList<ShapePoint> shape) {
+        Collections.sort(shape, new Comparator() {
+
+            @Override
+            public int compare(Object o1, Object o2) {
+                ShapePoint sp1 = (ShapePoint) o1;
+                ShapePoint sp2 = (ShapePoint) o2;
+                return ((Integer) sp1.getSequence()).compareTo(sp2.getSequence());
+            }
+        });
+        for (int i = 0; i < shape.size() - 1; i++) {
+            shape.get(i).setNext(shape.get(i + 1));
+        }
+
     }
 
     private void createConnections() {
