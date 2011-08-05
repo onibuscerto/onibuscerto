@@ -18,4 +18,7 @@ enum Relationships implements RelationshipType {
     NEXT_STOPTIME,
     TRANSPORT_CONNECTION,
     WALKING_CONNECTION,
+    SHAPE_POINTS,
+    SHAPE_POINT,
+    NEXT_SHAPE_POINT
 }
