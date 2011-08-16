@@ -1,6 +1,6 @@
 package com.onibuscerto.api;
 
-import com.onibuscerto.api.entities.Stop;
+import com.onibuscerto.api.entities.Location;
 import com.onibuscerto.api.entities.WalkingConnection;
 import org.neo4j.graphdb.Relationship;
 
@@ -29,12 +29,12 @@ class WalkingConnectionImpl implements WalkingConnection {
     }
 
     @Override
-    public Stop getSource() {
+    public Location getSource() {
         return new StopImpl(this.underlyingRelationship.getStartNode());
     }
 
     @Override
-    public Stop getTarget() {
+    public Location getTarget() {
         return new StopImpl(this.underlyingRelationship.getEndNode());
     }
 

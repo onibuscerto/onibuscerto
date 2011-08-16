@@ -118,14 +118,14 @@ public final class DatabaseController {
                     }
                 }
 
-                if (!in.contains(c.getTarget()) && d.get(c.getTarget()) > time + c.getTimeCost()) {
-                    d.put(c.getTarget(), time + c.getTimeCost());
-                    p.put(c.getTarget(), c);
+                if (!in.contains((Stop) c.getTarget()) && d.get((Stop) c.getTarget()) > time + c.getTimeCost()) {
+                    d.put((Stop) c.getTarget(), time + c.getTimeCost());
+                    p.put((Stop) c.getTarget(), c);
                 }
             }
         }
 
-        for (Stop stop = target;; stop = p.get(stop).getSource()) {
+        for (Stop stop = target;; stop = (Stop) p.get(stop).getSource()) {
             if (!p.containsKey(stop)) {
                 break;
             }

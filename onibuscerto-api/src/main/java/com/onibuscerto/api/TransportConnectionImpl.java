@@ -1,5 +1,6 @@
 package com.onibuscerto.api;
 
+import com.onibuscerto.api.entities.Location;
 import com.onibuscerto.api.entities.Stop;
 import com.onibuscerto.api.entities.TransportConnection;
 import com.onibuscerto.api.entities.Trip;

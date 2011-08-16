@@ -8,6 +8,7 @@ import com.google.sitebricks.headless.Service;
 import com.google.sitebricks.http.Get;
 import com.onibuscerto.api.DatabaseController;
 import com.onibuscerto.api.entities.Connection;
+import com.onibuscerto.api.entities.Location;
 import com.onibuscerto.api.entities.Stop;
 import com.onibuscerto.service.utils.GlobalPosition;
 import java.util.Collection;
@@ -50,8 +51,8 @@ public class RouteApp {
         }
 
         for (Connection connection : path) {
-            Stop stop = connection.getSource();
-            ret.add(new GlobalPosition(stop.getLatitude(), stop.getLongitude()));
+            Location location = connection.getSource();
+            ret.add(new GlobalPosition(location.getLatitude(), location.getLongitude()));
         }
         ret.add(new GlobalPosition(tgtNode.getLatitude(), tgtNode.getLongitude()));
 
