@@ -28,12 +28,12 @@ class LocationFactoryImpl implements LocationFactory {
         this.graphDb = this.databaseController.getGraphDatabaseService();
 
         Relationship rel = graphDb.getReferenceNode().getSingleRelationship(
-                Relationships.STOPS, Direction.OUTGOING);
+                Relationships.LOCATIONS, Direction.OUTGOING);
 
         if (rel == null) {
             locationFactoryNode = graphDb.createNode();
             graphDb.getReferenceNode().createRelationshipTo(
-                    locationFactoryNode, Relationships.STOPS);
+                    locationFactoryNode, Relationships.LOCATIONS);
         } else {
             locationFactoryNode = rel.getEndNode();
         }
