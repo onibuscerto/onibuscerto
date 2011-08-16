@@ -46,8 +46,8 @@ public class ConnectionTest {
 
     @Test
     public void testCreateTransportConnection() {
-        Stop s1 = databaseController.getStopFactory().createStop("stop1");
-        Stop s2 = databaseController.getStopFactory().createStop("stop2");
+        Stop s1 = databaseController.getLocationFactory().createStop("stop1");
+        Stop s2 = databaseController.getLocationFactory().createStop("stop2");
         Trip t = databaseController.getTripFactory().createTrip("trip1");
         Connection c = databaseController.getConnectionFactory().createTransportConnection(t, s1, s2);
 
@@ -64,8 +64,8 @@ public class ConnectionTest {
 
     @Test
     public void testCreateWalkingConnection() {
-        Stop s1 = databaseController.getStopFactory().createStop("stop1");
-        Stop s2 = databaseController.getStopFactory().createStop("stop2");
+        Stop s1 = databaseController.getLocationFactory().createStop("stop1");
+        Stop s2 = databaseController.getLocationFactory().createStop("stop2");
         Connection c = databaseController.getConnectionFactory().createWalkingConnection(s1, s2);
 
         // Testa getIncomingConnections

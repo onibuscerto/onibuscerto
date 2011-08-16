@@ -43,7 +43,7 @@ public class GTFSImporterTest {
 
     @Test
     public void testImportedStops() {
-        Collection<Stop> allStops = databaseController.getStopFactory().getAllStops();
+        Collection<Stop> allStops = databaseController.getLocationFactory().getAllStops();
         assertEquals(allStops.size(), 9);
     }
 }

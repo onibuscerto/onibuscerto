@@ -61,7 +61,7 @@ public class StopTimeTest {
     @Test
     public void testSetGetStop() {
         StopTime st = databaseController.getStopTimeFactory().createStopTime();
-        Stop stop = databaseController.getStopFactory().createStop("stop42");
+        Stop stop = databaseController.getLocationFactory().createStop("stop42");
         st.setStop(stop);
         assertEquals(stop, st.getStop());
     }

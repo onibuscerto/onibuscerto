@@ -6,7 +6,7 @@ import com.onibuscerto.api.entities.TransportConnection;
 import com.onibuscerto.api.factories.ConnectionFactory;
 import com.onibuscerto.api.factories.RouteFactory;
 import com.onibuscerto.api.factories.ShapePointFactory;
-import com.onibuscerto.api.factories.StopFactory;
+import com.onibuscerto.api.factories.LocationFactory;
 import com.onibuscerto.api.factories.StopTimeFactory;
 import com.onibuscerto.api.factories.TripFactory;
 import java.util.Collection;
@@ -22,7 +22,7 @@ public final class DatabaseController {
 
     private static final String DEFAULT_DATABASE_PATH = "target/db";
     protected final GraphDatabaseService graphDb;
-    protected final StopFactory stopFactory;
+    protected final LocationFactory locationFactory;
     protected final RouteFactory routeFactory;
     protected final TripFactory tripFactory;
     protected final StopTimeFactory stopTimeFactory;
@@ -34,7 +34,7 @@ public final class DatabaseController {
         this.graphDb = graphDb;
 
         beginTransaction();
-        stopFactory = new StopFactoryImpl(this);
+        locationFactory = new LocationFactoryImpl(this);
         routeFactory = new RouteFactoryImpl(this);
         tripFactory = new TripFactoryImpl(this);
         stopTimeFactory = new StopTimeFactoryImpl(this);
@@ -85,7 +85,7 @@ public final class DatabaseController {
         HashMap<Stop, Connection> p = new HashMap<Stop, Connection>();
         HashSet<Stop> in = new HashSet<Stop>();
         Collection<Connection> path = new LinkedList<Connection>();
-        Collection<Stop> allStops = getStopFactory().getAllStops();
+        Collection<Stop> allStops = getLocationFactory().getAllStops();
 
         for (Stop stop : allStops) {
             d.put(stop, 0x3f3f3f3f);
@@ -136,8 +136,8 @@ public final class DatabaseController {
         return path;
     }
 
-    public StopFactory getStopFactory() {
-        return stopFactory;
+    public LocationFactory getLocationFactory() {
+        return locationFactory;
     }
 
     public RouteFactory getRouteFactory() {

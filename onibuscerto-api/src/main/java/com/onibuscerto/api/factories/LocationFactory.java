@@ -3,7 +3,7 @@ package com.onibuscerto.api.factories;
 import com.onibuscerto.api.entities.Stop;
 import java.util.Collection;
 
-public interface StopFactory {
+public interface LocationFactory {
 
     public Stop createStop(String id);
 

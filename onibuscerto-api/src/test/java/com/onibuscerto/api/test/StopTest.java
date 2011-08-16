@@ -46,23 +46,23 @@ public class StopTest {
     @Test
     public void testCreateStop() {
         String stopId = "stop42";
-        Stop stop = databaseController.getStopFactory().createStop(stopId);
+        Stop stop = databaseController.getLocationFactory().createStop(stopId);
         assertEquals(stop.getId(), stopId);
     }
 
     @Test
     public void testCreateStopDuplicate() {
         String stopId = "stop42";
-        Stop stop1 = databaseController.getStopFactory().createStop(stopId);
+        Stop stop1 = databaseController.getLocationFactory().createStop(stopId);
         exception.expect(DuplicateEntityException.class);
-        Stop stop2 = databaseController.getStopFactory().createStop(stopId);
+        Stop stop2 = databaseController.getLocationFactory().createStop(stopId);
     }
 
     @Test
     public void testGetById() {
         String stopId = "stop42";
-        Stop stop = databaseController.getStopFactory().createStop(stopId);
-        Stop stopById = databaseController.getStopFactory().getStopById(stopId);
+        Stop stop = databaseController.getLocationFactory().createStop(stopId);
+        Stop stopById = databaseController.getLocationFactory().getStopById(stopId);
         assertEquals(stopById, stop);
     }
 
@@ -72,23 +72,23 @@ public class StopTest {
         int numStops = 15;
 
         for (int i = 1; i <= numStops; i++) {
-            databaseController.getStopFactory().createStop(stopId + i);
+            databaseController.getLocationFactory().createStop(stopId + i);
         }
 
-        Collection<Stop> allStops = databaseController.getStopFactory().getAllStops();
+        Collection<Stop> allStops = databaseController.getLocationFactory().getAllStops();
         assertEquals(allStops.size(), numStops);
     }
 
     @Test
     public void testGetByIdNotFound() {
         String stopId = "stop42";
-        Stop stopById = databaseController.getStopFactory().getStopById(stopId);
+        Stop stopById = databaseController.getLocationFactory().getStopById(stopId);
         assertEquals(stopById, null);
     }
 
     @Test
     public void testSetGetName() {
-        Stop stop = databaseController.getStopFactory().createStop("stop42");
+        Stop stop = databaseController.getLocationFactory().createStop("stop42");
         String expResult = "alsgj42n";
         stop.setName(expResult);
         assertEquals(stop.getName(), expResult);
@@ -96,7 +96,7 @@ public class StopTest {
 
     @Test
     public void testSetGetLatitude() {
-        Stop stop = databaseController.getStopFactory().createStop("stop42");
+        Stop stop = databaseController.getLocationFactory().createStop("stop42");
         double expResult = 3.1415;
         stop.setLatitude(expResult);
         assertEquals(stop.getLatitude(), expResult, 1E-9);
@@ -104,7 +104,7 @@ public class StopTest {
 
     @Test
     public void testSetGetLongitude() {
-        Stop stop = databaseController.getStopFactory().createStop("stop42");
+        Stop stop = databaseController.getLocationFactory().createStop("stop42");
         double expResult = 3.1415;
         stop.setLongitude(expResult);
         assertEquals(stop.getLongitude(), expResult, 1E-9);

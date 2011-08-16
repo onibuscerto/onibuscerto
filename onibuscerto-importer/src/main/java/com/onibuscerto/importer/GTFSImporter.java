@@ -11,7 +11,7 @@ import com.onibuscerto.api.entities.Trip;
 import com.onibuscerto.api.factories.ConnectionFactory;
 import com.onibuscerto.api.factories.RouteFactory;
 import com.onibuscerto.api.factories.ShapePointFactory;
-import com.onibuscerto.api.factories.StopFactory;
+import com.onibuscerto.api.factories.LocationFactory;
 import com.onibuscerto.api.factories.StopTimeFactory;
 import com.onibuscerto.api.factories.TripFactory;
 import java.io.FileReader;
@@ -53,7 +53,7 @@ public class GTFSImporter {
 
     private void importStops(String stopsFile)
             throws IOException {
-        StopFactory stopFactory = databaseController.getStopFactory();
+        LocationFactory locationFactory = databaseController.getLocationFactory();
         CSVReader reader = new CSVReader(new FileReader(stopsFile));
         String columnNames[] = reader.readNext();
         String lineValues[];
@@ -64,7 +64,7 @@ public class GTFSImporter {
                 hashMap.put(columnNames[i], lineValues[i]);
             }
 
-            Stop stop = stopFactory.createStop(hashMap.get("stop_id"));
+            Stop stop = locationFactory.createStop(hashMap.get("stop_id"));
             stop.setName(hashMap.get("stop_name"));
             stop.setLatitude(Double.parseDouble(hashMap.get("stop_lat")));
             stop.setLongitude(Double.parseDouble(hashMap.get("stop_lon")));
@@ -141,7 +141,7 @@ public class GTFSImporter {
                     hashMap.get("trip_id")));
             stopTime.setArrivalTime(getSecondsFromTime(hashMap.get("arrival_time")));
             stopTime.setDepartureTime(getSecondsFromTime(hashMap.get("departure_time")));
-            stopTime.setStop(databaseController.getStopFactory().getStopById(
+            stopTime.setStop(databaseController.getLocationFactory().getStopById(
                     hashMap.get("stop_id")));
             stopTime.setSequence(Integer.parseInt(hashMap.get("stop_sequence")));
             if (hashMap.containsKey("shape_dist_traveled")

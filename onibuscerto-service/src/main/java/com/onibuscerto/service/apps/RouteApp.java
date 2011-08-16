@@ -25,8 +25,8 @@ public class RouteApp {
         databaseController.beginTransaction();
 
         // Encontra a Stop de origem e a de destino
-        Stop srcNode = databaseController.getStopFactory().getStopById(source);
-        Stop tgtNode = databaseController.getStopFactory().getStopById(target);
+        Stop srcNode = databaseController.getLocationFactory().getStopById(source);
+        Stop tgtNode = databaseController.getLocationFactory().getStopById(target);
         int departureTime = 0;
 
         if (srcNode == null || tgtNode == null) {

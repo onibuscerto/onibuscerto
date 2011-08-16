@@ -1,6 +1,6 @@
 package com.onibuscerto.api;
 
-import com.onibuscerto.api.factories.StopFactory;
+import com.onibuscerto.api.factories.LocationFactory;
 import com.onibuscerto.api.entities.Stop;
 import com.onibuscerto.api.exceptions.DuplicateEntityException;
 import java.util.Collection;
@@ -15,15 +15,15 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.Traverser;
 import org.neo4j.graphdb.index.Index;
 
-class StopFactoryImpl implements StopFactory {
+class LocationFactoryImpl implements LocationFactory {
 
     private final DatabaseController databaseController;
     private final GraphDatabaseService graphDb;
-    private final Node stopFactoryNode;
+    private final Node locationFactoryNode;
     private final Index<Node> stopIndex;
     private static final String STOP_INDEX = "stop_index";
 
-    StopFactoryImpl(DatabaseController databaseController) {
+    LocationFactoryImpl(DatabaseController databaseController) {
         this.databaseController = databaseController;
         this.graphDb = this.databaseController.getGraphDatabaseService();
 
@@ -31,11 +31,11 @@ class StopFactoryImpl implements StopFactory {
                 Relationships.STOPS, Direction.OUTGOING);
 
         if (rel == null) {
-            stopFactoryNode = graphDb.createNode();
+            locationFactoryNode = graphDb.createNode();
             graphDb.getReferenceNode().createRelationshipTo(
-                    stopFactoryNode, Relationships.STOPS);
+                    locationFactoryNode, Relationships.STOPS);
         } else {
-            stopFactoryNode = rel.getEndNode();
+            locationFactoryNode = rel.getEndNode();
         }
 
         stopIndex = graphDb.index().forNodes(STOP_INDEX);
@@ -52,7 +52,7 @@ class StopFactoryImpl implements StopFactory {
             Node node = graphDb.createNode();
             Stop stop = new StopImpl(node, id);
             stopIndex.add(node, StopImpl.KEY_ID, id);
-            stopFactoryNode.createRelationshipTo(node, Relationships.STOP);
+            locationFactoryNode.createRelationshipTo(node, Relationships.STOP);
             tx.success();
             return stop;
         } finally {
@@ -61,7 +61,7 @@ class StopFactoryImpl implements StopFactory {
     }
 
     private Collection<Node> getAllStopNodes() {
-        Traverser traverser = stopFactoryNode.traverse(
+        Traverser traverser = locationFactoryNode.traverse(
                 Traverser.Order.BREADTH_FIRST, StopEvaluator.DEPTH_ONE,
                 ReturnableEvaluator.ALL_BUT_START_NODE,
                 Relationships.STOP, Direction.OUTGOING);
