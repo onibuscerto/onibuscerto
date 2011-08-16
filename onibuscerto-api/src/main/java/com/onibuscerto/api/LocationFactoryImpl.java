@@ -1,5 +1,6 @@
 package com.onibuscerto.api;
 
+import com.onibuscerto.api.entities.Location;
 import com.onibuscerto.api.factories.LocationFactory;
 import com.onibuscerto.api.entities.Stop;
 import com.onibuscerto.api.exceptions.DuplicateEntityException;
@@ -55,6 +56,19 @@ class LocationFactoryImpl implements LocationFactory {
             locationFactoryNode.createRelationshipTo(node, Relationships.STOP);
             tx.success();
             return stop;
+        } finally {
+            tx.finish();
+        }
+    }
+
+    @Override
+    public Location createLocation() {
+        Transaction tx = graphDb.beginTx();
+        try {
+            Node node = graphDb.createNode();
+            Location location = new LocationImpl(node);
+            tx.success();
+            return location;
         } finally {
             tx.finish();
         }
