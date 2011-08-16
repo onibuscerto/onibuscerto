@@ -7,6 +7,7 @@ import com.google.sitebricks.headless.Reply;
 import com.google.sitebricks.headless.Service;
 import com.google.sitebricks.http.Get;
 import com.onibuscerto.api.DatabaseController;
+import com.onibuscerto.api.entities.Connection;
 import com.onibuscerto.api.entities.Stop;
 import com.onibuscerto.service.utils.GlobalPosition;
 import java.util.Collection;
@@ -32,23 +33,27 @@ public class RouteApp {
             // WTF, o lugar não existe
             databaseController.endTransaction(false);
             databaseController.close();
-            return null;
+            throw new RuntimeException("Fudeu, o lugar não existe.");
+            //return null;
         }
 
         // Encontra o caminho e converte pra uma Collection de GlobalPositions
-        Collection<Stop> path = databaseController.getShortestPath(srcNode, tgtNode, departureTime);
+        Collection<Connection> path = databaseController.getShortestPath(srcNode, tgtNode, departureTime);
         Collection<GlobalPosition> ret = new LinkedList<GlobalPosition>();
 
         if (path == null) {
             // WTF, não tem caminho!
             databaseController.endTransaction(false);
             databaseController.close();
-            return null;
+            throw new RuntimeException("WTF não tem caminho!");
+            //return null;
         }
 
-        for (Stop stop : path) {
+        for (Connection connection : path) {
+            Stop stop = connection.getSource();
             ret.add(new GlobalPosition(stop.getLatitude(), stop.getLongitude()));
         }
+        ret.add(new GlobalPosition(tgtNode.getLatitude(), tgtNode.getLongitude()));
 
         // Faz um rollback da transação
         databaseController.endTransaction(false);

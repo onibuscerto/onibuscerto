@@ -10,6 +10,7 @@ import com.onibuscerto.api.factories.StopFactory;
 import com.onibuscerto.api.factories.StopTimeFactory;
 import com.onibuscerto.api.factories.TripFactory;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -79,11 +80,11 @@ public final class DatabaseController {
         currentTransaction = null;
     }
 
-    public Collection<Stop> getShortestPath(Stop source, Stop target, int time) {
+    public Collection<Connection> getShortestPath(Stop source, Stop target, int time) {
         HashMap<Stop, Integer> d = new HashMap<Stop, Integer>();
-        HashMap<Stop, Stop> p = new HashMap<Stop, Stop>();
+        HashMap<Stop, Connection> p = new HashMap<Stop, Connection>();
         HashSet<Stop> in = new HashSet<Stop>();
-        Collection<Stop> path = new LinkedList<Stop>();
+        Collection<Connection> path = new LinkedList<Connection>();
         Collection<Stop> allStops = getStopFactory().getAllStops();
 
         for (Stop stop : allStops) {
@@ -119,17 +120,18 @@ public final class DatabaseController {
 
                 if (!in.contains(c.getTarget()) && d.get(c.getTarget()) > time + c.getTimeCost()) {
                     d.put(c.getTarget(), time + c.getTimeCost());
-                    p.put(c.getTarget(), stop);
+                    p.put(c.getTarget(), c);
                 }
             }
         }
 
-        for (Stop stop = target;; stop = p.get(stop)) {
-            path.add(stop);
+        for (Stop stop = target;; stop = p.get(stop).getSource()) {
             if (!p.containsKey(stop)) {
                 break;
             }
+            path.add(p.get(stop));
         }
+        Collections.reverse((LinkedList) path);
 
         return path;
     }
