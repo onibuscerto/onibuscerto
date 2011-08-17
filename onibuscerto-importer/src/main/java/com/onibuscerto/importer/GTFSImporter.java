@@ -2,12 +2,14 @@ package com.onibuscerto.importer;
 
 import au.com.bytecode.opencsv.CSVReader;
 import com.onibuscerto.api.DatabaseController;
+import com.onibuscerto.api.entities.Calendar;
 import com.onibuscerto.api.entities.Route;
 import com.onibuscerto.api.entities.ShapePoint;
 import com.onibuscerto.api.entities.Stop;
 import com.onibuscerto.api.entities.StopTime;
 import com.onibuscerto.api.entities.TransportConnection;
 import com.onibuscerto.api.entities.Trip;
+import com.onibuscerto.api.factories.CalendarFactory;
 import com.onibuscerto.api.factories.ConnectionFactory;
 import com.onibuscerto.api.factories.RouteFactory;
 import com.onibuscerto.api.factories.ShapePointFactory;
@@ -42,6 +44,7 @@ public class GTFSImporter {
             importRoutes(transitFeedPath + "/routes.txt");
             importTrips(transitFeedPath + "/trips.txt");
             importStopTimes(transitFeedPath + "/stop_times.txt");
+            importCalendars(transitFeedPath + "/calendar.txt");
             linkStopTimes();
             createConnections();
             databaseController.endTransaction(true);
@@ -201,8 +204,37 @@ public class GTFSImporter {
             hashMap.clear();
 
         }
+    }
 
+    private void importCalendars(String calendarFile)
+            throws IOException {
+        CalendarFactory calendarFactory = databaseController.getCalendarFactory();
+        Collection<String> days = null;
+        CSVReader reader = new CSVReader(new FileReader(calendarFile));
+        String columnNames[] = reader.readNext();
+        String lineValues[];
+        String[] day = {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"};
+        HashMap<String, String> hashMap = new HashMap<String, String>();
 
+        while ((lineValues = reader.readNext()) != null) {
+            for (int i = 0; i < lineValues.length; i++) {
+                hashMap.put(columnNames[i], lineValues[i]);
+            }
+
+            Calendar calendar = calendarFactory.createCalendar(hashMap.get("service_id"));
+            for (int i = 0; i < day.length; i++) {
+                //days.add(hashMap.get(day[i]));
+                calendar.setDaysOfWork(day[i], hashMap.get(day[i]));
+            }
+            //calendar.setDaysOfWork(days);
+            calendar.setStartDate(hashMap.get("start_date"));
+            calendar.setEndDate(hashMap.get("end_date"));
+
+            Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
+                    "Inseri calendar " + calendar.getServiceId());
+
+            hashMap.clear();
+        }
     }
 
     private void linkStopTimes() {

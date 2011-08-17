@@ -3,6 +3,7 @@ package com.onibuscerto.api;
 import com.onibuscerto.api.entities.Connection;
 import com.onibuscerto.api.entities.Stop;
 import com.onibuscerto.api.entities.TransportConnection;
+import com.onibuscerto.api.factories.CalendarFactory;
 import com.onibuscerto.api.factories.ConnectionFactory;
 import com.onibuscerto.api.factories.RouteFactory;
 import com.onibuscerto.api.factories.ShapePointFactory;
@@ -28,6 +29,7 @@ public final class DatabaseController {
     protected final StopTimeFactory stopTimeFactory;
     protected final ConnectionFactory connectionFactory;
     protected final ShapePointFactory shapePointFactory;
+    protected final CalendarFactory calendarFactory;
     protected Transaction currentTransaction;
 
     public DatabaseController(GraphDatabaseService graphDb) {
@@ -40,6 +42,7 @@ public final class DatabaseController {
         stopTimeFactory = new StopTimeFactoryImpl(this);
         connectionFactory = new ConnectionFactoryImpl(this);
         shapePointFactory = new ShapePointFactoryImpl(this);
+        calendarFactory = new CalendarFactoryImpl(this);
         endTransaction(true);
     }
 
@@ -158,5 +161,9 @@ public final class DatabaseController {
 
     public ShapePointFactory getShapePointFactory() {
         return shapePointFactory;
+    }
+
+    public CalendarFactory getCalendarFactory() {
+        return calendarFactory;
     }
 }
