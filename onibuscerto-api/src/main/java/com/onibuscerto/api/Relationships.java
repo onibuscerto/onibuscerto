@@ -22,5 +22,7 @@ enum Relationships implements RelationshipType {
     SHAPE_POINT,
     NEXT_SHAPE_POINT,
     SHAPES,
-    SHAPE_FIRST_POINT
+    SHAPE_FIRST_POINT,
+    CALENDARS,
+    CALENDAR
 }

@@ -23,7 +23,7 @@ public interface Calendar {
      * 0: indisponível
      * 1: disponível
      */
-    public Collection<String> getDaysOfWeek();
+    public String getDaysOfWork(String day);
 
     /**
      * Atribui um vetor contendo a disponibilidade de serviço por dia da semana
@@ -31,7 +31,7 @@ public interface Calendar {
      * 0: indisponível
      * 1: disponível
      */
-    public void setDaysOfWeek(Collection<String> days);
+    public void setDaysOfWork(String day, String value);
 
     /**
      * Retorna a data de início do serviço.
