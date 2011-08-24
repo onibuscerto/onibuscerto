@@ -1,17 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.onibuscerto.api;
 
 import com.onibuscerto.api.entities.Calendar;
-import java.util.Collection;
 import org.neo4j.graphdb.Node;
 
-/**
- *
- * @author Bruno
- */
 public class CalendarImpl implements Calendar {
 
     private final Node underlyingNode;
@@ -49,7 +40,7 @@ public class CalendarImpl implements Calendar {
     }
 
     @Override
-    public void setDaysOfWork(String day, String value){
+    public void setDaysOfWork(String day, String value) {
         underlyingNode.setProperty(day, value);
     }
 

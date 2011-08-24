@@ -18,19 +18,17 @@ public interface Calendar {
     public void setServiceId(String serviceId);
 
     /**
-     * Retorna um vetor contendo a disponibilidade de serviço por dia da semana
-     * @return disponibilidade do serviço por dia da semana:
-     * 0: indisponível
-     * 1: disponível
+     * Retorna um valor binario contendo a disponibilidade de serviço por dia da semana
+     * @param day Dia da semana a ser consultado
+     * @return
      */
     public String getDaysOfWork(String day);
 
     /**
-     * Atribui um vetor contendo a disponibilidade de serviço por dia da semana
-     * @param days vetor com a disponibilidade do serviço por dia da semana:
-     * 0: indisponível
-     * 1: disponível
-     */
+    * Atribui um valor binario contendo a disponibilidade de serviço por dia da semana
+    * @param day Dia da semana
+    * @param value Valor binario contendo a disponibilidade do dia
+    */
     public void setDaysOfWork(String day, String value);
 
     /**

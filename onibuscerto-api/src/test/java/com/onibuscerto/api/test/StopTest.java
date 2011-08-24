@@ -47,7 +47,7 @@ public class StopTest {
     public void testCreateStop() {
         String stopId = "stop42";
         Stop stop = databaseController.getLocationFactory().createStop(stopId);
-        assertEquals(stop.getId(), stopId);
+        assertEquals(stopId, stop.getId());
     }
 
     @Test
