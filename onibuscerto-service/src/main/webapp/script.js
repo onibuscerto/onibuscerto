@@ -39,7 +39,12 @@ function setupAutoComplete() {
 
 function setupCallbacks() {
     $("#route").click(function() {
-        $.get("route/"+$("input#start").val()+"/"+$("input#end").val(), function(data) {
+        data = {
+            source: $("input#start").val(),
+            target: $("input#end").val()
+        };
+
+        $.post("/route", data, function(data) {
             var path = [];
 
             for (var i = 0; i < data.length; i++) {

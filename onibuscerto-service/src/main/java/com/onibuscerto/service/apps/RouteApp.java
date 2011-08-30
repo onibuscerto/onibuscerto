@@ -5,7 +5,7 @@ import com.google.sitebricks.At;
 import com.google.sitebricks.client.transport.Json;
 import com.google.sitebricks.headless.Reply;
 import com.google.sitebricks.headless.Service;
-import com.google.sitebricks.http.Get;
+import com.google.sitebricks.http.Post;
 import com.onibuscerto.api.DatabaseController;
 import com.onibuscerto.api.entities.Connection;
 import com.onibuscerto.api.entities.Location;
@@ -15,13 +15,14 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 @Service
-@At("/route/:source/:target")
+@At("/route")
 public class RouteApp {
 
-    @Get
-    public Reply<Collection<GlobalPosition>> get(
-            @Named("source") String source,
-            @Named("target") String target) {
+    private String source;
+    private String target;
+
+    @Post
+    public Reply<Collection<GlobalPosition>> post() {
         DatabaseController databaseController = new DatabaseController();
         databaseController.beginTransaction();
 
@@ -61,5 +62,21 @@ public class RouteApp {
         databaseController.close();
 
         return Reply.with(ret).as(Json.class).type("application/json");
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getTarget() {
+        return target;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
     }
 }
