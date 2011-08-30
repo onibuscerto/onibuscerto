@@ -1,5 +1,7 @@
 var map;
-var poly;
+var polyline;
+var startMarker;
+var endMarker;
 
 $(document).ready(function() {
     setupUI();
@@ -44,24 +46,54 @@ function setupCallbacks() {
             target: $("input#end").val()
         };
 
-        $.post("/route", data, function(data) {
-            var path = [];
-
-            for (var i = 0; i < data.length; i++) {
-                var pos = data[i];
-                path.push(new google.maps.LatLng(pos.latitude, pos.longitude));
-            }
-
-            if (poly) {
-                poly.setMap(null);
-            }
-
-            poly = new google.maps.Polyline({
-                path: path,
-                strokeColor: "#0000CC",
-                opacity: 0.4
-            });
-            poly.setMap(map);
+        $.post("/route", data, function(response) {
+            addMapPath(response);
+            addMapMarkers(response);
         }, "json");
+    });
+}
+
+function addMapPath(response) {
+    var path = [];
+
+    for (var i = 0; i < response.length; i++) {
+        var pos = response[i];
+        path.push(new google.maps.LatLng(pos.latitude, pos.longitude));
+    }
+
+    if (polyline) {
+        polyline.setMap(null);
+    }
+
+    polyline = new google.maps.Polyline({
+        path: path,
+        strokeColor: "#0000CC",
+        opacity: 0.4
+    });
+    polyline.setMap(map);
+}
+
+function addMapMarkers(response) {
+    var start = response[0];
+    var end = response[response.length-1];
+
+    if (startMarker) {
+        startMarker.setMap(null);
+    }
+
+    startMarker = new google.maps.Marker({
+        map: map,
+        position: new google.maps.LatLng(start.latitude, start.longitude),
+        icon: "img/start.png"
+    });
+
+    if (endMarker) {
+        endMarker.setMap(null);
+    }
+
+    endMarker = new google.maps.Marker({
+        map: map,
+        position: new google.maps.LatLng(end.latitude, end.longitude),
+        icon: "img/end.png"
     });
 }
