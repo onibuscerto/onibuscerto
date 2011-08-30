@@ -10,12 +10,16 @@ import org.neo4j.graphdb.Relationship;
 
 class LocationImpl implements Location {
 
-    private final Node underlyingNode;
+    protected final Node underlyingNode;
     static final String KEY_LATITUDE = "location_lat";
     static final String KEY_LONGITUDE = "location_lon";
 
     LocationImpl(Node underlyingNode) {
         this.underlyingNode = underlyingNode;
+    }
+
+    public Node getUnderlyingNode() {
+        return underlyingNode;
     }
 
     @Override
