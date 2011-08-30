@@ -72,4 +72,19 @@ class LocationImpl implements Location {
         Collection<Connection> incomingConnections = new LinkedList<Connection>();
         return buildConnectionsCollection(incomingRelationships);
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof LocationImpl) {
+            return getUnderlyingNode().equals(
+                    ((LocationImpl) object).getUnderlyingNode());
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return getUnderlyingNode().hashCode();
+    }
 }
