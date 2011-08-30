@@ -47,10 +47,25 @@ function setupCallbacks() {
         };
 
         $.post("/route", data, function(response) {
+            clearMap();
             addMapPath(response);
             addMapMarkers(response);
         }, "json");
     });
+}
+
+function clearMap() {
+    if (polyline) {
+        polyline.setMap(null);
+    }
+
+    if (startMarker) {
+        startMarker.setMap(null);
+    }
+
+    if (endMarker) {
+        endMarker.setMap(null);
+    }
 }
 
 function addMapPath(response) {
@@ -61,35 +76,23 @@ function addMapPath(response) {
         path.push(new google.maps.LatLng(pos.latitude, pos.longitude));
     }
 
-    if (polyline) {
-        polyline.setMap(null);
-    }
-
     polyline = new google.maps.Polyline({
+        map: map,
         path: path,
         strokeColor: "#0000CC",
         opacity: 0.4
     });
-    polyline.setMap(map);
 }
 
 function addMapMarkers(response) {
     var start = response[0];
     var end = response[response.length-1];
 
-    if (startMarker) {
-        startMarker.setMap(null);
-    }
-
     startMarker = new google.maps.Marker({
         map: map,
         position: new google.maps.LatLng(start.latitude, start.longitude),
         icon: "img/start.png"
     });
-
-    if (endMarker) {
-        endMarker.setMap(null);
-    }
 
     endMarker = new google.maps.Marker({
         map: map,
