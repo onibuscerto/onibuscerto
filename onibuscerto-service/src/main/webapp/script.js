@@ -1,5 +1,6 @@
 var map;
 var polyline;
+var bounds;
 var startMarker;
 var endMarker;
 
@@ -50,6 +51,7 @@ function setupCallbacks() {
             clearMap();
             addMapPath(response);
             addMapMarkers(response);
+            map.fitBounds(bounds);
         }, "json");
     });
 }
@@ -66,6 +68,8 @@ function clearMap() {
     if (endMarker) {
         endMarker.setMap(null);
     }
+
+    bounds = new google.maps.LatLngBounds();
 }
 
 function addMapPath(response) {
@@ -73,7 +77,9 @@ function addMapPath(response) {
 
     for (var i = 0; i < response.length; i++) {
         var pos = response[i];
-        path.push(new google.maps.LatLng(pos.latitude, pos.longitude));
+        var latlng = new google.maps.LatLng(pos.latitude, pos.longitude);
+        path.push(latlng);
+        bounds.extend(latlng);
     }
 
     polyline = new google.maps.Polyline({
