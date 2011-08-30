@@ -63,4 +63,18 @@ public class CalendarImpl implements Calendar {
     public void setEndDate(String endDate) {
         underlyingNode.setProperty(KEY_END_DATE, endDate);
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof CalendarImpl) {
+            return getUnderlyingNode().equals(
+                    ((CalendarImpl) object).getUnderlyingNode());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return getUnderlyingNode().hashCode();
+    }
 }
