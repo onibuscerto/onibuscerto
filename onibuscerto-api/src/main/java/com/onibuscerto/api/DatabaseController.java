@@ -1,6 +1,7 @@
 package com.onibuscerto.api;
 
 import com.onibuscerto.api.entities.Connection;
+import com.onibuscerto.api.entities.Location;
 import com.onibuscerto.api.entities.Stop;
 import com.onibuscerto.api.entities.TransportConnection;
 import com.onibuscerto.api.factories.CalendarFactory;
@@ -83,35 +84,43 @@ public final class DatabaseController {
         currentTransaction = null;
     }
 
-    public Collection<Connection> getShortestPath(Stop source, Stop target, int time) {
-        HashMap<Stop, Integer> d = new HashMap<Stop, Integer>();
-        HashMap<Stop, Connection> p = new HashMap<Stop, Connection>();
-        HashSet<Stop> in = new HashSet<Stop>();
+    public Collection<Connection> getShortestPath(Location source, Location target, int time) {
+        HashMap<Location, Integer> d = new HashMap<Location, Integer>();
+        HashMap<Location, Connection> p = new HashMap<Location, Connection>();
+        HashSet<Location> in = new HashSet<Location>();
         Collection<Connection> path = new LinkedList<Connection>();
-        Collection<Stop> allStops = getLocationFactory().getAllStops();
+        Collection<Location> allLocations = (Collection) getLocationFactory().getAllStops();
 
-        for (Stop stop : allStops) {
-            d.put(stop, 0x3f3f3f3f);
+        if (!(source instanceof Stop)) {
+            allLocations.add(source);
+        }
+
+        if (!(target instanceof Stop)) {
+            allLocations.add(target);
+        }
+
+        for (Location location : allLocations) {
+            d.put(location, 0x3f3f3f3f);
         }
         d.put(source, time);
 
         while (!in.contains(target)) {
-            Stop stop = null;
+            Location location = null;
             int best = 0x3f3f3f3f;
-            for (Stop s : allStops) {
-                if (!in.contains(s) && best > d.get(s)) {
-                    best = d.get(stop = s);
+            for (Location l : allLocations) {
+                if (!in.contains(l) && best > d.get(l)) {
+                    best = d.get(location = l);
                 }
             }
 
-            if (stop == null) {
+            if (location == null) {
                 return null;
             }
 
-            in.add(stop);
-            time = d.get(stop);
+            in.add(location);
+            time = d.get(location);
 
-            for (Connection c : stop.getOutgoingConnections()) {
+            for (Connection c : location.getOutgoingConnections()) {
                 int waitingTime = 0;
 
                 if (c instanceof TransportConnection) {
@@ -121,18 +130,18 @@ public final class DatabaseController {
                     }
                 }
 
-                if (!in.contains((Stop) c.getTarget()) && d.get((Stop) c.getTarget()) > time + c.getTimeCost()) {
-                    d.put((Stop) c.getTarget(), time + c.getTimeCost());
-                    p.put((Stop) c.getTarget(), c);
+                if (!in.contains(c.getTarget()) && d.get(c.getTarget()) > time + c.getTimeCost()) {
+                    d.put(c.getTarget(), time + c.getTimeCost());
+                    p.put(c.getTarget(), c);
                 }
             }
         }
 
-        for (Stop stop = target;; stop = (Stop) p.get(stop).getSource()) {
-            if (!p.containsKey(stop)) {
+        for (Location location = target;; location = p.get(location).getSource()) {
+            if (!p.containsKey(location)) {
                 break;
             }
-            path.add(p.get(stop));
+            path.add(p.get(location));
         }
         Collections.reverse((LinkedList) path);
 
