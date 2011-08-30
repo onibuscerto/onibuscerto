@@ -13,6 +13,16 @@ $(document).ready(function() {
 
 function setupUI() {
     $("input:button").button();
+    $("#loading")
+        .hide()
+        .ajaxStart(function() {
+            $("input:button").hide();
+            $(this).show();
+        })
+        .ajaxStop(function() {
+            $(this).hide();
+            $("input:button").show();
+        });
 }
 
 function setupMapWidget() {
