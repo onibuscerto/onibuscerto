@@ -39,12 +39,12 @@ public class GTFSImporter {
     public void importData(String transitFeedPath) {
         databaseController.beginTransaction();
         try {
+            importCalendars(transitFeedPath + "/calendar.txt");
             importShapes(transitFeedPath + "/shapes.txt");
             importStops(transitFeedPath + "/stops.txt");
             importRoutes(transitFeedPath + "/routes.txt");
             importTrips(transitFeedPath + "/trips.txt");
             importStopTimes(transitFeedPath + "/stop_times.txt");
-            importCalendars(transitFeedPath + "/calendar.txt");
             linkStopTimes();
             createConnections();
             databaseController.endTransaction(true);
@@ -119,6 +119,8 @@ public class GTFSImporter {
             Trip trip = tripFactory.createTrip(hashMap.get("trip_id"));
             trip.setRoute(databaseController.getRouteFactory().getRouteById(
                     hashMap.get("route_id")));
+            trip.setCalendar(databaseController.getCalendarFactory().getCalendarById(
+                    hashMap.get("service_id")));
 
             Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
                     "Inseri trip " + trip.getId());

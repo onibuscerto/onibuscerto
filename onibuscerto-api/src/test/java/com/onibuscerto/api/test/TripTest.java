@@ -1,5 +1,6 @@
 package com.onibuscerto.api.test;
 
+import com.onibuscerto.api.entities.Calendar;
 import com.onibuscerto.api.exceptions.DuplicateEntityException;
 import com.onibuscerto.api.entities.StopTime;
 import com.onibuscerto.api.entities.Route;
@@ -83,6 +84,15 @@ public class TripTest {
         Trip trip = databaseController.getTripFactory().createTrip("trip42");
         trip.setRoute(route);
         assertEquals(route, trip.getRoute());
+    }
+
+    @Test
+    public void testSetGetCalendar() {
+        String calendarId = "calendar42";
+        Calendar calendar = databaseController.getCalendarFactory().createCalendar(calendarId);
+        Trip trip = databaseController.getTripFactory().createTrip("trip42");
+        trip.setCalendar(calendar);
+        assertEquals(calendar, trip.getCalendar());
     }
 
     @Test
