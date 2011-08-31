@@ -1,5 +1,6 @@
 package com.onibuscerto.api;
 
+import com.onibuscerto.api.entities.Calendar;
 import com.onibuscerto.api.entities.Route;
 import com.onibuscerto.api.entities.StopTime;
 import com.onibuscerto.api.entities.Trip;
@@ -54,6 +55,32 @@ class TripImpl implements Trip {
 
         routeImpl.getUnderlyingNode().createRelationshipTo(underlyingNode,
                 Relationships.ROUTE_TO_TRIP);
+    }
+
+    @Override
+    public Calendar getCalendar() {
+        Relationship rel = underlyingNode.getSingleRelationship(
+                Relationships.CALENDAR_TO_TRIP, Direction.INCOMING);
+
+        if (rel == null) {
+            return null;
+        } else {
+            return new CalendarImpl(rel.getStartNode());
+        }
+    }
+
+    @Override
+    public void setCalendar(Calendar calendar) {
+        Relationship rel = underlyingNode.getSingleRelationship(
+                Relationships.CALENDAR_TO_TRIP, Direction.INCOMING);
+        CalendarImpl calendarImpl = (CalendarImpl) calendar;
+
+        if (rel != null) {
+            rel.delete();
+        }
+
+        calendarImpl.getUnderlyingNode().createRelationshipTo(underlyingNode,
+                Relationships.CALENDAR_TO_TRIP);
     }
 
     @Override

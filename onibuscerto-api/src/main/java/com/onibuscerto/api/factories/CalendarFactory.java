@@ -6,5 +6,5 @@ public interface CalendarFactory {
 
     public Calendar createCalendar(String serviceId);
 
-    public Calendar getStopById(String id);
+    public Calendar getCalendarById(String id);
 }

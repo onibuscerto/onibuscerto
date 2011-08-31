@@ -24,5 +24,6 @@ enum Relationships implements RelationshipType {
     SHAPES,
     SHAPE_FIRST_POINT,
     CALENDARS,
-    CALENDAR
+    CALENDAR,
+    CALENDAR_TO_TRIP
 }

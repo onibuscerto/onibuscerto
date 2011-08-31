@@ -41,7 +41,7 @@ public class CalendarFactoryImpl implements CalendarFactory {
     public Calendar createCalendar(String serviceId) {
         Transaction tx = graphDb.beginTx();
         try {
-            if (getStopById(serviceId) != null) {
+            if (getCalendarById(serviceId) != null) {
                 throw new DuplicateEntityException();
             }
 
@@ -57,7 +57,7 @@ public class CalendarFactoryImpl implements CalendarFactory {
     }
 
     @Override
-    public Calendar getStopById(String id) {
+    public Calendar getCalendarById(String id) {
         Node node = calendarIndex.get(CalendarImpl.KEY_ID, id).getSingle();
 
         if (node == null) {

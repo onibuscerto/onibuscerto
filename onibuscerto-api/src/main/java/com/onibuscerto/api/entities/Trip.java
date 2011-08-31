@@ -8,6 +8,10 @@ public interface Trip {
 
     public void setRoute(Route route);
 
+    public Calendar getCalendar();
+
+    public void setCalendar(Calendar calendar);
+
     public String getId();
 
     public Collection<StopTime> getStopTimes();
