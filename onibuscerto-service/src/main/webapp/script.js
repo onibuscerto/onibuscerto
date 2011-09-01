@@ -74,6 +74,7 @@ function setupMapWidget() {
                 break;
 
             case "setEnd":
+                clearMap();
                 setEndMarker(clickedLatLng);
                 if (startMarker) {
                     startMarker.setMap(map);
