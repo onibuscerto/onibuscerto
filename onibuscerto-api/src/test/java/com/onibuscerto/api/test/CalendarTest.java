@@ -1,5 +1,6 @@
 package com.onibuscerto.api.test;
 
+import com.onibuscerto.api.exceptions.DuplicateEntityException;
 import org.neo4j.test.ImpermanentGraphDatabase;
 import org.neo4j.graphdb.GraphDatabaseService;
 import com.onibuscerto.api.DatabaseController;
@@ -46,6 +47,14 @@ public class CalendarTest {
         String serviceId = "service42";
         Calendar calendar = databaseController.getCalendarFactory().createCalendar(serviceId);
         assertEquals(serviceId, calendar.getServiceId());
+    }
+
+    @Test
+    public void testCreateCalendarDuplicate() {
+        String calendarId = "calendar42";
+        Calendar calendar1 = databaseController.getCalendarFactory().createCalendar(calendarId);
+        exception.expect(DuplicateEntityException.class);
+        Calendar calendar2 = databaseController.getCalendarFactory().createCalendar(calendarId);
     }
 
     @Test
