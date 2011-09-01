@@ -69,6 +69,15 @@ body {
     padding: 1px 10px;
 }
 
+#contextMenu a:focus {
+    outline: none;
+    border: none;
+}
+
+#contextMenu a:-moz-focus-inner {
+    border: none;
+}
+
 #contextMenu li {
     list-style: none;
     padding: 1px;
