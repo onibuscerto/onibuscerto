@@ -40,8 +40,8 @@ class ConnectionFactoryImpl implements ConnectionFactory {
     public WalkingConnection createWalkingConnection(Location source, Location target) {
         Transaction tx = graphDb.beginTx();
         try {
-            Node sourceNode = ((StopImpl) source).getUnderlyingNode();
-            Node targetNode = ((StopImpl) target).getUnderlyingNode();
+            Node sourceNode = ((LocationImpl) source).getUnderlyingNode();
+            Node targetNode = ((LocationImpl) target).getUnderlyingNode();
             Relationship relationship = sourceNode.createRelationshipTo(targetNode, Relationships.WALKING_CONNECTION);
             WalkingConnection walkingConnection = new WalkingConnectionImpl(relationship);
             tx.success();
