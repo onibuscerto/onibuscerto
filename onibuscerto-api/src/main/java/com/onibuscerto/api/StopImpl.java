@@ -35,19 +35,4 @@ class StopImpl extends LocationImpl implements Stop {
     public void setName(String name) {
         underlyingNode.setProperty(KEY_NAME, name);
     }
-
-    @Override
-    public boolean equals(Object object) {
-        if (object instanceof StopImpl) {
-            return getUnderlyingNode().equals(
-                    ((StopImpl) object).getUnderlyingNode());
-        }
-
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return getUnderlyingNode().hashCode();
-    }
 }
