@@ -30,12 +30,14 @@ class WalkingConnectionImpl implements WalkingConnection {
 
     @Override
     public Location getSource() {
-        return new StopImpl(this.underlyingRelationship.getStartNode());
+        // FIXME: esse método deve retornar StopImpl quando for adequado
+        return new LocationImpl(this.underlyingRelationship.getStartNode());
     }
 
     @Override
     public Location getTarget() {
-        return new StopImpl(this.underlyingRelationship.getEndNode());
+        // FIXME: esse método deve retornar StopImpl quando for adequado
+        return new LocationImpl(this.underlyingRelationship.getEndNode());
     }
 
     @Override
