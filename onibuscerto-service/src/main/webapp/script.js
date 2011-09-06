@@ -83,6 +83,13 @@ function setupMapWidget() {
                 if (startMarker && endMarker) {
                     runQuery();
                 }
+                geocoder.geocode({ 'latLng': startMarker.getPosition() }, function(results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        if (results[0]) {
+                            $("#start").val(results[0].formatted_address);
+                        }
+                    }
+                });
                 break;
 
             case "setEnd":
@@ -96,6 +103,13 @@ function setupMapWidget() {
                 if (startMarker && endMarker) {
                     runQuery();
                 }
+                geocoder.geocode({ 'latLng': endMarker.getPosition() }, function(results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        if (results[0]) {
+                            $("#end").val(results[0].formatted_address);
+                        }
+                    }
+                });
                 break;
         }
 
@@ -257,6 +271,14 @@ function setStartMarker(position) {
         if (startMarker && endMarker) {
             runQuery();
         }
+
+        geocoder.geocode({ 'latLng': startMarker.getPosition() }, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                if (results[0]) {
+                    $("#start").val(results[0].formatted_address);
+                }
+            }
+        });
     });
 }
 
@@ -279,5 +301,13 @@ function setEndMarker(position) {
         if (startMarker && endMarker) {
             runQuery();
         }
+
+        geocoder.geocode({ 'latLng': endMarker.getPosition() }, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                if (results[0]) {
+                    $("#end").val(results[0].formatted_address);
+                }
+            }
+        });
     });
 }
