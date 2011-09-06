@@ -199,7 +199,21 @@ function setStartMarker(position) {
     startMarker = new google.maps.Marker({
         map: map,
         position: position,
-        icon: "img/start.png"
+        icon: "img/start.png",
+        draggable: true
+    });
+
+    google.maps.event.addListener(startMarker, 'dragend', function() {
+        clearMap();
+        startMarker.setMap(map);
+        if (endMarker) {
+            endMarker.setMap(map);
+        }
+        lat1 = startMarker.getPosition().lat();
+        lng1 = startMarker.getPosition().lng();
+        if (startMarker && endMarker) {
+            runQuery();
+        }
     });
 }
 
@@ -207,6 +221,20 @@ function setEndMarker(position) {
     endMarker = new google.maps.Marker({
         map: map,
         position: position,
-        icon: "img/end.png"
+        icon: "img/end.png",
+        draggable: true
+    });
+
+    google.maps.event.addListener(endMarker, 'dragend', function() {
+        clearMap();
+        endMarker.setMap(map);
+        if (startMarker) {
+            startMarker.setMap(map);
+        }
+        lat2 = endMarker.getPosition().lat();
+        lng2 = endMarker.getPosition().lng();
+        if (startMarker && endMarker) {
+            runQuery();
+        }
     });
 }
