@@ -1,10 +1,14 @@
 var map;
+var geocoder;
 var contextMenu;
 var clickedLatLng;
 var polyline;
 var bounds;
 var startMarker;
 var endMarker;
+
+var lat1, lng1;
+var lat2, lng2;
 
 $(document).ready(function() {
     setupUI();
@@ -112,22 +116,61 @@ function setupMapWidget() {
 }
 
 function setupAutoComplete() {
-    var availableStops = [
-    "FUR_CREEK_RES",
-    "BEATTY_AIRPORT",
-    "BULLFROG",
-    "STAGECOACH",
-    "NADAV",
-    "NANAA",
-    "DADAN",
-    "EMSI",
-    "AMV",
-    ];
+    geocoder = new google.maps.Geocoder();
+    // TODO: boilerplate code!
     $("#start").autocomplete({
-        source: availableStops
+        source: function(request, response) {
+            geocoder.geocode({'address': request.term}, function(results, status) {
+                response($.map(results, function(item) {
+                    return {
+                        label: item.formatted_address,
+                        value: item.formatted_address,
+                        latitude: item.geometry.location.lat(),
+                        longitude: item.geometry.location.lng()
+                    }
+                }));
+            });
+        },
+        select: function(event, ui) {
+            lat1 = ui.item.latitude;
+            lng1 = ui.item.longitude;
+            clearMap();
+            var latlng = new google.maps.LatLng(lat1, lng1);
+            setStartMarker(latlng);
+            if (endMarker) {
+                endMarker.setMap(map);
+            }
+            if (startMarker && endMarker) {
+                runQuery();
+            }
+        }
     });
     $("#end").autocomplete({
-        source: availableStops
+        source: function(request, response) {
+            geocoder.geocode({'address': request.term}, function(results, status) {
+                response($.map(results, function(item) {
+                    return {
+                        label: item.formatted_address,
+                        value: item.formatted_address,
+                        latitude: item.geometry.location.lat(),
+                        longitude: item.geometry.location.lng()
+                    }
+                }));
+            });
+        },
+        select: function(event, ui) {
+            lat2 = ui.item.latitude;
+            lng2 = ui.item.longitude;
+            clearMap();
+            var latlng = new google.maps.LatLng(lat2, lng2);
+            setEndMarker(latlng);
+            if (startMarker) {
+                startMarker.setMap(map);
+            }
+            if (startMarker && endMarker) {
+                runQuery();
+            }
+        }
     });
 }
 
