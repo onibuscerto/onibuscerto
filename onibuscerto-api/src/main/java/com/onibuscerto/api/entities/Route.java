@@ -20,6 +20,10 @@ public interface Route {
 
     public Collection<Trip> getTrips();
 
+    public void setRouteColor(String color);
+
+    public String getRouteColor();
+
     public enum Type {
 
         STREETCAR(0),

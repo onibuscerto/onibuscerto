@@ -96,7 +96,10 @@ public class GTFSImporter {
             route.setLongName(hashMap.get("route_long_name"));
             route.setType(Route.Type.fromInt(Integer.parseInt(
                     hashMap.get("route_type"))));
-
+            if (hashMap.containsKey("route_color")
+                    && !hashMap.get("route_color").isEmpty()) {
+                route.setRouteColor(hashMap.get("route_color"));
+            }
             Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
                     "Inseri route " + route.getShortName() + " (" + route.getId() + ")");
 
