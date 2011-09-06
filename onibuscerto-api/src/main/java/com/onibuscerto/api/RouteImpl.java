@@ -17,6 +17,7 @@ class RouteImpl implements Route {
     private static final String KEY_SHORT_NAME = "route_short_name";
     private static final String KEY_LONG_NAME = "route_long_name";
     private static final String KEY_TYPE = "route_type";
+    private static final String KEY_ROUTE_COLOR = "route_color";
 
     RouteImpl(Node underlyingNode, String id) {
         this(underlyingNode);
@@ -88,6 +89,16 @@ class RouteImpl implements Route {
         }
 
         return trips;
+    }
+
+    @Override
+    public void setRouteColor(String color) {
+        underlyingNode.setProperty(KEY_ROUTE_COLOR, color);
+    }
+
+    @Override
+    public String getRouteColor() {
+        return (String) underlyingNode.getProperty(KEY_ROUTE_COLOR);
     }
 
     @Override

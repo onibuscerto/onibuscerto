@@ -110,4 +110,12 @@ public class RouteTest {
         assertEquals(2, result.size());
         assertThat(result, hasItems(trip1, trip2));
     }
+
+    @Test
+    public void testSetGetRouteColor() {
+        Route route = databaseController.getRouteFactory().createRoute("route42");
+        String routeColor = "00ffff";
+        route.setRouteColor(routeColor);
+        assertEquals(routeColor, route.getRouteColor());
+    }
 }
