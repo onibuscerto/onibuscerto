@@ -16,15 +16,15 @@ $(document).ready(function() {
 function setupUI() {
     $("input:button").button();
     $("#loading")
-        .hide()
-        .ajaxStart(function() {
-            $("input:button").hide();
-            $(this).show();
-        })
-        .ajaxStop(function() {
-            $(this).hide();
-            $("input:button").show();
-        });
+    .hide()
+    .ajaxStart(function() {
+        $("input:button").hide();
+        $(this).show();
+    })
+    .ajaxStop(function() {
+        $(this).hide();
+        $("input:button").show();
+    });
 }
 
 function setupMapWidget() {
@@ -39,8 +39,10 @@ function setupMapWidget() {
     contextMenu.append(
         '<li><a href="#setStart">Partir daqui</a></li>' +
         '<li><a href="#setEnd">Chegar aqui</a></li>'
-    );
-    contextMenu.bind('contextmenu', function() {return false;});
+        );
+    contextMenu.bind('contextmenu', function() {
+        return false;
+    });
     $(map.getDiv()).append(contextMenu);
 
     google.maps.event.addListener(map, 'rightclick', function(evt) {
@@ -55,7 +57,10 @@ function setupMapWidget() {
         if (y > mapDiv.height() - contextMenu.height())
             y -= contextMenu.height();
 
-        contextMenu.css({top: y, left: x}).fadeIn(100);
+        contextMenu.css({
+            top: y,
+            left: x
+        }).fadeIn(100);
     });
 
     contextMenu.find('a').click(function() {
@@ -71,6 +76,9 @@ function setupMapWidget() {
                 }
                 lat1 = clickedLatLng.lat();
                 lng1 = clickedLatLng.lng();
+                if (startMarker && endMarker) {
+                    runQuery();
+                }
                 break;
 
             case "setEnd":
@@ -79,8 +87,11 @@ function setupMapWidget() {
                 if (startMarker) {
                     startMarker.setMap(map);
                 }
-                lat1 = clickedLatLng.lat();
-                lng1 = clickedLatLng.lng();
+                lat2 = clickedLatLng.lat();
+                lng2 = clickedLatLng.lng();
+                if (startMarker && endMarker) {
+                    runQuery();
+                }
                 break;
         }
 
@@ -94,40 +105,52 @@ function setupMapWidget() {
     });
 
     $.each('click dragstart zoom_changed maptypeid_changed'.split(' '), function(i, name){
-        google.maps.event.addListener(map, name, function(){ contextMenu.hide() });
+        google.maps.event.addListener(map, name, function(){
+            contextMenu.hide()
+        });
     });
 }
 
 function setupAutoComplete() {
     var availableStops = [
-        "FUR_CREEK_RES",
-        "BEATTY_AIRPORT",
-        "BULLFROG",
-        "STAGECOACH",
-        "NADAV",
-        "NANAA",
-        "DADAN",
-        "EMSI",
-        "AMV",
+    "FUR_CREEK_RES",
+    "BEATTY_AIRPORT",
+    "BULLFROG",
+    "STAGECOACH",
+    "NADAV",
+    "NANAA",
+    "DADAN",
+    "EMSI",
+    "AMV",
     ];
-    $("#start").autocomplete({ source: availableStops });
-    $("#end").autocomplete({ source: availableStops });
+    $("#start").autocomplete({
+        source: availableStops
+    });
+    $("#end").autocomplete({
+        source: availableStops
+    });
 }
 
 function setupCallbacks() {
     $("#route").click(function() {
-        data = {
-            source: $("input#start").val(),
-            target: $("input#end").val()
-        };
-
-        $.post("/route", data, function(response) {
-            clearMap();
-            addMapPath(response);
-            addMapMarkers(response);
-            map.fitBounds(bounds);
-        }, "json");
+        runQuery();
     });
+}
+
+function runQuery() {
+    data = {
+        "start.latitude": lat1,
+        "start.longitude": lng1,
+        "end.latitude": lat2,
+        "end.longitude": lng2
+    };
+
+    $.post("/route", data, function(response) {
+        clearMap();
+        addMapPath(response);
+        addMapMarkers(response);
+        map.fitBounds(bounds);
+    }, "json");
 }
 
 function clearMap() {
