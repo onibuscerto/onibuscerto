@@ -1,5 +1,6 @@
 package com.onibuscerto.api;
 
+import com.onibuscerto.api.entities.FareRule;
 import java.util.Collection;
 import org.neo4j.graphdb.Node;
 import com.onibuscerto.api.entities.Route;
@@ -99,6 +100,16 @@ class RouteImpl implements Route {
     @Override
     public String getRouteColor() {
         return (String) underlyingNode.getProperty(KEY_ROUTE_COLOR);
+    }
+
+    @Override
+    public FareRule getFareRule() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setFareRule(FareRule fr) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
