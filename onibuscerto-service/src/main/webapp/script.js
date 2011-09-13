@@ -80,9 +80,7 @@ function setupMapWidget() {
                 }
                 lat1 = clickedLatLng.lat();
                 lng1 = clickedLatLng.lng();
-                if (startMarker && endMarker) {
-                    runQuery();
-                }
+                runQuery();
                 geocoder.geocode({ 'latLng': startMarker.getPosition() }, function(results, status) {
                     if (status == google.maps.GeocoderStatus.OK) {
                         if (results[0]) {
@@ -100,9 +98,7 @@ function setupMapWidget() {
                 }
                 lat2 = clickedLatLng.lat();
                 lng2 = clickedLatLng.lng();
-                if (startMarker && endMarker) {
-                    runQuery();
-                }
+                runQuery();
                 geocoder.geocode({ 'latLng': endMarker.getPosition() }, function(results, status) {
                     if (status == google.maps.GeocoderStatus.OK) {
                         if (results[0]) {
@@ -154,9 +150,7 @@ function setupAutoComplete() {
             if (endMarker) {
                 endMarker.setMap(map);
             }
-            if (startMarker && endMarker) {
-                runQuery();
-            }
+            runQuery();
         }
     });
     $("#end").autocomplete({
@@ -181,9 +175,7 @@ function setupAutoComplete() {
             if (startMarker) {
                 startMarker.setMap(map);
             }
-            if (startMarker && endMarker) {
-                runQuery();
-            }
+            runQuery();
         }
     });
 }
@@ -195,6 +187,10 @@ function setupCallbacks() {
 }
 
 function runQuery() {
+    if (!startMarker || !endMarker) {
+        return;
+    }
+
     data = {
         "start.latitude": lat1,
         "start.longitude": lng1,
@@ -268,9 +264,7 @@ function setStartMarker(position) {
         }
         lat1 = startMarker.getPosition().lat();
         lng1 = startMarker.getPosition().lng();
-        if (startMarker && endMarker) {
-            runQuery();
-        }
+        runQuery();
 
         geocoder.geocode({ 'latLng': startMarker.getPosition() }, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
@@ -298,9 +292,7 @@ function setEndMarker(position) {
         }
         lat2 = endMarker.getPosition().lat();
         lng2 = endMarker.getPosition().lng();
-        if (startMarker && endMarker) {
-            runQuery();
-        }
+        runQuery();
 
         geocoder.geocode({ 'latLng': endMarker.getPosition() }, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
