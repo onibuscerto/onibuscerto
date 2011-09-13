@@ -4,7 +4,7 @@ import com.onibuscerto.api.DatabaseController;
 
 public class ImporterMain {
 
-    private static final String TRANSIT_FEED_PATH = "src/main/resources";
+    private static final String TRANSIT_FEED_PATH = "src/test/resources/bart";
 
     public static void main(String args[]) {
         DatabaseController databaseController = new DatabaseController();
