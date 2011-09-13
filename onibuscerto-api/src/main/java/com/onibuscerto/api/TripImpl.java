@@ -2,6 +2,7 @@ package com.onibuscerto.api;
 
 import com.onibuscerto.api.entities.Calendar;
 import com.onibuscerto.api.entities.Route;
+import com.onibuscerto.api.entities.ShapePoint;
 import com.onibuscerto.api.entities.StopTime;
 import com.onibuscerto.api.entities.Trip;
 import java.util.Collection;
@@ -110,6 +111,32 @@ class TripImpl implements Trip {
         }
 
         return stopTimes;
+    }
+
+    @Override
+    public ShapePoint getShape() {
+        Relationship rel = underlyingNode.getSingleRelationship(
+                Relationships.TRIP_TO_SHAPE_POINT, Direction.OUTGOING);
+
+        if (rel == null) {
+            return null;
+        } else {
+            return new ShapePointImpl(rel.getEndNode());
+        }
+    }
+
+    @Override
+    public void setShape(ShapePoint shapeFirstPoint) {
+        Relationship rel = underlyingNode.getSingleRelationship(
+                Relationships.TRIP_TO_SHAPE_POINT, Direction.OUTGOING);
+        ShapePointImpl shapePoint = (ShapePointImpl) shapeFirstPoint;
+
+        if (rel != null) {
+            rel.delete();
+        }
+
+        getUnderlyingNode().createRelationshipTo(shapePoint.getUnderlyingNode(),
+                Relationships.TRIP_TO_SHAPE_POINT);
     }
 
     @Override

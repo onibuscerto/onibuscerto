@@ -124,6 +124,11 @@ public class GTFSImporter {
                     hashMap.get("route_id")));
             trip.setCalendar(databaseController.getCalendarFactory().getCalendarById(
                     hashMap.get("service_id")));
+            if (hashMap.containsKey("shape_id")
+                    && !hashMap.get("shape_id").isEmpty()) {
+                trip.setShape(databaseController.getShapePointFactory().getShapeById(
+                        hashMap.get("shape_id")));
+            }
 
             Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
                     "Inseri trip " + trip.getId());

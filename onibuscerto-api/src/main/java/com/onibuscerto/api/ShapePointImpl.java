@@ -8,11 +8,11 @@ import org.neo4j.graphdb.Relationship;
 public class ShapePointImpl implements ShapePoint {
 
     private final Node underlyingNode;
-    private final String KEY_SHAPE_ID = "shape_point_shape_id";
-    private final String KEY_LATITUDE = "shape_point_lat";
-    private final String KEY_LONGITUDE = "shape_point_lon";
-    private final String KEY_SEQUENCE = "shape_point_sequence";
-    private final String KEY_SHAPE_DIST_TRAVELED = "shape_point_dist_traveled";
+    static String KEY_SHAPE_ID = "shape_point_shape_id";
+    private static final String KEY_LATITUDE = "shape_point_lat";
+    private static final String KEY_LONGITUDE = "shape_point_lon";
+    private static final String KEY_SEQUENCE = "shape_point_sequence";
+    private static final String KEY_SHAPE_DIST_TRAVELED = "shape_point_dist_traveled";
 
     public ShapePointImpl(Node underlyingNode) {
         this.underlyingNode = underlyingNode;

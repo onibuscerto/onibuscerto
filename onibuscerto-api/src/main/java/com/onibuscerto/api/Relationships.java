@@ -23,6 +23,7 @@ enum Relationships implements RelationshipType {
     NEXT_SHAPE_POINT,
     SHAPES,
     SHAPE_FIRST_POINT,
+    TRIP_TO_SHAPE_POINT,
     CALENDARS,
     CALENDAR,
     CALENDAR_TO_TRIP

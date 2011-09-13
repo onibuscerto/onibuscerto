@@ -15,4 +15,8 @@ public interface Trip {
     public String getId();
 
     public Collection<StopTime> getStopTimes();
+
+    public ShapePoint getShape();
+
+    public void setShape(ShapePoint shapeFirstPoint);
 }
