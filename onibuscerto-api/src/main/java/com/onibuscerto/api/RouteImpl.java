@@ -103,16 +103,6 @@ class RouteImpl implements Route {
     }
 
     @Override
-    public FareRule getFareRule() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setFareRule(FareRule fr) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public boolean equals(Object object) {
         if (object instanceof RouteImpl) {
             return getUnderlyingNode().equals(

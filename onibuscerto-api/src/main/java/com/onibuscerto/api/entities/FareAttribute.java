@@ -13,7 +13,6 @@ public interface FareAttribute {
 //fare_id,price,currency_type,payment_method,transfers,transfer_duration
     
     public String getFareId();
-    public void setFareId(String fareId);
 
     public double getPrice();
     public void setPrice(double price);

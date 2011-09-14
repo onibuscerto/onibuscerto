@@ -1,66 +1,87 @@
 package com.onibuscerto.api;
 
 import com.onibuscerto.api.entities.FareAttribute;
+import org.neo4j.graphdb.Node;
 
 public class FareAttributeImpl implements FareAttribute {
 
-    @Override
-    public String getFareId() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    private final Node underlyingNode;
+    static final String KEY_ID = "fare_id";
+    private static final String KEY_PRICE = "price";
+    private static final String KEY_CURRENCY_TYPE = "currency_type";
+    private static final String KEY_PAYMENT_METHOD = "payment_method";
+    private static final String KEY_TRANSFERS = "transfers";
+    private static final String KEY_TRANSFER_DURATION = "transfer_duration";
+
+    FareAttributeImpl(Node underlyingNode, String id) {
+        this(underlyingNode);
+        setFareId(id);
+    }
+
+    FareAttributeImpl(Node underlyingNode) {
+        this.underlyingNode = underlyingNode;
+    }
+
+    public Node getUnderlyingNode() {
+        return underlyingNode;
     }
 
     @Override
-    public void setFareId(String fareId) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public String getFareId() {
+        return (String) underlyingNode.getProperty(KEY_ID);
+    }
+
+    private void setFareId(String id) {
+        underlyingNode.setProperty(KEY_ID, id);
     }
 
     @Override
     public double getPrice() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return (Double) underlyingNode.getProperty(KEY_PRICE);
     }
 
     @Override
     public void setPrice(double price) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        underlyingNode.setProperty(KEY_PRICE, price);
     }
 
     @Override
     public String getCurrencyType() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return (String) underlyingNode.getProperty(KEY_CURRENCY_TYPE);
     }
 
     @Override
     public void setCurrencyType(String currencyType) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        underlyingNode.setProperty(KEY_CURRENCY_TYPE, currencyType);
     }
 
     @Override
     public int getPaymentMethod() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return (Integer) underlyingNode.getProperty(KEY_PAYMENT_METHOD);
     }
 
     @Override
     public void setPaymentMathod(int paymentMethod) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        underlyingNode.setProperty(KEY_PAYMENT_METHOD, paymentMethod);
     }
 
     @Override
     public int getTranfers() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return (Integer) underlyingNode.getProperty(KEY_TRANSFERS);
     }
 
     @Override
     public void setTranfers(int transfers) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        underlyingNode.setProperty(KEY_TRANSFERS, transfers);
     }
 
     @Override
     public int getTransferDuration() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return (Integer) underlyingNode.getProperty(KEY_TRANSFER_DURATION);
     }
 
     @Override
     public void setTranferDuration(int transferDuration) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        underlyingNode.setProperty(KEY_TRANSFER_DURATION, transferDuration);
     }
 }
