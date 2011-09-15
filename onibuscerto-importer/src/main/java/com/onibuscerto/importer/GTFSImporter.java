@@ -264,7 +264,12 @@ public class GTFSImporter {
             fareAttribute.setPrice(Double.parseDouble(hashMap.get("price")));
             fareAttribute.setCurrencyType(hashMap.get("currency_type"));
             fareAttribute.setPaymentMethod(Integer.parseInt(hashMap.get("payment_method")));
-            fareAttribute.setTransfers(Integer.parseInt(hashMap.get("transfers")));
+            if(hashMap.get("transfers").isEmpty()) {
+                //TODO: verificar se -1 é o valor adequado quando transfers esta vazio
+                fareAttribute.setTransfers(-1);
+            } else {
+                fareAttribute.setTransfers(Integer.parseInt(hashMap.get("transfers")));
+            }
             if (hashMap.containsKey("transfer_duration")
                     && !hashMap.get("transfer_duration").isEmpty()) {
                 fareAttribute.setTransferDuration(
