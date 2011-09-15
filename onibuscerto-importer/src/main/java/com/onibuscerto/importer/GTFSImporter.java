@@ -3,6 +3,7 @@ package com.onibuscerto.importer;
 import au.com.bytecode.opencsv.CSVReader;
 import com.onibuscerto.api.DatabaseController;
 import com.onibuscerto.api.entities.Calendar;
+import com.onibuscerto.api.entities.FareAttribute;
 import com.onibuscerto.api.entities.Route;
 import com.onibuscerto.api.entities.ShapePoint;
 import com.onibuscerto.api.entities.Stop;
@@ -11,6 +12,7 @@ import com.onibuscerto.api.entities.TransportConnection;
 import com.onibuscerto.api.entities.Trip;
 import com.onibuscerto.api.factories.CalendarFactory;
 import com.onibuscerto.api.factories.ConnectionFactory;
+import com.onibuscerto.api.factories.FareAttributeFactory;
 import com.onibuscerto.api.factories.RouteFactory;
 import com.onibuscerto.api.factories.ShapePointFactory;
 import com.onibuscerto.api.factories.LocationFactory;
@@ -40,6 +42,7 @@ public class GTFSImporter {
         databaseController.beginTransaction();
         try {
             importCalendars(transitFeedPath + "/calendar.txt");
+            importFareAttributes(transitFeedPath + "/fare_attributes.txt");
             importShapes(transitFeedPath + "/shapes.txt");
             importStops(transitFeedPath + "/stops.txt");
             importRoutes(transitFeedPath + "/routes.txt");
@@ -219,7 +222,6 @@ public class GTFSImporter {
     private void importCalendars(String calendarFile)
             throws IOException {
         CalendarFactory calendarFactory = databaseController.getCalendarFactory();
-        Collection<String> days = null;
         CSVReader reader = new CSVReader(new FileReader(calendarFile));
         String columnNames[] = reader.readNext();
         String lineValues[];
@@ -233,15 +235,45 @@ public class GTFSImporter {
 
             Calendar calendar = calendarFactory.createCalendar(hashMap.get("service_id"));
             for (int i = 0; i < day.length; i++) {
-                //days.add(hashMap.get(day[i]));
                 calendar.setDaysOfWork(day[i], hashMap.get(day[i]));
             }
-            //calendar.setDaysOfWork(days);
             calendar.setStartDate(hashMap.get("start_date"));
             calendar.setEndDate(hashMap.get("end_date"));
 
             Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
                     "Inseri calendar " + calendar.getServiceId());
+
+            hashMap.clear();
+        }
+    }
+
+    private void importFareAttributes(String fareAttributesFile)
+            throws IOException {
+        FareAttributeFactory fareAttributeFactory = databaseController.getFareAttributeFactory();
+        CSVReader reader = new CSVReader(new FileReader(fareAttributesFile));
+        String columnNames[] = reader.readNext();
+        String lineValues[];
+        HashMap<String, String> hashMap = new HashMap<String, String>();
+
+        while ((lineValues = reader.readNext()) != null) {
+            for (int i = 0; i < lineValues.length; i++) {
+                hashMap.put(columnNames[i], lineValues[i]);
+            }
+
+            FareAttribute fareAttribute = fareAttributeFactory.createFareAttribute(hashMap.get("fare_id"));
+            fareAttribute.setPrice(Double.parseDouble(hashMap.get("price")));
+            fareAttribute.setCurrencyType(hashMap.get("currency_type"));
+            fareAttribute.setPaymentMethod(Integer.parseInt(hashMap.get("payment_method")));
+            fareAttribute.setTransfers(Integer.parseInt(hashMap.get("transfers")));
+            fareAttribute.setTransferDuration(Integer.parseInt(hashMap.get("transfer_duration")));
+            if (hashMap.containsKey("transfer_duration")
+                    && !hashMap.get("transfer_duration").isEmpty()) {
+                fareAttribute.setTransferDuration(
+                        Integer.parseInt(hashMap.get("transfer_duration")));
+            }
+
+            Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
+                    "Inseri stop " + fareAttribute.getFareId());
 
             hashMap.clear();
         }

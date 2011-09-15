@@ -61,17 +61,17 @@ public class FareAttributeImpl implements FareAttribute {
     }
 
     @Override
-    public void setPaymentMathod(int paymentMethod) {
+    public void setPaymentMethod(int paymentMethod) {
         underlyingNode.setProperty(KEY_PAYMENT_METHOD, paymentMethod);
     }
 
     @Override
-    public int getTranfers() {
+    public int getTransfers() {
         return (Integer) underlyingNode.getProperty(KEY_TRANSFERS);
     }
 
     @Override
-    public void setTranfers(int transfers) {
+    public void setTransfers(int transfers) {
         underlyingNode.setProperty(KEY_TRANSFERS, transfers);
     }
 
@@ -81,7 +81,7 @@ public class FareAttributeImpl implements FareAttribute {
     }
 
     @Override
-    public void setTranferDuration(int transferDuration) {
+    public void setTransferDuration(int transferDuration) {
         underlyingNode.setProperty(KEY_TRANSFER_DURATION, transferDuration);
     }
 }
