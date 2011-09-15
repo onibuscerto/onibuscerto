@@ -265,7 +265,6 @@ public class GTFSImporter {
             fareAttribute.setCurrencyType(hashMap.get("currency_type"));
             fareAttribute.setPaymentMethod(Integer.parseInt(hashMap.get("payment_method")));
             fareAttribute.setTransfers(Integer.parseInt(hashMap.get("transfers")));
-            fareAttribute.setTransferDuration(Integer.parseInt(hashMap.get("transfer_duration")));
             if (hashMap.containsKey("transfer_duration")
                     && !hashMap.get("transfer_duration").isEmpty()) {
                 fareAttribute.setTransferDuration(
