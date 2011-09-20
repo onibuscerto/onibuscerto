@@ -298,7 +298,6 @@ public class GTFSImporter {
                 hashMap.put(columnNames[i], lineValues[i]);
             }
 
-            //fare_id,route_id,origin_id,destination_id,contains_id
             FareRule fareRule = fareRuleFactory.createFareRule();
             fareRule.setFareAttribute(databaseController.getFareAttributeFactory().getFareAttributeById(
                     hashMap.get("fare_id")));
@@ -310,11 +309,22 @@ public class GTFSImporter {
                         hashMap.get("fare_id")));
             }
 
+            if (hashMap.containsKey("origin_id")
+                    && !hashMap.get("origin_id").isEmpty()) {
 
+            }
+
+            if (hashMap.containsKey("destination_id")
+                    && !hashMap.get("destination_id").isEmpty()) {
+            }
+
+            if (hashMap.containsKey("contains_id")
+                    && !hashMap.get("contains_id").isEmpty()) {
+            }
 
             Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
-                    "Inseri FareRule " +
-                    fareRule.getFareAttribute().getFareId());
+                    "Inseri FareRule "
+                    + fareRule.getFareAttribute().getFareId());
 
             hashMap.clear();
         }
