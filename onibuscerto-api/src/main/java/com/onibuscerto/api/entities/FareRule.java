@@ -12,5 +12,5 @@ package com.onibuscerto.api.entities;
 public interface FareRule {
 //fare_id,route_id,origin_id,destination_id,contains_id
     public FareAttribute getFareAttribute();
-    public void setFareAttribute(FareAttribute fareId);
+    public void setFareAttribute(FareAttribute fare);
 }

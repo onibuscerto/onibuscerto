@@ -1,5 +1,6 @@
 package com.onibuscerto.api;
 
+import com.onibuscerto.api.entities.FareAttribute;
 import com.onibuscerto.api.entities.FareRule;
 import java.util.Collection;
 import org.neo4j.graphdb.Node;
@@ -7,6 +8,7 @@ import com.onibuscerto.api.entities.Route;
 import com.onibuscerto.api.entities.Trip;
 import java.util.LinkedList;
 import org.neo4j.graphdb.Direction;
+import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.ReturnableEvaluator;
 import org.neo4j.graphdb.StopEvaluator;
 import org.neo4j.graphdb.Traverser;
@@ -100,6 +102,32 @@ class RouteImpl implements Route {
     @Override
     public String getRouteColor() {
         return (String) underlyingNode.getProperty(KEY_ROUTE_COLOR);
+    }
+
+    @Override
+    public FareAttribute getFare() {
+        Relationship rel = underlyingNode.getSingleRelationship(
+                Relationships.ROUTE_TO_FARE, Direction.INCOMING);
+
+        if (rel == null) {
+            return null;
+        } else {
+            return new FareAttributeImpl(rel.getStartNode());
+        }
+    }
+
+    @Override
+    public void setFare(FareAttribute fare) {
+        Relationship rel = underlyingNode.getSingleRelationship(
+                Relationships.ROUTE_TO_FARE, Direction.INCOMING);
+        FareAttributeImpl fareImpl = (FareAttributeImpl) fare;
+
+        if (rel != null) {
+            rel.delete();
+        }
+
+        fareImpl.getUnderlyingNode().createRelationshipTo(underlyingNode,
+                Relationships.ROUTE_TO_FARE);
     }
 
     @Override

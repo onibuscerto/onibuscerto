@@ -4,6 +4,7 @@ import au.com.bytecode.opencsv.CSVReader;
 import com.onibuscerto.api.DatabaseController;
 import com.onibuscerto.api.entities.Calendar;
 import com.onibuscerto.api.entities.FareAttribute;
+import com.onibuscerto.api.entities.FareRule;
 import com.onibuscerto.api.entities.Route;
 import com.onibuscerto.api.entities.ShapePoint;
 import com.onibuscerto.api.entities.Stop;
@@ -13,6 +14,7 @@ import com.onibuscerto.api.entities.Trip;
 import com.onibuscerto.api.factories.CalendarFactory;
 import com.onibuscerto.api.factories.ConnectionFactory;
 import com.onibuscerto.api.factories.FareAttributeFactory;
+import com.onibuscerto.api.factories.FareRuleFactory;
 import com.onibuscerto.api.factories.RouteFactory;
 import com.onibuscerto.api.factories.ShapePointFactory;
 import com.onibuscerto.api.factories.LocationFactory;
@@ -48,6 +50,7 @@ public class GTFSImporter {
             importRoutes(transitFeedPath + "/routes.txt");
             importTrips(transitFeedPath + "/trips.txt");
             importStopTimes(transitFeedPath + "/stop_times.txt");
+            importFareRules(transitFeedPath + "/fare_rules.txt");
             linkStopTimes();
             createConnections();
             databaseController.endTransaction(true);
@@ -265,7 +268,6 @@ public class GTFSImporter {
             fareAttribute.setCurrencyType(hashMap.get("currency_type"));
             fareAttribute.setPaymentMethod(Integer.parseInt(hashMap.get("payment_method")));
             if (hashMap.get("transfers").isEmpty()) {
-                //TODO: verificar se -1 é o valor adequado quando transfers esta vazio
                 fareAttribute.setTransfers(-1);
             } else {
                 fareAttribute.setTransfers(Integer.parseInt(hashMap.get("transfers")));
@@ -277,7 +279,39 @@ public class GTFSImporter {
             }
 
             Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
-                    "Inseri stop " + fareAttribute.getFareId());
+                    "Inseri fare " + fareAttribute.getFareId());
+
+            hashMap.clear();
+        }
+    }
+
+    private void importFareRules(String fareRulesFile) throws IOException {
+        FareRuleFactory fareRuleFactory = databaseController.getFareRuleFactory();
+        CSVReader reader = new CSVReader(new FileReader(fareRulesFile));
+        String columnNames[] = reader.readNext();
+        String lineValues[];
+        HashMap<String, String> hashMap = new HashMap<String, String>();
+
+        while ((lineValues = reader.readNext()) != null) {
+            for (int i = 0; i < lineValues.length; i++) {
+                hashMap.put(columnNames[i], lineValues[i]);
+            }
+
+            //fare_id,route_id,origin_id,destination_id,contains_id
+            FareRule fareRule = fareRuleFactory.createFareRule();
+            fareRule.setFareAttribute(databaseController.getFareAttributeFactory().getFareAttributeById(
+                    hashMap.get("fare_id")));
+            if (hashMap.containsKey("route_id")
+                    && !hashMap.get("route_id").isEmpty()) {
+                Route route = databaseController.getRouteFactory().getRouteById(
+                        hashMap.get("route_id"));
+                route.setFare(databaseController.getFareAttributeFactory().getFareAttributeById(
+                        hashMap.get("fare_id")));
+            }
+
+            Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
+                    "Inseri FareRule " +
+                    fareRule.getFareAttribute().getFareId());
 
             hashMap.clear();
         }

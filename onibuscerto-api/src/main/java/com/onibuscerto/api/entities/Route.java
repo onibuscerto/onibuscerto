@@ -24,6 +24,10 @@ public interface Route {
 
     public String getRouteColor();
 
+    public FareAttribute getFare();
+
+    public void setFare(FareAttribute f);
+
     public enum Type {
 
         STREETCAR(0),

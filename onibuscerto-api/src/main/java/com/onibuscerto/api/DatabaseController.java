@@ -7,6 +7,7 @@ import com.onibuscerto.api.entities.TransportConnection;
 import com.onibuscerto.api.factories.CalendarFactory;
 import com.onibuscerto.api.factories.ConnectionFactory;
 import com.onibuscerto.api.factories.FareAttributeFactory;
+import com.onibuscerto.api.factories.FareRuleFactory;
 import com.onibuscerto.api.factories.RouteFactory;
 import com.onibuscerto.api.factories.ShapePointFactory;
 import com.onibuscerto.api.factories.LocationFactory;
@@ -33,6 +34,7 @@ public final class DatabaseController {
     protected final ShapePointFactory shapePointFactory;
     protected final CalendarFactory calendarFactory;
     protected final FareAttributeFactory fareAttributeFactory;
+    protected final FareRuleFactory fareRuleFactory;
     protected Transaction currentTransaction;
 
     public DatabaseController(GraphDatabaseService graphDb) {
@@ -47,6 +49,7 @@ public final class DatabaseController {
         shapePointFactory = new ShapePointFactoryImpl(this);
         calendarFactory = new CalendarFactoryImpl(this);
         fareAttributeFactory = new FareAttributeFactoryImpl(this);
+        fareRuleFactory = new FareRuleFactoryImpl(this);
         endTransaction(true);
     }
 
@@ -181,5 +184,9 @@ public final class DatabaseController {
 
     public FareAttributeFactory getFareAttributeFactory() {
         return fareAttributeFactory;
+    }
+
+    public FareRuleFactory getFareRuleFactory() {
+        return fareRuleFactory;
     }
 }
