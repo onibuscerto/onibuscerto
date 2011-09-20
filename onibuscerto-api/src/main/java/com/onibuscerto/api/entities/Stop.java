@@ -7,4 +7,8 @@ public interface Stop extends Location {
     public String getName();
 
     public void setName(String name);
+
+    public String getZoneId();
+
+    public void setZoneId(String zoneId);
 }

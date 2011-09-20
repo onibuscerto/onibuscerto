@@ -77,6 +77,7 @@ public class GTFSImporter {
             stop.setName(hashMap.get("stop_name"));
             stop.setLatitude(Double.parseDouble(hashMap.get("stop_lat")));
             stop.setLongitude(Double.parseDouble(hashMap.get("stop_lon")));
+            stop.setZoneId(hashMap.get("zone_id"));
 
             Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
                     "Inseri stop " + stop.getName() + " (" + stop.getId() + ")");
@@ -308,6 +309,8 @@ public class GTFSImporter {
                 route.setFare(databaseController.getFareAttributeFactory().getFareAttributeById(
                         hashMap.get("fare_id")));
             }
+
+
 
             Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
                     "Inseri FareRule " +
