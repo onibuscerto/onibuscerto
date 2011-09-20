@@ -13,7 +13,7 @@ import org.neo4j.test.ImpermanentGraphDatabase;
 import static org.junit.Assert.*;
 
 public class GTFSImporterBartTest {
-    
+
     private static final String TRANSIT_FEED_PATH = "src/test/resources/bart";
     private static DatabaseController databaseController;
     private static GTFSImporter importer;
@@ -40,7 +40,7 @@ public class GTFSImporterBartTest {
     public void tearDown() {
         databaseController.endTransaction(false);
     }
-    
+
     @Test
     public void testImportedStops() {
         Collection<Stop> allStops = databaseController.getLocationFactory().getAllStops();

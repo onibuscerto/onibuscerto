@@ -3,6 +3,8 @@ package com.onibuscerto.api;
 import com.onibuscerto.api.entities.ShapePoint;
 import com.onibuscerto.api.factories.ShapePointFactory;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
@@ -84,11 +86,15 @@ public class ShapePointFactoryImpl implements ShapePointFactory {
         ReturnableEvaluator evaluator = new ReturnableEvaluator() {
 
             @Override
-            public boolean isReturnableNode(TraversalPosition tp) {
-                if (tp.currentNode().getProperty(ShapePointImpl.KEY_SHAPE_ID) == shapeId) {
-                    return true;
-                } else {
+            public boolean isReturnableNode(TraversalPosition position) {
+                if (position.isStartNode()) {
                     return false;
+                } else {
+                    if (position.currentNode().getProperty(ShapePointImpl.KEY_SHAPE_ID).equals(shapeId)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }
             }
         };

@@ -205,17 +205,17 @@ public class GTFSImporter {
                 shapes.get((String) shapePoint.getShapeId()).add(shapePoint);
             }
 
-            for (Entry<String, ArrayList<ShapePoint>> entry : shapes.entrySet()) {
-                linkShapePoints(entry.getValue());
-                shapePointFactory.setShapeFirstPoint(entry.getValue().get(0));
-            }
-
             Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
                     "Inseri ShapePoint da shape " + shapePoint.getShapeId()
                     + " numero de sequencia " + shapePoint.getSequence());
 
             hashMap.clear();
 
+        }
+
+        for (Entry<String, ArrayList<ShapePoint>> entry : shapes.entrySet()) {
+            linkShapePoints(entry.getValue());
+            shapePointFactory.setShapeFirstPoint(entry.getValue().get(0));
         }
     }
 
@@ -264,7 +264,7 @@ public class GTFSImporter {
             fareAttribute.setPrice(Double.parseDouble(hashMap.get("price")));
             fareAttribute.setCurrencyType(hashMap.get("currency_type"));
             fareAttribute.setPaymentMethod(Integer.parseInt(hashMap.get("payment_method")));
-            if(hashMap.get("transfers").isEmpty()) {
+            if (hashMap.get("transfers").isEmpty()) {
                 //TODO: verificar se -1 é o valor adequado quando transfers esta vazio
                 fareAttribute.setTransfers(-1);
             } else {
