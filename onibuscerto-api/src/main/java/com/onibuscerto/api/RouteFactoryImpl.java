@@ -63,7 +63,7 @@ class RouteFactoryImpl implements RouteFactory {
         Traverser traverser = routeFactoryNode.traverse(
                 Traverser.Order.BREADTH_FIRST, StopEvaluator.DEPTH_ONE,
                 ReturnableEvaluator.ALL_BUT_START_NODE,
-                Relationships.STOP, Direction.OUTGOING);
+                Relationships.ROUTE, Direction.OUTGOING);
         return traverser.getAllNodes();
     }
 
