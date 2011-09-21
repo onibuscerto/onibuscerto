@@ -199,6 +199,7 @@ function runQuery() {
     };
 
     $.post("/route", data, function(response) {
+        alert(response);
         clearMap();
         addMapPath(response);
         addMapMarkers(response);
@@ -225,8 +226,12 @@ function clearMap() {
 function addMapPath(response) {
     var path = [];
 
+    var start = new google.maps.LatLng(response[0].start.latitude, response[0].start.longitude)
+    path.push(start);
+    bounds.extend(start);
+
     for (var i = 0; i < response.length; i++) {
-        var pos = response[i];
+        var pos = response[i].end;
         var latlng = new google.maps.LatLng(pos.latitude, pos.longitude);
         path.push(latlng);
         bounds.extend(latlng);
@@ -241,8 +246,8 @@ function addMapPath(response) {
 }
 
 function addMapMarkers(response) {
-    var start = response[0];
-    var end = response[response.length-1];
+    var start = response[0].start;
+    var end = response[response.length-1].end;
 
     setStartMarker(new google.maps.LatLng(start.latitude, start.longitude));
     setEndMarker(new google.maps.LatLng(end.latitude, end.longitude));

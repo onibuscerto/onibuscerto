@@ -9,9 +9,12 @@ import com.onibuscerto.api.DatabaseController;
 import com.onibuscerto.api.entities.Connection;
 import com.onibuscerto.api.entities.Location;
 import com.onibuscerto.api.entities.Stop;
+import com.onibuscerto.api.entities.TransportConnection;
+import com.onibuscerto.api.entities.Trip;
 import com.onibuscerto.api.entities.WalkingConnection;
 import com.onibuscerto.api.factories.ConnectionFactory;
-import com.onibuscerto.service.utils.GlobalPosition;
+import com.onibuscerto.api.utils.GlobalPosition;
+import com.onibuscerto.api.utils.QueryResponseConnection;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -39,7 +42,7 @@ public class RouteApp {
     }
 
     @Post
-    public Reply<Collection<GlobalPosition>> post() {
+    public Reply<Collection<QueryResponseConnection>> post() {
         DatabaseController databaseController = new DatabaseController();
         databaseController.beginTransaction();
 
@@ -60,20 +63,20 @@ public class RouteApp {
             double d1 = distance(srcNode.getLatitude(), srcNode.getLongitude(),
                     stop.getLatitude(), stop.getLongitude());
             wc1.setWalkingDistance(d1);
-            wc1.setTimeCost((int) Math.round(d1/1.5));
+            wc1.setTimeCost((int) Math.round(d1 / 1.5));
 
             WalkingConnection wc2 = connectionFactory.createWalkingConnection(stop, tgtNode);
             double d2 = distance(stop.getLatitude(), stop.getLongitude(),
                     tgtNode.getLatitude(), tgtNode.getLongitude());
             wc2.setWalkingDistance(d2);
-            wc2.setTimeCost((int) Math.round(d2/1.5));
+            wc2.setTimeCost((int) Math.round(d2 / 1.5));
         }
 
         // Conecta a origem com o destino também
         WalkingConnection wc = connectionFactory.createWalkingConnection(srcNode, tgtNode);
         double d3 = distance(srcNode.getLatitude(), srcNode.getLongitude(), tgtNode.getLatitude(), tgtNode.getLongitude());
         wc.setWalkingDistance(d3);
-        wc.setTimeCost((int) Math.round(d3/1.5));
+        wc.setTimeCost((int) Math.round(d3 / 1.5));
 
         int departureTime = 0;
 
@@ -87,7 +90,7 @@ public class RouteApp {
 
         // Encontra o caminho e converte pra uma Collection de GlobalPositions
         Collection<Connection> path = databaseController.getShortestPath(srcNode, tgtNode, departureTime);
-        Collection<GlobalPosition> ret = new LinkedList<GlobalPosition>();
+        Collection<QueryResponseConnection> ret = new LinkedList<QueryResponseConnection>();
 
         if (path == null) {
             // WTF, não tem caminho!
@@ -98,10 +101,22 @@ public class RouteApp {
         }
 
         for (Connection connection : path) {
-            Location location = connection.getSource();
-            ret.add(new GlobalPosition(location.getLatitude(), location.getLongitude()));
+            QueryResponseConnection qrc = new QueryResponseConnection();
+            qrc.setStart(new GlobalPosition(connection.getSource().getLatitude(),
+                    connection.getSource().getLongitude()));
+            qrc.setEnd(new GlobalPosition(connection.getTarget().getLatitude(),
+                    connection.getTarget().getLongitude()));
+
+            if (connection instanceof WalkingConnection) {
+                qrc.setRouteType(-1);
+            } else {
+                Trip trip = databaseController.getTripFactory().getTripById(
+                        ((TransportConnection) connection).getTripId());
+                qrc.setRouteType(trip.getRoute().getType().toInt());
+            }
+
+            ret.add(qrc);
         }
-        ret.add(new GlobalPosition(tgtNode.getLatitude(), tgtNode.getLongitude()));
 
         // Faz um rollback da transação
         databaseController.endTransaction(false);
