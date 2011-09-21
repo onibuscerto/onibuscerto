@@ -199,7 +199,6 @@ function runQuery() {
     };
 
     $.post("/route", data, function(response) {
-        alert(response);
         clearMap();
         addMapPath(response);
         addMapMarkers(response);
