@@ -236,6 +236,10 @@ function addMapPath(response) {
         var path = [];
         var scolor = response[i].routeType == -1 ? "#000000" : "#0000CC";
 
+        if (response[i].routeColor) {
+            scolor = "#" + response[i].routeColor;
+        }
+
         path.push(latlng1);
         path.push(latlng2);
 
@@ -316,18 +320,31 @@ function setEndMarker(position) {
     });
 }
 
+function pad(num, size) {
+    var s = num + "";
+    while (s.length < size) s = "0" + s;
+    return s;
+}
+
 function showInformation(response) {
     for (var i = 0; i < response.length; i++) {
         var pos1 = response[i].start;
         var pos2 = response[i].end;
         var latlng1 = new google.maps.LatLng(pos1.latitude, pos1.longitude);
         var latlng2 = new google.maps.LatLng(pos2.latitude, pos2.longitude);
-        var scolor = response[i].routeType == -1 ? "#000000" : "#0000CC";
 
         if (response[i].routeType == -1) {
-            $("#result").append('<li>Caminhar até '+latlng2+'.</li>');
+            if (i == response.length-1) {
+                $("#result").append('<li>Caminhar até o destino.</li>');
+            } else {
+                $("#result").append('<li>Caminhar até '+response[i+1].startStopName+'.</li>');
+            }
         } else {
-            $("#result").append('<li>Pegar a rota '+response[i].routeLongName+'.</li>');
+            var routeType = ['o bonde', 'o metrô', 'o trem', 'o ônibus', 'o barco',
+                'a carruagem de cabos', 'a gôndola', 'o funicular'][response[i].routeType];
+            var hour = Math.floor(response[i].departureTime / 3600);
+            var minute = Math.floor(response[i].departureTime / 60) % 60;
+            $("#result").append('<li>Pegar '+routeType+' '+response[i].routeLongName+', partindo às '+hour+':'+pad(minute, 2)+'.</li>');
         }
     }
 }

@@ -105,6 +105,11 @@ class RouteImpl implements Route {
     }
 
     @Override
+    public boolean hasRouteColor() {
+        return getRouteColor() != null;
+    }
+
+    @Override
     public FareAttribute getFare() {
         Relationship rel = underlyingNode.getSingleRelationship(
                 Relationships.ROUTE_TO_FARE, Direction.INCOMING);

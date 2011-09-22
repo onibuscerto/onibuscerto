@@ -21,6 +21,8 @@ class WalkingConnectionImpl implements WalkingConnection {
     @Override
     public void setWalkingDistance(double distance) {
         this.underlyingRelationship.setProperty(KEY_WALKING_DISTANCE, distance);
+        //supondo velocidade de caminhada 1 m/s
+        setTimeCost((int) distance);
     }
 
     @Override

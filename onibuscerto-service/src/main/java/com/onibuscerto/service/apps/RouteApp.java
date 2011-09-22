@@ -63,13 +63,11 @@ public class RouteApp {
             double d1 = distance(srcNode.getLatitude(), srcNode.getLongitude(),
                     stop.getLatitude(), stop.getLongitude());
             wc1.setWalkingDistance(d1);
-            wc1.setTimeCost((int) Math.round(d1 / 1.5));
 
             WalkingConnection wc2 = connectionFactory.createWalkingConnection(stop, tgtNode);
             double d2 = distance(stop.getLatitude(), stop.getLongitude(),
                     tgtNode.getLatitude(), tgtNode.getLongitude());
             wc2.setWalkingDistance(d2);
-            wc2.setTimeCost((int) Math.round(d2 / 1.5));
         }
 
         // Conecta a origem com o destino também
@@ -113,6 +111,12 @@ public class RouteApp {
                 TransportConnection transportConnection = (TransportConnection) connection;
                 Trip trip = databaseController.getTripFactory().getTripById(transportConnection.getTripId());
 
+                if (trip.getRoute().hasRouteColor()) {
+                    qrc.setRouteColor(trip.getRoute().getRouteColor());
+                }
+
+                qrc.setDepartureTime(transportConnection.getDepartureTime());
+                qrc.setStartStopName(((Stop) transportConnection.getSource()).getName());
                 qrc.setRouteType(trip.getRoute().getType().toInt());
                 qrc.setRouteLongName(trip.getRoute().getLongName());
             }
