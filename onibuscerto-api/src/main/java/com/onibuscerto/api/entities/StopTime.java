@@ -25,15 +25,15 @@ public interface StopTime {
     public double getShapeDistTraveled();
 
     public void setShapeDistTraveled(double shapeDistTraveled);
-    
+
     public boolean hasShapeDistTraveled();
-    
+
     public ShapePoint getShape();
-    
+
     public void setShape(ShapePoint shapePoint);
-    
+
     public int getShapeLength();
-    
+
     public void setShapeLength(int length);
 
     public StopTime getNext();

@@ -139,11 +139,11 @@ public class StopTimeImpl implements StopTime {
         Relationship rel = underlyingNode.getSingleRelationship(
                 Relationships.STOPTIME_TO_SHAPE, Direction.OUTGOING);
         ShapePointImpl shapePointImpl = (ShapePointImpl) shapePoint;
-        
-        if(rel != null) {
+
+        if (rel != null) {
             rel.delete();
         }
-        
+
         underlyingNode.createRelationshipTo(
                 shapePointImpl.getUnderlyingNode(), Relationships.STOPTIME_TO_SHAPE);
     }
@@ -154,8 +154,8 @@ public class StopTimeImpl implements StopTime {
     }
 
     @Override
-    public void setShapeLength(int length) {
-        underlyingNode.setProperty(KEY_SHAPE_LENGTH, length);
+    public void setShapeLength(int shapeLength) {
+        underlyingNode.setProperty(KEY_SHAPE_LENGTH, shapeLength);
     }
 
     @Override
