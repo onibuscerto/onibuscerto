@@ -328,11 +328,6 @@ function pad(num, size) {
 
 function showInformation(response) {
     for (var i = 0; i < response.length; i++) {
-        var pos1 = response[i].start;
-        var pos2 = response[i].end;
-        var latlng1 = new google.maps.LatLng(pos1.latitude, pos1.longitude);
-        var latlng2 = new google.maps.LatLng(pos2.latitude, pos2.longitude);
-
         if (response[i].routeType == -1) {
             if (i == response.length-1) {
                 $("#result").append('<li>Caminhar até o destino.</li>');
