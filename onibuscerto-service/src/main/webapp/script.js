@@ -316,6 +316,12 @@ function setEndMarker(position) {
     });
 }
 
+function pad(num, size) {
+    var s = num + "";
+    while (s.length < size) s = "0" + s;
+    return s;
+}
+
 function showInformation(response) {
     for (var i = 0; i < response.length; i++) {
         var pos1 = response[i].start;
@@ -332,7 +338,9 @@ function showInformation(response) {
         } else {
             var routeType = ['o bonde', 'o metrô', 'o trem', 'o ônibus', 'o barco',
                 'a carruagem de cabos', 'a gôndola', 'o funicular'][response[i].routeType];
-            $("#result").append('<li>Pegar '+routeType+' '+response[i].routeLongName+'.</li>');
+            var hour = Math.floor(response[i].departureTime / 3600);
+            var minute = Math.floor(response[i].departureTime / 60) % 60;
+            $("#result").append('<li>Pegar '+routeType+' '+response[i].routeLongName+', partindo às '+hour+':'+pad(minute, 2)+'.</li>');
         }
     }
 }
