@@ -236,6 +236,10 @@ function addMapPath(response) {
         var path = [];
         var scolor = response[i].routeType == -1 ? "#000000" : "#0000CC";
 
+        if (response[i].routeColor) {
+            scolor = "#" + response[i].routeColor;
+        }
+
         path.push(latlng1);
         path.push(latlng2);
 

@@ -5,6 +5,7 @@ public final class QueryResponseConnection {
     private GlobalPosition start;
     private GlobalPosition end;
     private int routeType;
+    private String routeColor;
     private String routeLongName;
     private String startStopName;
     private int departureTime;
@@ -55,5 +56,13 @@ public final class QueryResponseConnection {
 
     public void setDepartureTime(int departureTime) {
         this.departureTime = departureTime;
+    }
+
+    public String getRouteColor() {
+        return routeColor;
+    }
+
+    public void setRouteColor(String routeColor) {
+        this.routeColor = routeColor;
     }
 }

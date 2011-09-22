@@ -111,6 +111,10 @@ public class RouteApp {
                 TransportConnection transportConnection = (TransportConnection) connection;
                 Trip trip = databaseController.getTripFactory().getTripById(transportConnection.getTripId());
 
+                if (trip.getRoute().hasRouteColor()) {
+                    qrc.setRouteColor(trip.getRoute().getRouteColor());
+                }
+
                 qrc.setDepartureTime(transportConnection.getDepartureTime());
                 qrc.setStartStopName(((Stop) transportConnection.getSource()).getName());
                 qrc.setRouteType(trip.getRoute().getType().toInt());
