@@ -208,7 +208,7 @@ function runQuery() {
 
 function clearMap() {
     if (polylines) {
-        for (i in polylines) {
+        for (var i in polylines) {
             polylines[i].setMap(null);
         }
     }
