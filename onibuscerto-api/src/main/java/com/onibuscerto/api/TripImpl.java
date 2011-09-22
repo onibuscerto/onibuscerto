@@ -140,6 +140,32 @@ class TripImpl implements Trip {
     }
 
     @Override
+    public StopTime getFirstStopTime() {
+        Relationship rel = underlyingNode.getSingleRelationship(
+                Relationships.TRIP_TO_FIRST_STOPTIME, Direction.OUTGOING);
+
+        if (rel == null) {
+            return null;
+        } else {
+            return new StopTimeImpl(rel.getEndNode());
+        }
+    }
+
+    @Override
+    public void setFirstStopTime(StopTime firstStopTime) {
+        Relationship rel = underlyingNode.getSingleRelationship(
+                Relationships.TRIP_TO_FIRST_STOPTIME, Direction.OUTGOING);
+        StopTimeImpl stopTime = (StopTimeImpl) firstStopTime;
+
+        if (rel != null) {
+            rel.delete();
+        }
+
+        getUnderlyingNode().createRelationshipTo(stopTime.getUnderlyingNode(),
+                Relationships.TRIP_TO_FIRST_STOPTIME);
+    }
+
+    @Override
     public boolean equals(Object object) {
         if (object instanceof TripImpl) {
             return getUnderlyingNode().equals(

@@ -19,4 +19,8 @@ public interface Trip {
     public ShapePoint getShape();
 
     public void setShape(ShapePoint shapeFirstPoint);
+
+    public StopTime getFirstStopTime();
+
+    public void setFirstStopTime(StopTime stopTime);
 }
