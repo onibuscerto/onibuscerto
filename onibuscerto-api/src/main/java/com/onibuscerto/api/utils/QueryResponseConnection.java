@@ -5,6 +5,7 @@ public final class QueryResponseConnection {
     private GlobalPosition start;
     private GlobalPosition end;
     private int routeType;
+    private String routeLongName;
 
     public GlobalPosition getEnd() {
         return end;
@@ -28,5 +29,13 @@ public final class QueryResponseConnection {
 
     public void setStart(GlobalPosition start) {
         this.start = start;
+    }
+
+    public String getRouteLongName() {
+        return routeLongName;
+    }
+
+    public void setRouteLongName(String routeLongName) {
+        this.routeLongName = routeLongName;
     }
 }

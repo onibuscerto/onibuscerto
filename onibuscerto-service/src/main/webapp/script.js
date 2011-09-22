@@ -325,9 +325,9 @@ function showInformation(response) {
         var scolor = response[i].routeType == -1 ? "#000000" : "#0000CC";
 
         if (response[i].routeType == -1) {
-            $("#result").append('<li>Caminhar de '+latlng1+' até '+latlng2+'.</li>');
+            $("#result").append('<li>Caminhar até '+latlng2+'.</li>');
         } else {
-            $("#result").append('<li>Ir de '+latlng1+' até '+latlng2+'.</li>');
+            $("#result").append('<li>Pegar a rota '+response[i].routeLongName+'.</li>');
         }
     }
 }

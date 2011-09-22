@@ -110,9 +110,11 @@ public class RouteApp {
             if (connection instanceof WalkingConnection) {
                 qrc.setRouteType(-1);
             } else {
-                Trip trip = databaseController.getTripFactory().getTripById(
-                        ((TransportConnection) connection).getTripId());
+                TransportConnection transportConnection = (TransportConnection) connection;
+                Trip trip = databaseController.getTripFactory().getTripById(transportConnection.getTripId());
+
                 qrc.setRouteType(trip.getRoute().getType().toInt());
+                qrc.setRouteLongName(trip.getRoute().getLongName());
             }
 
             ret.add(qrc);
