@@ -2,7 +2,7 @@ var map;
 var geocoder;
 var contextMenu;
 var clickedLatLng;
-var polyline;
+var polylines = [];
 var bounds;
 var startMarker;
 var endMarker;
@@ -207,8 +207,10 @@ function runQuery() {
 }
 
 function clearMap() {
-    if (polyline) {
-        polyline.setMap(null);
+    if (polylines) {
+        for (i in polylines) {
+            polylines[i].setMap(null);
+        }
     }
 
     if (startMarker) {
@@ -223,25 +225,28 @@ function clearMap() {
 }
 
 function addMapPath(response) {
-    var path = [];
-
-    var start = new google.maps.LatLng(response[0].start.latitude, response[0].start.longitude)
-    path.push(start);
-    bounds.extend(start);
-
     for (var i = 0; i < response.length; i++) {
-        var pos = response[i].end;
-        var latlng = new google.maps.LatLng(pos.latitude, pos.longitude);
-        path.push(latlng);
-        bounds.extend(latlng);
-    }
+        var pos1 = response[i].start;
+        var pos2 = response[i].end;
+        var latlng1 = new google.maps.LatLng(pos1.latitude, pos1.longitude);
+        var latlng2 = new google.maps.LatLng(pos2.latitude, pos2.longitude);
+        var path = [];
+        var scolor = response[i].routeType == -1 ? "#000000" : "#0000CC";
 
-    polyline = new google.maps.Polyline({
-        map: map,
-        path: path,
-        strokeColor: "#0000CC",
-        opacity: 0.4
-    });
+        path.push(latlng1);
+        path.push(latlng2);
+
+        polylines.push(new google.maps.Polyline({
+            map: map,
+            path: path,
+            strokeColor: scolor,
+            strokeOpacity: 0.75,
+            strokeWeight: 4
+        }));
+
+        bounds.extend(latlng1);
+        bounds.extend(latlng2);
+    }
 }
 
 function addMapMarkers(response) {
