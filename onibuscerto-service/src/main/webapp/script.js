@@ -322,12 +322,13 @@ function showInformation(response) {
         var pos2 = response[i].end;
         var latlng1 = new google.maps.LatLng(pos1.latitude, pos1.longitude);
         var latlng2 = new google.maps.LatLng(pos2.latitude, pos2.longitude);
-        var scolor = response[i].routeType == -1 ? "#000000" : "#0000CC";
 
         if (response[i].routeType == -1) {
             $("#result").append('<li>Caminhar até '+latlng2+'.</li>');
         } else {
-            $("#result").append('<li>Pegar a rota '+response[i].routeLongName+'.</li>');
+            var routeType = ['o bonde', 'o metrô', 'o trem', 'o ônibus', 'o barco',
+                'a carruagem de cabos', 'a gôndola', 'o funicular'][response[i].routeType];
+            $("#result").append('<li>Pegar '+routeType+' '+response[i].routeLongName+'.</li>');
         }
     }
 }
