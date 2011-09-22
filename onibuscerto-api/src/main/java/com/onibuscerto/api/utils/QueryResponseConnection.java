@@ -6,6 +6,8 @@ public final class QueryResponseConnection {
     private GlobalPosition end;
     private int routeType;
     private String routeLongName;
+    private String startStopName;
+    private int departureTime;
 
     public GlobalPosition getEnd() {
         return end;
@@ -37,5 +39,21 @@ public final class QueryResponseConnection {
 
     public void setRouteLongName(String routeLongName) {
         this.routeLongName = routeLongName;
+    }
+
+    public String getStartStopName() {
+        return startStopName;
+    }
+
+    public void setStartStopName(String startStopName) {
+        this.startStopName = startStopName;
+    }
+
+    public int getDepartureTime() {
+        return departureTime;
+    }
+
+    public void setDepartureTime(int departureTime) {
+        this.departureTime = departureTime;
     }
 }

@@ -112,6 +112,8 @@ public class RouteApp {
                 TransportConnection transportConnection = (TransportConnection) connection;
                 Trip trip = databaseController.getTripFactory().getTripById(transportConnection.getTripId());
 
+                qrc.setDepartureTime(transportConnection.getDepartureTime());
+                qrc.setStartStopName(((Stop) transportConnection.getSource()).getName());
                 qrc.setRouteType(trip.getRoute().getType().toInt());
                 qrc.setRouteLongName(trip.getRoute().getLongName());
             }
