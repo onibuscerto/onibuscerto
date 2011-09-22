@@ -12,6 +12,7 @@ enum Relationships implements RelationshipType {
     TRIP,
     STOPTIMES,
     STOPTIME,
+    STOPTIME_TO_SHAPE,
     TRIP_TO_STOPTIME,
     TRIP_TO_FIRST_STOPTIME,
     STOP_TO_STOPTIME,
