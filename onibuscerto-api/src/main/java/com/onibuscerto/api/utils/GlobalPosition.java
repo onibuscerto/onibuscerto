@@ -28,4 +28,10 @@ public final class GlobalPosition {
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
+
+    public double getDistanceTo(GlobalPosition globalPosition) {
+        double dx = Math.pow(this.latitude - globalPosition.getLatitude(), 2);
+        double dy = Math.pow(this.longitude - globalPosition.getLongitude(), 2);
+        return Math.sqrt(dx + dy);
+    }
 }

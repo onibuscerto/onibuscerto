@@ -1,5 +1,6 @@
 package com.onibuscerto.api.entities;
 
+import com.onibuscerto.api.utils.GlobalPosition;
 import java.util.Collection;
 
 /**
@@ -31,6 +32,19 @@ public interface Location {
      * @param longitude longitude em graus
      */
     public void setLongitude(double longitude);
+
+    /**
+     * Retorna a latitude e a longitude em um objeto <code>GlobalPosition</code>.
+     * @return a latitude e a longitude em um objeto <code>GlobalPosition</code>
+     */
+    public GlobalPosition getGlobalPosition();
+    
+    
+    /**
+     * Atribui a latitude e a longitude da entidade a partir de um objeto <code>GlobalPosition</code>.
+     * @param globalPosition objeto que contém informações de latitude e longitude
+     */
+    public void setGlobalPosition(GlobalPosition globalPosition);
 
     /**
      * Retorna uma coleção com as conexões saindo deste <code>Location</code>.
