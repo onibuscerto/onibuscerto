@@ -33,8 +33,8 @@ function setupUI() {
 
 function setupMapWidget() {
     var mapOptions = {
-        zoom: 15,
-        center: new google.maps.LatLng(36.90773, -116.76477),
+        zoom: 12,
+        center: new google.maps.LatLng(37.765015, -122.347183),
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     map = new google.maps.Map(document.getElementById("right"), mapOptions);
