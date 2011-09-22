@@ -33,13 +33,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class GTFSImporter {
-
+    
     private DatabaseController databaseController;
-
+    
     public GTFSImporter(DatabaseController databaseController) {
         this.databaseController = databaseController;
     }
-
+    
     public void importData(String transitFeedPath) {
         databaseController.beginTransaction();
         try {
@@ -52,6 +52,7 @@ public class GTFSImporter {
             importStopTimes(transitFeedPath + "/stop_times.txt");
             importFareRules(transitFeedPath + "/fare_rules.txt");
             linkStopTimes();
+            assignShapes();
             createConnections();
             databaseController.endTransaction(true);
         } catch (IOException ex) {
@@ -59,7 +60,7 @@ public class GTFSImporter {
             databaseController.endTransaction(false);
         }
     }
-
+    
     private void importStops(String stopsFile)
             throws IOException {
         LocationFactory locationFactory = databaseController.getLocationFactory();
@@ -67,37 +68,37 @@ public class GTFSImporter {
         String columnNames[] = reader.readNext();
         String lineValues[];
         HashMap<String, String> hashMap = new HashMap<String, String>();
-
+        
         while ((lineValues = reader.readNext()) != null) {
             for (int i = 0; i < lineValues.length; i++) {
                 hashMap.put(columnNames[i], lineValues[i]);
             }
-
+            
             Stop stop = locationFactory.createStop(hashMap.get("stop_id"));
             stop.setName(hashMap.get("stop_name"));
             stop.setLatitude(Double.parseDouble(hashMap.get("stop_lat")));
             stop.setLongitude(Double.parseDouble(hashMap.get("stop_lon")));
             stop.setZoneId(hashMap.get("zone_id"));
-
+            
             Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
                     "Inseri stop " + stop.getName() + " (" + stop.getId() + ")");
-
+            
             hashMap.clear();
         }
     }
-
+    
     private void importRoutes(String routesFile) throws IOException {
         RouteFactory routeFactory = databaseController.getRouteFactory();
         CSVReader reader = new CSVReader(new FileReader(routesFile));
         String columnNames[] = reader.readNext();
         String lineValues[];
         HashMap<String, String> hashMap = new HashMap<String, String>();
-
+        
         while ((lineValues = reader.readNext()) != null) {
             for (int i = 0; i < lineValues.length; i++) {
                 hashMap.put(columnNames[i], lineValues[i]);
             }
-
+            
             Route route = routeFactory.createRoute(hashMap.get("route_id"));
             route.setShortName(hashMap.get("route_short_name"));
             route.setLongName(hashMap.get("route_long_name"));
@@ -109,23 +110,23 @@ public class GTFSImporter {
             }
             Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
                     "Inseri route " + route.getShortName() + " (" + route.getId() + ")");
-
+            
             hashMap.clear();
         }
     }
-
+    
     private void importTrips(String tripsFile) throws IOException {
         TripFactory tripFactory = databaseController.getTripFactory();
         CSVReader reader = new CSVReader(new FileReader(tripsFile));
         String columnNames[] = reader.readNext();
         String lineValues[];
         HashMap<String, String> hashMap = new HashMap<String, String>();
-
+        
         while ((lineValues = reader.readNext()) != null) {
             for (int i = 0; i < lineValues.length; i++) {
                 hashMap.put(columnNames[i], lineValues[i]);
             }
-
+            
             Trip trip = tripFactory.createTrip(hashMap.get("trip_id"));
             trip.setRoute(databaseController.getRouteFactory().getRouteById(
                     hashMap.get("route_id")));
@@ -136,26 +137,26 @@ public class GTFSImporter {
                 trip.setShape(databaseController.getShapePointFactory().getShapeById(
                         hashMap.get("shape_id")));
             }
-
+            
             Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
                     "Inseri trip " + trip.getId());
-
+            
             hashMap.clear();
         }
     }
-
+    
     private void importStopTimes(String stopTimesFile) throws IOException {
         StopTimeFactory stopTimeFactory = databaseController.getStopTimeFactory();
         CSVReader reader = new CSVReader(new FileReader(stopTimesFile));
         String columnNames[] = reader.readNext();
         String lineValues[];
         HashMap<String, String> hashMap = new HashMap<String, String>();
-
+        
         while ((lineValues = reader.readNext()) != null) {
             for (int i = 0; i < lineValues.length; i++) {
                 hashMap.put(columnNames[i], lineValues[i]);
             }
-
+            
             StopTime stopTime = stopTimeFactory.createStopTime();
             stopTime.setTrip(databaseController.getTripFactory().getTripById(
                     hashMap.get("trip_id")));
@@ -169,15 +170,15 @@ public class GTFSImporter {
                 double dist = Double.parseDouble(hashMap.get("shape_dist_traveled"));
                 stopTime.setShapeDistTraveled(dist);
             }
-
+            
             Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
                     "Inseri StopTime da trip " + stopTime.getTrip().getId()
                     + " numero de sequencia " + stopTime.getSequence());
-
+            
             hashMap.clear();
         }
     }
-
+    
     private void importShapes(String shapesFile) throws IOException {
         ShapePointFactory shapePointFactory = databaseController.getShapePointFactory();
         CSVReader reader = new CSVReader(new FileReader(shapesFile));
@@ -185,12 +186,12 @@ public class GTFSImporter {
         String lineValues[];
         HashMap<String, String> hashMap = new HashMap<String, String>();
         HashMap<String, ArrayList<ShapePoint>> shapes = new HashMap<String, ArrayList<ShapePoint>>();
-
+        
         while ((lineValues = reader.readNext()) != null) {
             for (int i = 0; i < lineValues.length; i++) {
                 hashMap.put(columnNames[i], lineValues[i]);
             }
-
+            
             ShapePoint shapePoint = shapePointFactory.createShapePoint();
             shapePoint.setShapeId(hashMap.get("shape_id"));
             shapePoint.setLatitude(Double.parseDouble(hashMap.get("shape_pt_lat")));
@@ -200,7 +201,7 @@ public class GTFSImporter {
                 shapePoint.setShapeDistTraveled(Double.parseDouble(hashMap.get(
                         "shape_dist_traveled")));
             }
-
+            
             if (shapes.containsKey(shapePoint.getShapeId()) == false) {
                 ArrayList<ShapePoint> shapePoints = new ArrayList<ShapePoint>();
                 shapePoints.add(shapePoint);
@@ -208,21 +209,21 @@ public class GTFSImporter {
             } else {
                 shapes.get((String) shapePoint.getShapeId()).add(shapePoint);
             }
-
+            
             Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
                     "Inseri ShapePoint da shape " + shapePoint.getShapeId()
                     + " numero de sequencia " + shapePoint.getSequence());
-
+            
             hashMap.clear();
-
+            
         }
-
+        
         for (Entry<String, ArrayList<ShapePoint>> entry : shapes.entrySet()) {
             linkShapePoints(entry.getValue());
             shapePointFactory.setShapeFirstPoint(entry.getValue().get(0));
         }
     }
-
+    
     private void importCalendars(String calendarFile)
             throws IOException {
         CalendarFactory calendarFactory = databaseController.getCalendarFactory();
@@ -231,26 +232,26 @@ public class GTFSImporter {
         String lineValues[];
         String[] day = {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"};
         HashMap<String, String> hashMap = new HashMap<String, String>();
-
+        
         while ((lineValues = reader.readNext()) != null) {
             for (int i = 0; i < lineValues.length; i++) {
                 hashMap.put(columnNames[i], lineValues[i]);
             }
-
+            
             Calendar calendar = calendarFactory.createCalendar(hashMap.get("service_id"));
             for (int i = 0; i < day.length; i++) {
                 calendar.setDaysOfWork(day[i], hashMap.get(day[i]));
             }
             calendar.setStartDate(hashMap.get("start_date"));
             calendar.setEndDate(hashMap.get("end_date"));
-
+            
             Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
                     "Inseri calendar " + calendar.getServiceId());
-
+            
             hashMap.clear();
         }
     }
-
+    
     private void importFareAttributes(String fareAttributesFile)
             throws IOException {
         FareAttributeFactory fareAttributeFactory = databaseController.getFareAttributeFactory();
@@ -258,12 +259,12 @@ public class GTFSImporter {
         String columnNames[] = reader.readNext();
         String lineValues[];
         HashMap<String, String> hashMap = new HashMap<String, String>();
-
+        
         while ((lineValues = reader.readNext()) != null) {
             for (int i = 0; i < lineValues.length; i++) {
                 hashMap.put(columnNames[i], lineValues[i]);
             }
-
+            
             FareAttribute fareAttribute = fareAttributeFactory.createFareAttribute(hashMap.get("fare_id"));
             fareAttribute.setPrice(Double.parseDouble(hashMap.get("price")));
             fareAttribute.setCurrencyType(hashMap.get("currency_type"));
@@ -278,26 +279,26 @@ public class GTFSImporter {
                 fareAttribute.setTransferDuration(
                         Integer.parseInt(hashMap.get("transfer_duration")));
             }
-
+            
             Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
                     "Inseri fare " + fareAttribute.getFareId());
-
+            
             hashMap.clear();
         }
     }
-
+    
     private void importFareRules(String fareRulesFile) throws IOException {
         FareRuleFactory fareRuleFactory = databaseController.getFareRuleFactory();
         CSVReader reader = new CSVReader(new FileReader(fareRulesFile));
         String columnNames[] = reader.readNext();
         String lineValues[];
         HashMap<String, String> hashMap = new HashMap<String, String>();
-
+        
         while ((lineValues = reader.readNext()) != null) {
             for (int i = 0; i < lineValues.length; i++) {
                 hashMap.put(columnNames[i], lineValues[i]);
             }
-
+            
             FareRule fareRule = fareRuleFactory.createFareRule();
             fareRule.setFareAttribute(databaseController.getFareAttributeFactory().getFareAttributeById(
                     hashMap.get("fare_id")));
@@ -308,36 +309,35 @@ public class GTFSImporter {
                 route.setFare(databaseController.getFareAttributeFactory().getFareAttributeById(
                         hashMap.get("fare_id")));
             }
-
+            
             if (hashMap.containsKey("origin_id")
                     && !hashMap.get("origin_id").isEmpty()) {
-
             }
-
+            
             if (hashMap.containsKey("destination_id")
                     && !hashMap.get("destination_id").isEmpty()) {
             }
-
+            
             if (hashMap.containsKey("contains_id")
                     && !hashMap.get("contains_id").isEmpty()) {
             }
-
+            
             Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
                     "Inseri FareRule "
                     + fareRule.getFareAttribute().getFareId());
-
+            
             hashMap.clear();
         }
     }
-
+    
     private void linkStopTimes() {
         Collection<Trip> allTrips = databaseController.getTripFactory().getAllTrips();
         LinkedList<StopTime> stopTimes;
-
+        
         for (Trip trip : allTrips) {
             stopTimes = new LinkedList<StopTime>(trip.getStopTimes());
             Collections.sort(stopTimes, new Comparator() {
-
+                
                 @Override
                 public int compare(Object o1, Object o2) {
                     StopTime st1 = (StopTime) o1;
@@ -345,16 +345,82 @@ public class GTFSImporter {
                     return ((Integer) st1.getSequence()).compareTo(st2.getSequence());
                 }
             });
+            trip.setFirstStopTime(stopTimes.getFirst());
             while (stopTimes.isEmpty() == false) {
                 StopTime stopTime = stopTimes.pop();
                 stopTime.setNext(stopTimes.peekFirst());
             }
         }
     }
+    
+    private void assignShapes() {
+        Collection<Trip> allTrips = databaseController.getTripFactory().getAllTrips();
+        HashMap<StopTime, ArrayList<ShapePoint>> hashMap;
+        //ArrayList<ShapePoint> segments;
 
+        for (Trip trip : allTrips) {
+            ShapePoint shapeFirstPoint = trip.getShape();
+            if (shapeFirstPoint == null) {
+                continue;
+            }
+            StopTime firstStopTime = trip.getFirstStopTime();
+            hashMap = new HashMap<StopTime, ArrayList<ShapePoint>>();
+            
+            
+            if (firstStopTime.hasShapeDistTraveled()) {
+                throw new UnsupportedOperationException("Not implemented yet.");
+            } else {
+                ShapePoint currentPoint = shapeFirstPoint;
+                
+                while (currentPoint != null) {
+                    StopTime closestStopTime = firstStopTime;
+                    StopTime currentStopTime = firstStopTime.getNext();
+                    double bestDistance = closestStopTime.getStop().getGlobalPosition().
+                            getDistanceTo(currentPoint.getGlobalPosition());
+                    
+                    while (currentStopTime != null) {
+                        double distance = currentStopTime.getStop().getGlobalPosition().
+                                getDistanceTo(currentPoint.getGlobalPosition());
+                        if (distance < bestDistance) {
+                            bestDistance = distance;
+                            closestStopTime = currentStopTime;
+                        }
+                        currentStopTime = currentStopTime.getNext();
+                    }
+                    
+                    if (hashMap.containsKey(closestStopTime)) {
+                        hashMap.get(closestStopTime).add(currentPoint);
+                    } else {
+                        ArrayList<ShapePoint> points = new ArrayList<ShapePoint>();
+                        points.add(currentPoint);
+                    }
+                    
+                    currentPoint = currentPoint.getNext();
+                }
+            }
+            
+            for (Entry<StopTime, ArrayList<ShapePoint>> entry : hashMap.entrySet()) {
+                ArrayList<ShapePoint> points = entry.getValue();
+                if (points.isEmpty()) {
+                    continue;
+                }
+                ShapePoint current = points.get(0);
+                ShapePoint last = points.get(points.size() - 1);
+                int length;
+                for (length = 1; current != last; length++) {
+                    current = current.getNext();
+                }
+                
+                entry.getKey().setShape(points.get(0));
+                entry.getKey().setShapeLength(length);
+            }
+            
+        }
+    }
+    
     private void linkShapePoints(ArrayList<ShapePoint> shape) {
         Collections.sort(shape, new Comparator() {
-
+            
             @Override
             public int compare(Object o1, Object o2) {
                 ShapePoint sp1 = (ShapePoint) o1;
@@ -365,17 +431,19 @@ public class GTFSImporter {
         for (int i = 0; i < shape.size() - 1; i++) {
             shape.get(i).setNext(shape.get(i + 1));
         }
-
+        
     }
-
+    
     private void createConnections() {
         Collection<Trip> allTrips = databaseController.getTripFactory().getAllTrips();
         ConnectionFactory connectionFactory = databaseController.getConnectionFactory();
         LinkedList<StopTime> stopTimes;
-
+        
         for (Trip trip : allTrips) {
+            //FIXME: seria mais economico pegar apenas o primeiro stoptime da trip e iterar
+            // por ele, agora tem um metodo pra isso
             stopTimes = new LinkedList<StopTime>(trip.getStopTimes());
-
+            
             for (StopTime stopTime : stopTimes) {
                 if (stopTime.hasNext()) {
                     TransportConnection connection = connectionFactory.createTransportConnection(
@@ -388,7 +456,7 @@ public class GTFSImporter {
             }
         }
     }
-
+    
     private int getSecondsFromTime(String time) {
         int seconds = 0;
         String[] parts = time.split(":");
