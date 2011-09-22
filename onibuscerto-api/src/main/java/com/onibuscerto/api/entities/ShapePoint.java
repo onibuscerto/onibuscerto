@@ -1,5 +1,7 @@
 package com.onibuscerto.api.entities;
 
+import com.onibuscerto.api.utils.GlobalPosition;
+
 /**
  * Interface que define um ponto de uma polilinha. A polilinha define um
  * caminho no mapa.
@@ -41,6 +43,18 @@ public interface ShapePoint {
      * @param longitude longitude em graus
      */
     public void setLongitude(double longitude);
+
+    /**
+     * Retorna a latitude e a longitude do ponto em um objeto <code>GlobalPosition</code>.
+     * @return a latitude e a longitude do ponto em um objeto <code>GlobalPosition</code>
+     */
+    public GlobalPosition getGlobalPosition();
+
+    /**
+     * Atribui a latitude e a longitude do ponto a partir de um objeto <code>GlobalPosition</code>.
+     * @param globalPosition objeto que contém informações de latitude e longitude
+     */
+    public void setGlobalPosition(GlobalPosition globalPosition);
 
     /**
      * Retorna o número de sequência do ponto na polilinha.

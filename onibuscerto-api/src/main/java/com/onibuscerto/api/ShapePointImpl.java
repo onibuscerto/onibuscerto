@@ -1,6 +1,7 @@
 package com.onibuscerto.api;
 
 import com.onibuscerto.api.entities.ShapePoint;
+import com.onibuscerto.api.utils.GlobalPosition;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
@@ -50,6 +51,17 @@ public class ShapePointImpl implements ShapePoint {
     @Override
     public void setLongitude(double longitude) {
         underlyingNode.setProperty(KEY_LONGITUDE, longitude);
+    }
+
+    @Override
+    public GlobalPosition getGlobalPosition() {
+        return new GlobalPosition(this.getLatitude(), this.getLongitude());
+    }
+
+    @Override
+    public void setGlobalPosition(GlobalPosition globalPosition) {
+        this.setLatitude(globalPosition.getLatitude());
+        this.setLongitude(globalPosition.getLongitude());
     }
 
     @Override
