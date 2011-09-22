@@ -24,6 +24,8 @@ public interface Route {
 
     public String getRouteColor();
 
+    public boolean hasRouteColor();
+
     public FareAttribute getFare();
 
     public void setFare(FareAttribute f);
