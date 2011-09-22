@@ -92,6 +92,20 @@ body {
     border-top: solid 1px #ccc;
 }
 
+#result {
+    display: inline;
+}
+
+#result li {
+    list-style: none;
+    padding: 15px;
+    border-bottom: dashed 1px #ccc;
+}
+
+#result li:last-child {
+    border-bottom: none;
+}
+
 label {
     float: left;
     width: 80px;

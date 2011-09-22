@@ -221,6 +221,8 @@ function clearMap() {
         endMarker.setMap(null);
     }
 
+    $("#result li").remove();
+
     bounds = new google.maps.LatLngBounds();
 }
 
