@@ -201,8 +201,8 @@ function runQuery() {
     $.post("/route", data, function(response) {
         clearMap();
         addMapPath(response);
-        addMapMarkers(response);
         map.fitBounds(bounds);
+        addMapMarkers(response);
         showInformation(response);
     }, "json");
 }
