@@ -119,7 +119,7 @@ public class StopTimeImpl implements StopTime {
 
     @Override
     public boolean hasShapeDistTraveled() {
-        return underlyingNode.getProperty(KEY_SHAPE_DIST_TRAVELED) != null;
+        return underlyingNode.hasProperty(KEY_SHAPE_DIST_TRAVELED);
     }
 
     @Override
