@@ -203,6 +203,7 @@ function runQuery() {
         addMapPath(response);
         addMapMarkers(response);
         map.fitBounds(bounds);
+        showInformation(response);
     }, "json");
 }
 
@@ -313,4 +314,20 @@ function setEndMarker(position) {
             }
         });
     });
+}
+
+function showInformation(response) {
+    for (var i = 0; i < response.length; i++) {
+        var pos1 = response[i].start;
+        var pos2 = response[i].end;
+        var latlng1 = new google.maps.LatLng(pos1.latitude, pos1.longitude);
+        var latlng2 = new google.maps.LatLng(pos2.latitude, pos2.longitude);
+        var scolor = response[i].routeType == -1 ? "#000000" : "#0000CC";
+
+        if (response[i].routeType == -1) {
+            $("#result").append('<li>Caminhar de '+latlng1+' até '+latlng2+'.</li>');
+        } else {
+            $("#result").append('<li>Ir de '+latlng1+' até '+latlng2+'.</li>');
+        }
+    }
 }
