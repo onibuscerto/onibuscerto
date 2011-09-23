@@ -74,7 +74,6 @@ public class RouteApp {
         WalkingConnection wc = connectionFactory.createWalkingConnection(srcNode, tgtNode);
         double d3 = distance(srcNode.getLatitude(), srcNode.getLongitude(), tgtNode.getLatitude(), tgtNode.getLongitude());
         wc.setWalkingDistance(d3);
-        wc.setTimeCost((int) Math.round(d3 / 1.5));
 
         int departureTime = 0;
 
