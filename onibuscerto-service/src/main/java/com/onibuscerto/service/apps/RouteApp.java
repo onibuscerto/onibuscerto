@@ -24,8 +24,6 @@ public class RouteApp {
 
     private GlobalPosition start = new GlobalPosition(0, 0);
     private GlobalPosition end = new GlobalPosition(0, 0);
-    private GlobalPosition srcGlobalPosition;
-    private GlobalPosition tgtGlobalPosition;
     private String departure;
 
     @Post
