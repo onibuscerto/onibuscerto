@@ -131,7 +131,7 @@ public final class DatabaseController {
 
                 if (c instanceof TransportConnection) {
                     waitingTime = ((TransportConnection) c).getDepartureTime() - time;
-                    if (waitingTime <= 0) {
+                    if (waitingTime < 0) {
                         continue;
                     }
                 }
