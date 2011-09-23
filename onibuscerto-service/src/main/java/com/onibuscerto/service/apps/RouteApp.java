@@ -47,23 +47,17 @@ public class RouteApp {
         ConnectionFactory connectionFactory = databaseController.getConnectionFactory();
         for (Stop stop : databaseController.getLocationFactory().getAllStops()) {
             WalkingConnection wc1 = connectionFactory.createWalkingConnection(srcNode, stop);
-            srcGlobalPosition = new GlobalPosition(srcNode.getLatitude(), srcNode.getLongitude());
-            tgtGlobalPosition = new GlobalPosition(stop.getLatitude(), stop.getLongitude());
-            double d1 = srcGlobalPosition.getDistanceTo(tgtGlobalPosition);
+            double d1 = start.getDistanceTo(stop.getGlobalPosition());
             wc1.setWalkingDistance(d1);
 
             WalkingConnection wc2 = connectionFactory.createWalkingConnection(stop, tgtNode);
-            srcGlobalPosition = new GlobalPosition(stop.getLatitude(), stop.getLongitude());
-            tgtGlobalPosition = new GlobalPosition(tgtNode.getLatitude(), tgtNode.getLongitude());
-            double d2 = srcGlobalPosition.getDistanceTo(tgtGlobalPosition);
+            double d2 = stop.getGlobalPosition().getDistanceTo(end);
             wc2.setWalkingDistance(d2);
         }
 
         // Conecta a origem com o destino também
         WalkingConnection wc = connectionFactory.createWalkingConnection(srcNode, tgtNode);
-        srcGlobalPosition = new GlobalPosition(srcNode.getLatitude(), srcNode.getLongitude());
-        tgtGlobalPosition = new GlobalPosition(tgtNode.getLatitude(), tgtNode.getLongitude());
-        double d3 = srcGlobalPosition.getDistanceTo(tgtGlobalPosition);
+        double d3 = start.getDistanceTo(end);
         wc.setWalkingDistance(d3);
 
         String dsplit[] = departure.split(":");
