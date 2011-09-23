@@ -24,23 +24,9 @@ public class RouteApp {
 
     private GlobalPosition start = new GlobalPosition(0, 0);
     private GlobalPosition end = new GlobalPosition(0, 0);
+    private GlobalPosition srcGlobalPosition;
+    private GlobalPosition tgtGlobalPosition;
     private String departure;
-
-    private double distance(double lat1, double lng1, double lat2, double lng2) {
-        double ans, theta;
-
-        lat1 *= Math.PI / 180.0;
-        lng1 *= Math.PI / 180.0;
-        lat2 *= Math.PI / 180.0;
-        lng2 *= Math.PI / 180.0;
-
-        theta = lng1 - lng2;
-        ans = Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(theta);
-        ans = Math.acos(ans) * 180.0 / Math.PI;
-        ans = ans * 60 * 1.1515 * 1609.344;
-
-        return ans;
-    }
 
     @Post
     public Reply<Collection<QueryResponseConnection>> post() {
@@ -61,21 +47,24 @@ public class RouteApp {
         ConnectionFactory connectionFactory = databaseController.getConnectionFactory();
         for (Stop stop : databaseController.getLocationFactory().getAllStops()) {
             WalkingConnection wc1 = connectionFactory.createWalkingConnection(srcNode, stop);
-            double d1 = distance(srcNode.getLatitude(), srcNode.getLongitude(),
-                    stop.getLatitude(), stop.getLongitude());
+            srcGlobalPosition = new GlobalPosition(srcNode.getLatitude(), srcNode.getLongitude());
+            tgtGlobalPosition = new GlobalPosition(stop.getLatitude(), stop.getLongitude());
+            double d1 = srcGlobalPosition.getDistanceTo(tgtGlobalPosition);
             wc1.setWalkingDistance(d1);
 
             WalkingConnection wc2 = connectionFactory.createWalkingConnection(stop, tgtNode);
-            double d2 = distance(stop.getLatitude(), stop.getLongitude(),
-                    tgtNode.getLatitude(), tgtNode.getLongitude());
+            srcGlobalPosition = new GlobalPosition(stop.getLatitude(), stop.getLongitude());
+            tgtGlobalPosition = new GlobalPosition(tgtNode.getLatitude(), tgtNode.getLongitude());
+            double d2 = srcGlobalPosition.getDistanceTo(tgtGlobalPosition);
             wc2.setWalkingDistance(d2);
         }
 
         // Conecta a origem com o destino também
         WalkingConnection wc = connectionFactory.createWalkingConnection(srcNode, tgtNode);
-        double d3 = distance(srcNode.getLatitude(), srcNode.getLongitude(), tgtNode.getLatitude(), tgtNode.getLongitude());
+        srcGlobalPosition = new GlobalPosition(srcNode.getLatitude(), srcNode.getLongitude());
+        tgtGlobalPosition = new GlobalPosition(tgtNode.getLatitude(), tgtNode.getLongitude());
+        double d3 = srcGlobalPosition.getDistanceTo(tgtGlobalPosition);
         wc.setWalkingDistance(d3);
-        wc.setTimeCost((int) Math.round(d3 / 1.5));
 
         String dsplit[] = departure.split(":");
         int departureTime = Integer.parseInt(dsplit[0])*3600 + Integer.parseInt(dsplit[1])*60;
