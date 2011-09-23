@@ -75,7 +75,7 @@ public class RouteApp {
         double d3 = distance(srcNode.getLatitude(), srcNode.getLongitude(), tgtNode.getLatitude(), tgtNode.getLongitude());
         wc.setWalkingDistance(d3);
 
-        int departureTime = 0;
+        int departureTime = 9*60*60;
 
         if (srcNode == null || tgtNode == null) {
             // WTF, o lugar não existe

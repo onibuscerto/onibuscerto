@@ -136,8 +136,8 @@ public final class DatabaseController {
                     }
                 }
 
-                if (!in.contains(c.getTarget()) && d.get(c.getTarget()) > time + c.getTimeCost()) {
-                    d.put(c.getTarget(), time + c.getTimeCost());
+                if (!in.contains(c.getTarget()) && d.get(c.getTarget()) > time + waitingTime + c.getTimeCost()) {
+                    d.put(c.getTarget(), time + waitingTime + c.getTimeCost());
                     p.put(c.getTarget(), c);
                 }
             }
@@ -150,6 +150,30 @@ public final class DatabaseController {
             path.add(p.get(location));
         }
         Collections.reverse((LinkedList) path);
+
+        /* DEBUG NERVOSO {{{
+        for (Location location : allLocations) {
+            if (location instanceof Stop) {
+                Stop stop = (Stop) location;
+                System.out.println("d[" + stop.getId() + "] = " + d.get(location));
+            }
+            if (location.equals(source)) {
+                System.out.println("d[origem] = " + d.get(location));
+            }
+            if (location.equals(target)) {
+                System.out.println("d[destino] = " + d.get(location));
+            }
+        }
+
+        for (Connection connection : path) {
+            if (connection instanceof TransportConnection) {
+                TransportConnection tc = (TransportConnection) connection;
+                System.out.print("TransportConnection ");
+                System.out.print(((Stop) tc.getSource()).getId() + " -> ");
+                System.out.println(((Stop) tc.getTarget()).getId() + " (departure: " + tc.getDepartureTime() + ")");
+            }
+        }
+        }}} */
 
         return path;
     }
