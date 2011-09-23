@@ -1,5 +1,6 @@
 package com.onibuscerto.api;
 
+import com.onibuscerto.api.entities.ShapePoint;
 import com.onibuscerto.api.entities.Stop;
 import com.onibuscerto.api.entities.StopTime;
 import com.onibuscerto.api.entities.Trip;
@@ -14,6 +15,7 @@ public class StopTimeImpl implements StopTime {
     private static final String KEY_DEPARTURE_TIME = "stop_time_departure_time";
     private static final String KEY_SEQUENCE = "stop_time_sequence";
     private static final String KEY_SHAPE_DIST_TRAVELED = "stop_time_shape_dist_traveled";
+    private static final String KEY_SHAPE_LENGTH = "stop_time_shape_length";
 
     public StopTimeImpl(Node underlyingNode) {
         this.underlyingNode = underlyingNode;
@@ -117,7 +119,43 @@ public class StopTimeImpl implements StopTime {
 
     @Override
     public boolean hasShapeDistTraveled() {
-        return underlyingNode.getProperty(KEY_SHAPE_DIST_TRAVELED) != null;
+        return underlyingNode.hasProperty(KEY_SHAPE_DIST_TRAVELED);
+    }
+
+    @Override
+    public ShapePoint getShape() {
+        Relationship rel = underlyingNode.getSingleRelationship(
+                Relationships.STOPTIME_TO_SHAPE, Direction.OUTGOING);
+
+        if (rel == null) {
+            return null;
+        } else {
+            return new ShapePointImpl(rel.getEndNode());
+        }
+    }
+
+    @Override
+    public void setShape(ShapePoint shapePoint) {
+        Relationship rel = underlyingNode.getSingleRelationship(
+                Relationships.STOPTIME_TO_SHAPE, Direction.OUTGOING);
+        ShapePointImpl shapePointImpl = (ShapePointImpl) shapePoint;
+
+        if (rel != null) {
+            rel.delete();
+        }
+
+        underlyingNode.createRelationshipTo(
+                shapePointImpl.getUnderlyingNode(), Relationships.STOPTIME_TO_SHAPE);
+    }
+
+    @Override
+    public int getShapeLength() {
+        return (Integer) underlyingNode.getProperty(KEY_SHAPE_LENGTH);
+    }
+
+    @Override
+    public void setShapeLength(int shapeLength) {
+        underlyingNode.setProperty(KEY_SHAPE_LENGTH, shapeLength);
     }
 
     @Override
