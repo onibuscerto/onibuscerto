@@ -11,6 +11,7 @@ import com.onibuscerto.api.entities.Stop;
 import com.onibuscerto.api.entities.StopTime;
 import com.onibuscerto.api.entities.TransportConnection;
 import com.onibuscerto.api.entities.Trip;
+import com.onibuscerto.api.entities.WalkingConnection;
 import com.onibuscerto.api.factories.CalendarFactory;
 import com.onibuscerto.api.factories.ConnectionFactory;
 import com.onibuscerto.api.factories.FareAttributeFactory;
@@ -20,6 +21,7 @@ import com.onibuscerto.api.factories.ShapePointFactory;
 import com.onibuscerto.api.factories.LocationFactory;
 import com.onibuscerto.api.factories.StopTimeFactory;
 import com.onibuscerto.api.factories.TripFactory;
+import com.onibuscerto.api.utils.GlobalPosition;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ import java.util.logging.Logger;
 public class GTFSImporter {
     
     private DatabaseController databaseController;
+    private static final int MAX_WALKING_DISTANCE = 1000;
     
     public GTFSImporter(DatabaseController databaseController) {
         this.databaseController = databaseController;
@@ -435,6 +438,9 @@ public class GTFSImporter {
     }
     
     private void createConnections() {
+        double walkingDistance;
+        GlobalPosition gp;
+        GlobalPosition gp2;
         Collection<Trip> allTrips = databaseController.getTripFactory().getAllTrips();
         ConnectionFactory connectionFactory = databaseController.getConnectionFactory();
         LinkedList<StopTime> stopTimes;
@@ -452,6 +458,19 @@ public class GTFSImporter {
 
                     // FIXME: esse calculo talvez esteja errado
                     connection.setTimeCost(stopTime.getNext().getArrivalTime() - stopTime.getDepartureTime());
+
+                    //WalkingConnection entre stops com no max 1km de distância
+                    gp = new GlobalPosition(
+                            stopTime.getStop().getLatitude(), stopTime.getStop().getLatitude());
+                    gp2 = new GlobalPosition(
+                            stopTime.getNext().getStop().getLatitude(), stopTime.getNext().getStop().getLatitude());
+                    walkingDistance = gp.getDistanceTo(gp2);
+
+                    if (walkingDistance <= MAX_WALKING_DISTANCE){
+                        WalkingConnection wConnection = connectionFactory.createWalkingConnection(
+                            stopTime.getStop(), stopTime.getNext().getStop());
+                        wConnection.setWalkingDistance(walkingDistance);
+                    }
                 }
             }
         }
