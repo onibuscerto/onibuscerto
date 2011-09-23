@@ -24,6 +24,7 @@ public class RouteApp {
 
     private GlobalPosition start = new GlobalPosition(0, 0);
     private GlobalPosition end = new GlobalPosition(0, 0);
+    private String departure;
 
     private double distance(double lat1, double lng1, double lat2, double lng2) {
         double ans, theta;
@@ -76,7 +77,8 @@ public class RouteApp {
         wc.setWalkingDistance(d3);
         wc.setTimeCost((int) Math.round(d3 / 1.5));
 
-        int departureTime = 9*60*60;
+        String dsplit[] = departure.split(":");
+        int departureTime = Integer.parseInt(dsplit[0])*3600 + Integer.parseInt(dsplit[1])*60;
 
         if (srcNode == null || tgtNode == null) {
             // WTF, o lugar não existe
@@ -145,5 +147,13 @@ public class RouteApp {
 
     public void setStart(GlobalPosition start) {
         this.start = start;
+    }
+
+    public String getDeparture() {
+        return departure;
+    }
+
+    public void setDeparture(String departure) {
+        this.departure = departure;
     }
 }

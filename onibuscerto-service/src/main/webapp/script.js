@@ -195,7 +195,8 @@ function runQuery() {
         "start.latitude": lat1,
         "start.longitude": lng1,
         "end.latitude": lat2,
-        "end.longitude": lng2
+        "end.longitude": lng2,
+        "departure": $('#departure').val()
     };
 
     $.post("/route", data, function(response) {
