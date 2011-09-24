@@ -106,8 +106,25 @@ body {
     border-bottom: none;
 }
 
+form p {
+	vertical-align: middle;
+}
+
+input[type=text] {
+	width: 200px;
+	height: 16px;
+	border: 1px solid #ddd;
+}
+
 label {
+	text-align: right;
+	display: block;
     float: left;
-    width: 80px;
-    font-weight: bold;
+    width: 90px;
+	height: 16px;
+	margin-right: 10px;
+}
+
+#loading {
+	vertical-align: middle;
 }

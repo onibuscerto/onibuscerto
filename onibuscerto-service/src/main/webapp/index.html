@@ -18,14 +18,22 @@
         <div id="wrapper">
             <div id="left">
                 <form>
-                    <label for="start">Origem</label>
-                    <input id="start" type="text" name="start"/>
-                    <label for="end">Destino</label>
-                    <input id="end" type="text" name="end"/>
-                    <label for="departure">Partindo às</label>
-                    <input id="departure" type="text" name="departure" value="9:00"/>
-                    <input id="route" type="button" value="buscar"/>
-                    <div id="loading"><img src="img/spinner.gif" alt="Carregando..."/></div>
+                    <p>
+                        <label for="start">Origem</label>
+                        <input id="start" type="text" name="start"/>
+                    </p>
+                    <p>
+                        <label for="end">Destino</label>
+                        <input id="end" type="text" name="end"/>
+                    </p>
+                    <p>
+                        <label for="departure">Partindo às</label>
+                        <input id="departure" type="text" name="departure" value="9:00"/>
+                    </p>
+                    <p>
+                        <input id="route" type="button" value="buscar"/>
+                        <div id="loading"><img src="img/spinner.gif" alt="Carregando..."/></div>
+                    </p>
                 </form>
                 <ul id="result"></ul>
             </div>
