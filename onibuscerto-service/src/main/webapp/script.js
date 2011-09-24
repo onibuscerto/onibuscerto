@@ -29,6 +29,8 @@ function setupUI() {
         $(this).hide();
         $("input:button").show();
     });
+    var d = new Date();
+    $("#departure").val(d.getHours() + ":" + pad(d.getMinutes(), 2));
 }
 
 function setupMapWidget() {
