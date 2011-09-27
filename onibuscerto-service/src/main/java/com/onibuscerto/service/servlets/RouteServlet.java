@@ -46,11 +46,8 @@ public class RouteServlet extends HttpServlet {
         Location srcNode = databaseController.getLocationFactory().createLocation();
         Location tgtNode = databaseController.getLocationFactory().createLocation();
 
-        srcNode.setLatitude(start.getLatitude());
-        srcNode.setLongitude(start.getLongitude());
-
-        tgtNode.setLatitude(end.getLatitude());
-        tgtNode.setLongitude(end.getLongitude());
+        srcNode.setGlobalPosition(start);
+        tgtNode.setGlobalPosition(end);
 
         // Conecta nós de origem e destino com todas as stops
         ConnectionFactory connectionFactory = databaseController.getConnectionFactory();
@@ -75,10 +72,8 @@ public class RouteServlet extends HttpServlet {
         // Monta o objeto contendo a resposta da consulta
         for (Connection connection : path) {
             QueryResponseConnection qrc = new QueryResponseConnection();
-            qrc.setStart(new GlobalPosition(connection.getSource().getLatitude(),
-                    connection.getSource().getLongitude()));
-            qrc.setEnd(new GlobalPosition(connection.getTarget().getLatitude(),
-                    connection.getTarget().getLongitude()));
+            qrc.setStart(connection.getSource().getGlobalPosition());
+            qrc.setEnd(connection.getTarget().getGlobalPosition());
 
             if (connection instanceof WalkingConnection) {
                 qrc.setRouteType(-1);
@@ -114,7 +109,7 @@ public class RouteServlet extends HttpServlet {
             out.close();
         }
     }
-    
+
     protected GlobalPosition stringToGlobalPosition(String lat, String lng) {
         return new GlobalPosition(Double.parseDouble(lat), Double.parseDouble(lng));
     }
@@ -132,7 +127,7 @@ public class RouteServlet extends HttpServlet {
                 request.getParameter("end.latitude"),
                 request.getParameter("end.longitude"));
         String spDeparture[] = request.getParameter("departure").split(":");
-        int departureTime = Integer.parseInt(spDeparture[0])*3600 + Integer.parseInt(spDeparture[1])*60;
+        int departureTime = Integer.parseInt(spDeparture[0]) * 3600 + Integer.parseInt(spDeparture[1]) * 60;
 
         // Executa a consulta e imprime o JSON no PrintWriter do Servlet
         path = runQuery(start, end, departureTime);
