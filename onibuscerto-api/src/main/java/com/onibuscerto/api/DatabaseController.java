@@ -130,8 +130,19 @@ public final class DatabaseController {
                 int waitingTime = 0;
 
                 if (c instanceof TransportConnection) {
+                    Connection previousConnection = p.get(location);
+                    int slack = 0;
+
                     waitingTime = ((TransportConnection) c).getDepartureTime() - time;
-                    if (waitingTime < 0) {
+
+                    if (previousConnection instanceof TransportConnection
+                            && !((TransportConnection) previousConnection).getTripId().
+                            equals(((TransportConnection) c).getTripId())) {
+                        // aplica uma folga de 5 minutos
+                        slack = 5 * 60;
+                    }
+
+                    if (waitingTime < slack) {
                         continue;
                     }
                 }
