@@ -16,6 +16,10 @@ public class FareRuleImpl implements FareRule {
         this.underlyingNode = underlyingNode;
     }
 
+    public Node getUnderlyingNode() {
+        return underlyingNode;
+    }
+
     @Override
     public FareAttribute getFareAttribute() {
         Relationship rel = underlyingNode.getSingleRelationship(
@@ -40,5 +44,20 @@ public class FareRuleImpl implements FareRule {
 
         fareAttributeImpl.getUnderlyingNode().createRelationshipTo(underlyingNode,
                 Relationships.FARE_RULE_TO_FARE_ATTRIBUTE);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof FareRuleImpl) {
+            return getUnderlyingNode().equals(
+                    ((FareRuleImpl) object).getUnderlyingNode());
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return getUnderlyingNode().hashCode();
     }
 }

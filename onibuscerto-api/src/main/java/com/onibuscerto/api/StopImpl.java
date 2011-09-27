@@ -2,7 +2,9 @@ package com.onibuscerto.api;
 
 import com.onibuscerto.api.entities.FareAttribute;
 import com.onibuscerto.api.entities.Stop;
+import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 
 class StopImpl extends LocationImpl implements Stop {
 
@@ -50,11 +52,27 @@ class StopImpl extends LocationImpl implements Stop {
 
     @Override
     public FareAttribute getFare() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Relationship rel = underlyingNode.getSingleRelationship(
+                Relationships.STOP_TO_FARE, Direction.INCOMING);
+
+        if (rel == null) {
+            return null;
+        } else {
+            return new FareAttributeImpl(rel.getStartNode());
+        }
     }
 
     @Override
     public void setFare(FareAttribute fare) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Relationship rel = underlyingNode.getSingleRelationship(
+                Relationships.STOP_TO_FARE, Direction.INCOMING);
+        FareAttributeImpl fareImpl = (FareAttributeImpl) fare;
+
+        if (rel != null) {
+            rel.delete();
+        }
+
+        fareImpl.getUnderlyingNode().createRelationshipTo(underlyingNode,
+                Relationships.STOP_TO_FARE);
     }
 }

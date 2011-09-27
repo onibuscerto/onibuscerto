@@ -2,6 +2,7 @@ package com.onibuscerto.importer;
 
 import au.com.bytecode.opencsv.CSVReader;
 import com.onibuscerto.api.DatabaseController;
+import com.onibuscerto.api.StopTimeImpl;
 import com.onibuscerto.api.entities.Calendar;
 import com.onibuscerto.api.entities.FareAttribute;
 import com.onibuscerto.api.entities.FareRule;
@@ -296,6 +297,8 @@ public class GTFSImporter {
         String columnNames[] = reader.readNext();
         String lineValues[];
         HashMap<String, String> hashMap = new HashMap<String, String>();
+        Collection<Trip> allTrips;
+        Collection<StopTime> allstopTimes;
 
         while ((lineValues = reader.readNext()) != null) {
             for (int i = 0; i < lineValues.length; i++) {
@@ -303,14 +306,23 @@ public class GTFSImporter {
             }
 
             FareRule fareRule = fareRuleFactory.createFareRule();
-            fareRule.setFareAttribute(databaseController.getFareAttributeFactory().getFareAttributeById(
-                    hashMap.get("fare_id")));
+            fareRule.setFareAttribute(databaseController.getFareAttributeFactory().getFareAttributeById(hashMap.get("fare_id")));
             if (hashMap.containsKey("route_id")
                     && !hashMap.get("route_id").isEmpty()) {
+
                 Route route = databaseController.getRouteFactory().getRouteById(
                         hashMap.get("route_id"));
-                route.setFare(databaseController.getFareAttributeFactory().getFareAttributeById(
-                        hashMap.get("fare_id")));
+                allTrips = route.getTrips();
+                for (Trip trip : allTrips) {
+                    allstopTimes = trip.getStopTimes();
+                    for (StopTime stopTime : allstopTimes) {
+                        if (stopTime.getStop().getFare() == null) {
+                            stopTime.getStop().setFare(databaseController.getFareAttributeFactory().getFareAttributeById(hashMap.get("fare_id")));
+                        }
+                    }
+                }
+                /*route.setFare(databaseController.getFareAttributeFactory().getFareAttributeById(
+                hashMap.get("fare_id")));*/
             }
 
             if (hashMap.containsKey("origin_id")

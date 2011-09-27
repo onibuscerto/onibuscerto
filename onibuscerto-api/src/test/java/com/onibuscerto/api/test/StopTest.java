@@ -1,6 +1,7 @@
 package com.onibuscerto.api.test;
 
 import com.onibuscerto.api.DatabaseController;
+import com.onibuscerto.api.entities.FareAttribute;
 import com.onibuscerto.api.entities.Stop;
 import com.onibuscerto.api.exceptions.DuplicateEntityException;
 import java.util.Collection;
@@ -108,5 +109,13 @@ public class StopTest {
         double expResult = 3.1415;
         stop.setLongitude(expResult);
         assertEquals(stop.getLongitude(), expResult, 1E-9);
+    }
+
+    @Test
+    public void testSetGetFare() {
+        FareAttribute fare = databaseController.getFareAttributeFactory().createFareAttribute("fare42");
+        Stop stop = databaseController.getLocationFactory().createStop("stop42");
+        stop.setFare(fare);
+        assertEquals(fare, stop.getFare());
     }
 }

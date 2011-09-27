@@ -84,4 +84,19 @@ public class FareAttributeImpl implements FareAttribute {
     public void setTransferDuration(int transferDuration) {
         underlyingNode.setProperty(KEY_TRANSFER_DURATION, transferDuration);
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof FareAttributeImpl) {
+            return getUnderlyingNode().equals(
+                    ((FareAttributeImpl) object).getUnderlyingNode());
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return getUnderlyingNode().hashCode();
+    }
 }
