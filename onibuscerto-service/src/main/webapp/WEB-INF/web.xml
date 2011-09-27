@@ -3,12 +3,12 @@
     <display-name>onibuscerto.com</display-name>
 
     <servlet>
-        <servlet-name>RouteApp</servlet-name>
-        <servlet-class>com.onibuscerto.service.apps.RouteApp</servlet-class>
+        <servlet-name>RouteServlet</servlet-name>
+        <servlet-class>com.onibuscerto.service.servlets.RouteServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>RouteApp</servlet-name>
+        <servlet-name>RouteServlet</servlet-name>
         <url-pattern>/route</url-pattern>
     </servlet-mapping>
 </web-app>

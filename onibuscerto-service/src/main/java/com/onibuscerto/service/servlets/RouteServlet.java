@@ -1,4 +1,4 @@
-package com.onibuscerto.service.apps;
+package com.onibuscerto.service.servlets;
 
 import com.onibuscerto.api.DatabaseController;
 import com.onibuscerto.api.entities.Connection;
@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class RouteApp extends HttpServlet {
+public class RouteServlet extends HttpServlet {
 
     private DatabaseController databaseController;
 
