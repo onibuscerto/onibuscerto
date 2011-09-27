@@ -37,7 +37,7 @@ public class RouteServlet extends HttpServlet {
         databaseController.close();
     }
 
-    protected Collection<QueryResponseConnection> runQuery(GlobalPosition start,
+    protected synchronized Collection<QueryResponseConnection> runQuery(GlobalPosition start,
             GlobalPosition end, int departureTime) {
         Collection<QueryResponseConnection> ret = new LinkedList<QueryResponseConnection>();
         databaseController.beginTransaction();
