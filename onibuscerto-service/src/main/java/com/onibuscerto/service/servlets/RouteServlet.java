@@ -1,10 +1,5 @@
-package com.onibuscerto.service.apps;
+package com.onibuscerto.service.servlets;
 
-import com.google.sitebricks.At;
-import com.google.sitebricks.client.transport.Json;
-import com.google.sitebricks.headless.Reply;
-import com.google.sitebricks.headless.Service;
-import com.google.sitebricks.http.Post;
 import com.onibuscerto.api.DatabaseController;
 import com.onibuscerto.api.entities.Connection;
 import com.onibuscerto.api.entities.Location;
@@ -15,31 +10,44 @@ import com.onibuscerto.api.entities.WalkingConnection;
 import com.onibuscerto.api.factories.ConnectionFactory;
 import com.onibuscerto.api.utils.GlobalPosition;
 import com.onibuscerto.api.utils.QueryResponseConnection;
+import flexjson.JSONSerializer;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.LinkedList;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-@Service
-@At("/route")
-public class RouteApp {
+public class RouteServlet extends HttpServlet {
 
-    private GlobalPosition start = new GlobalPosition(0, 0);
-    private GlobalPosition end = new GlobalPosition(0, 0);
-    private String departure;
+    private DatabaseController databaseController;
 
-    @Post
-    public Reply<Collection<QueryResponseConnection>> post() {
-        DatabaseController databaseController = new DatabaseController();
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        databaseController = new DatabaseController();
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        databaseController.close();
+    }
+
+    protected synchronized Collection<QueryResponseConnection> runQuery(GlobalPosition start,
+            GlobalPosition end, int departureTime) {
+        Collection<QueryResponseConnection> ret = new LinkedList<QueryResponseConnection>();
         databaseController.beginTransaction();
 
         // Cria nós de origem e destino
         Location srcNode = databaseController.getLocationFactory().createLocation();
         Location tgtNode = databaseController.getLocationFactory().createLocation();
 
-        srcNode.setLatitude(start.getLatitude());
-        srcNode.setLongitude(start.getLongitude());
-
-        tgtNode.setLatitude(end.getLatitude());
-        tgtNode.setLongitude(end.getLongitude());
+        srcNode.setGlobalPosition(start);
+        tgtNode.setGlobalPosition(end);
 
         // Conecta nós de origem e destino com todas as stops
         ConnectionFactory connectionFactory = databaseController.getConnectionFactory();
@@ -58,35 +66,14 @@ public class RouteApp {
         double d3 = start.getDistanceTo(end);
         wc.setWalkingDistance(d3);
 
-        String dsplit[] = departure.split(":");
-        int departureTime = Integer.parseInt(dsplit[0])*3600 + Integer.parseInt(dsplit[1])*60;
-
-        if (srcNode == null || tgtNode == null) {
-            // WTF, o lugar não existe
-            databaseController.endTransaction(false);
-            databaseController.close();
-            throw new RuntimeException("Fudeu, o lugar não existe.");
-            //return null;
-        }
-
         // Encontra o caminho e converte pra uma Collection de GlobalPositions
         Collection<Connection> path = databaseController.getShortestPath(srcNode, tgtNode, departureTime);
-        Collection<QueryResponseConnection> ret = new LinkedList<QueryResponseConnection>();
 
-        if (path == null) {
-            // WTF, não tem caminho!
-            databaseController.endTransaction(false);
-            databaseController.close();
-            throw new RuntimeException("WTF não tem caminho!");
-            //return null;
-        }
-
+        // Monta o objeto contendo a resposta da consulta
         for (Connection connection : path) {
             QueryResponseConnection qrc = new QueryResponseConnection();
-            qrc.setStart(new GlobalPosition(connection.getSource().getLatitude(),
-                    connection.getSource().getLongitude()));
-            qrc.setEnd(new GlobalPosition(connection.getTarget().getLatitude(),
-                    connection.getTarget().getLongitude()));
+            qrc.setStart(connection.getSource().getGlobalPosition());
+            qrc.setEnd(connection.getTarget().getGlobalPosition());
 
             if (connection instanceof WalkingConnection) {
                 qrc.setRouteType(-1);
@@ -109,32 +96,41 @@ public class RouteApp {
 
         // Faz um rollback da transação
         databaseController.endTransaction(false);
-        databaseController.close();
-
-        return Reply.with(ret).as(Json.class).type("application/json");
+        return ret;
     }
 
-    public GlobalPosition getEnd() {
-        return end;
+    protected void doResponse(HttpServletResponse response, Collection<QueryResponseConnection> path)
+            throws IOException {
+        response.setContentType("application/json;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        try {
+            new JSONSerializer().serialize(path, out);
+        } finally {
+            out.close();
+        }
     }
 
-    public void setEnd(GlobalPosition end) {
-        this.end = end;
+    protected GlobalPosition stringToGlobalPosition(String lat, String lng) {
+        return new GlobalPosition(Double.parseDouble(lat), Double.parseDouble(lng));
     }
 
-    public GlobalPosition getStart() {
-        return start;
-    }
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        Collection<QueryResponseConnection> path;
 
-    public void setStart(GlobalPosition start) {
-        this.start = start;
-    }
+        // Obtém os parâmetros da consulta passados por POST
+        GlobalPosition start = stringToGlobalPosition(
+                request.getParameter("start.latitude"),
+                request.getParameter("start.longitude"));
+        GlobalPosition end = stringToGlobalPosition(
+                request.getParameter("end.latitude"),
+                request.getParameter("end.longitude"));
+        String spDeparture[] = request.getParameter("departure").split(":");
+        int departureTime = Integer.parseInt(spDeparture[0]) * 3600 + Integer.parseInt(spDeparture[1]) * 60;
 
-    public String getDeparture() {
-        return departure;
-    }
-
-    public void setDeparture(String departure) {
-        this.departure = departure;
+        // Executa a consulta e imprime o JSON no PrintWriter do Servlet
+        path = runQuery(start, end, departureTime);
+        doResponse(response, path);
     }
 }
