@@ -1,5 +1,6 @@
 package com.onibuscerto.api;
 
+import com.onibuscerto.api.entities.FareAttribute;
 import com.onibuscerto.api.entities.Stop;
 import org.neo4j.graphdb.Node;
 
@@ -45,5 +46,15 @@ class StopImpl extends LocationImpl implements Stop {
     @Override
     public void setZoneId(String zoneId) {
         underlyingNode.setProperty(KEY_ZONE_ID, zoneId);
+    }
+
+    @Override
+    public FareAttribute getFare() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setFare(FareAttribute fare) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

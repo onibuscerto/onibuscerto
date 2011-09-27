@@ -1,6 +1,7 @@
 package com.onibuscerto.api;
 
 import com.onibuscerto.api.entities.Connection;
+import com.onibuscerto.api.entities.FareAttribute;
 import com.onibuscerto.api.entities.Location;
 import com.onibuscerto.api.entities.Stop;
 import com.onibuscerto.api.entities.TransportConnection;
@@ -164,29 +165,56 @@ public final class DatabaseController {
 
         /* DEBUG NERVOSO {{{
         for (Location location : allLocations) {
-            if (location instanceof Stop) {
-                Stop stop = (Stop) location;
-                System.out.println("d[" + stop.getId() + "] = " + d.get(location));
-            }
-            if (location.equals(source)) {
-                System.out.println("d[origem] = " + d.get(location));
-            }
-            if (location.equals(target)) {
-                System.out.println("d[destino] = " + d.get(location));
-            }
+        if (location instanceof Stop) {
+        Stop stop = (Stop) location;
+        System.out.println("d[" + stop.getId() + "] = " + d.get(location));
+        }
+        if (location.equals(source)) {
+        System.out.println("d[origem] = " + d.get(location));
+        }
+        if (location.equals(target)) {
+        System.out.println("d[destino] = " + d.get(location));
+        }
         }
 
         for (Connection connection : path) {
-            if (connection instanceof TransportConnection) {
-                TransportConnection tc = (TransportConnection) connection;
-                System.out.print("TransportConnection ");
-                System.out.print(((Stop) tc.getSource()).getId() + " -> ");
-                System.out.println(((Stop) tc.getTarget()).getId() + " (departure: " + tc.getDepartureTime() + ")");
-            }
+        if (connection instanceof TransportConnection) {
+        TransportConnection tc = (TransportConnection) connection;
+        System.out.print("TransportConnection ");
+        System.out.print(((Stop) tc.getSource()).getId() + " -> ");
+        System.out.println(((Stop) tc.getTarget()).getId() + " (departure: " + tc.getDepartureTime() + ")");
+        }
         }
         }}} */
 
         return path;
+    }
+
+    public double getFare(Collection<Connection> path) {
+        double price = 0;
+        boolean init = true;
+        int countTransfers = 0;
+        for (Connection connection : path) {
+            if (connection instanceof TransportConnection) {
+                if (init) {
+                    Stop source = (Stop) connection.getSource();
+                    FareAttribute fare = source.getFare();
+                    countTransfers = fare.getTransfers();
+                    price += fare.getPrice();
+                    init = false;
+                }
+                if (countTransfers < -1) {
+                    continue;
+                } else if (countTransfers > 0) {
+                    countTransfers--;
+                    continue;
+                } else {
+                    init = true;
+                }
+            }
+            connection.getSource();
+        }
+        return price;
     }
 
     public LocationFactory getLocationFactory() {
