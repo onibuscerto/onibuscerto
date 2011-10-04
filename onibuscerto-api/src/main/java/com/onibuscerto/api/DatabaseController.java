@@ -2,6 +2,7 @@ package com.onibuscerto.api;
 
 import com.onibuscerto.api.entities.Connection;
 import com.onibuscerto.api.entities.FareAttribute;
+import com.onibuscerto.api.entities.FareRule;
 import com.onibuscerto.api.entities.Location;
 import com.onibuscerto.api.entities.Stop;
 import com.onibuscerto.api.entities.TransportConnection;
@@ -194,25 +195,52 @@ public final class DatabaseController {
         double price = 0;
         boolean init = true;
         int countTransfers = 0;
+        String oldTripId = "";
+        FareRule fareRule;
+        boolean tripChanged = true;
+        Stop firstSource = null;
+        Stop firstTarget = null;
+
         for (Connection connection : path) {
             if (connection instanceof TransportConnection) {
                 if (init) {
+                    if (tripChanged) {
+                        firstSource = (StopImpl) (((Connection) (((LinkedList) path).get(0))).getSource());
+                        firstTarget = (StopImpl) (((Connection) (((LinkedList) path).get(0))).getTarget());
+                    }
                     Stop source = (Stop) connection.getSource();
-                    FareAttribute fare = source.getFare();
-                    countTransfers = fare.getTransfers();
-                    price += fare.getPrice();
+                    Stop target = (Stop) connection.getTarget();
+                    fareRule = fareRuleFactory.getFareRuleById(firstSource.getId() + target.getId());
+                    if (fareRule == null) {
+                        fareRule = fareRuleFactory.getFareRuleById(firstSource.getId());
+                    }
+                    if (fareRule == null) {
+                        fareRule = fareRuleFactory.getFareRuleById(firstTarget.getId());
+                    } else {
+                        continue;
+                    }
+
+                    price += fareRule.getFareAttribute().getPrice();
+                    countTransfers = fareRule.getFareAttribute().getTransfers();
                     init = false;
+                    oldTripId = ((TransportConnection) connection).getTripId();
                 }
-                if (countTransfers < -1) {
-                    continue;
-                } else if (countTransfers > 0) {
-                    countTransfers--;
-                    continue;
+                if (((TransportConnection) connection).getTripId().equals(oldTripId)) {
+                    if (countTransfers == -1) {
+                        continue;
+                    } else if (countTransfers > 0) {
+                        countTransfers--;
+                        continue;
+                    } else {
+                        init = true;
+                    }
                 } else {
+                    tripChanged = true;
                     init = true;
                 }
+            } else {
+                continue;
             }
-            connection.getSource();
         }
         return price;
     }

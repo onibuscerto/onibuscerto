@@ -299,7 +299,13 @@ public class GTFSImporter {
         HashMap<String, String> hashMap = new HashMap<String, String>();
         Collection<Trip> allTrips;
         Collection<StopTime> allstopTimes;
-
+        Collection<Stop> allstops = databaseController.getLocationFactory().getAllStops();
+        if(reader.readNext() == null){
+            for(Stop stop : allstops){
+                FareRule fareRule = fareRuleFactory.createFareRule();
+                fareRule.setId(stop.getId());
+            }
+        }
         while ((lineValues = reader.readNext()) != null) {
             for (int i = 0; i < lineValues.length; i++) {
                 hashMap.put(columnNames[i], lineValues[i]);
@@ -316,24 +322,49 @@ public class GTFSImporter {
                 for (Trip trip : allTrips) {
                     allstopTimes = trip.getStopTimes();
                     for (StopTime stopTime : allstopTimes) {
-                        if (stopTime.getStop().getFare() == null) {
-                            stopTime.getStop().setFare(databaseController.getFareAttributeFactory().getFareAttributeById(hashMap.get("fare_id")));
+                        //if (stopTime.getStop().getFare() == null) {
+                        if(fareRule.getId() == null){
+                            //stopTime.getStop().setFare(databaseController.getFareAttributeFactory().getFareAttributeById(hashMap.get("fare_id")));
+                            fareRule.setId(stopTime.getStop().getId());
                         }
                     }
                 }
                 /*route.setFare(databaseController.getFareAttributeFactory().getFareAttributeById(
                 hashMap.get("fare_id")));*/
-            }
 
-            if (hashMap.containsKey("origin_id")
-                    && !hashMap.get("origin_id").isEmpty()) {
-            }
-
-            if (hashMap.containsKey("destination_id")
+            } else if (hashMap.containsKey("origin_id")
+                    && !hashMap.get("origin_id").isEmpty()
+                    && hashMap.containsKey("destination_id")
                     && !hashMap.get("destination_id").isEmpty()) {
-            }
+                for (Stop stop : allstops) {
+                    if (stop.getZoneId().equals(hashMap.get("origin_id"))) {
+                        fareRule.setId(stop.getId());
+                        fareRule.setSource(stop);
+                    }
+                    if (stop.getZoneId().equals(hashMap.get("destination_id"))) {
+                        fareRule.setTarget(stop);
+                        fareRule.setId(fareRule.getId() + stop.getId());
+                    }
+                }
 
-            if (hashMap.containsKey("contains_id")
+            } else if (hashMap.containsKey("origin_id")
+                    && !hashMap.get("origin_id").isEmpty()) {
+                for (Stop stop : allstops) {
+                    if (stop.getZoneId().equals(hashMap.get("origin_id"))) {
+                        fareRule.setId(stop.getId());
+                        fareRule.setSource(stop);
+                    }
+                }
+
+            } else if (hashMap.containsKey("destination_id")
+                    && !hashMap.get("destination_id").isEmpty()) {
+                for (Stop stop : allstops) {
+                    if (stop.getZoneId().equals(hashMap.get("destination_id"))) {
+                        fareRule.setTarget(stop);
+                        fareRule.setId(fareRule.getId() + stop.getId());
+                    }
+                }
+            } else if (hashMap.containsKey("contains_id")
                     && !hashMap.get("contains_id").isEmpty()) {
             }
 

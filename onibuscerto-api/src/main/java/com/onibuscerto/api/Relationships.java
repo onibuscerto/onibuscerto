@@ -18,7 +18,6 @@ enum Relationships implements RelationshipType {
     STOP_TO_STOPTIME,
     STOP_TO_FARE,
     ROUTE_TO_TRIP,
-    ROUTE_TO_FARE,
     NEXT_STOPTIME,
     TRANSPORT_CONNECTION,
     WALKING_CONNECTION,
@@ -35,5 +34,7 @@ enum Relationships implements RelationshipType {
     FARE_ATTRIBUTE,
     FARE_RULES,
     FARE_RULE,
-    FARE_RULE_TO_FARE_ATTRIBUTE
+    FARE_RULE_TO_FARE_ATTRIBUTE,
+    FARE_RULE_TO_SOURCE,
+    FARE_RULE_TO_TARGET
 }
