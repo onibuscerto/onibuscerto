@@ -1,6 +1,7 @@
 package com.onibuscerto.api;
 
 import com.onibuscerto.api.entities.FareRule;
+import com.onibuscerto.api.exceptions.DuplicateEntityException;
 import com.onibuscerto.api.factories.FareRuleFactory;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -59,14 +60,20 @@ public class FareRuleFactoryImpl implements FareRuleFactory {
     }
 
     @Override
-    public FareRule createFareRule() {
+    public FareRule createFareRule(String id) {
         Transaction tx = graphDb.beginTx();
         try {
+            if (getFareRuleById(id) != null) {
+                throw new DuplicateEntityException();
+            }
+
             Node node = graphDb.createNode();
+            FareRule fare = new FareRuleImpl(node, id);
+            fareRuleIndex.add(node, FareRuleImpl.KEY_ID, id);
             fareRuleFactoryNode.createRelationshipTo(
                     node, Relationships.FARE_RULE);
             tx.success();
-            return new FareRuleImpl(node);
+            return fare;
         } finally {
             tx.finish();
         }
@@ -74,7 +81,7 @@ public class FareRuleFactoryImpl implements FareRuleFactory {
 
     @Override
     public FareRule getFareRuleById(String id) {
-        Node node = fareRuleIndex.get(FareRuleImpl.KEY_FARE_ATTRIBUTE_ID, id).getSingle();
+        Node node = fareRuleIndex.get(FareRuleImpl.KEY_ID, id).getSingle();
 
         if (node == null) {
             return null;

@@ -300,19 +300,19 @@ public class GTFSImporter {
         Collection<Trip> allTrips;
         Collection<StopTime> allstopTimes;
         Collection<Stop> allstops = databaseController.getLocationFactory().getAllStops();
-        if(reader.readNext() == null){
-            for(Stop stop : allstops){
-                FareRule fareRule = fareRuleFactory.createFareRule();
-                fareRule.setId(stop.getId());
+        String fareRuleId;
+        if (reader.readNext() == null) {
+            for (Stop stop : allstops) {
+                FareRule fareRule = fareRuleFactory.createFareRule(stop.getId());
             }
         }
         while ((lineValues = reader.readNext()) != null) {
+            FareRule fareRule;
+            fareRuleId = "";
             for (int i = 0; i < lineValues.length; i++) {
                 hashMap.put(columnNames[i], lineValues[i]);
             }
 
-            FareRule fareRule = fareRuleFactory.createFareRule();
-            fareRule.setFareAttribute(databaseController.getFareAttributeFactory().getFareAttributeById(hashMap.get("fare_id")));
             if (hashMap.containsKey("route_id")
                     && !hashMap.get("route_id").isEmpty()) {
 
@@ -322,55 +322,61 @@ public class GTFSImporter {
                 for (Trip trip : allTrips) {
                     allstopTimes = trip.getStopTimes();
                     for (StopTime stopTime : allstopTimes) {
-                        //if (stopTime.getStop().getFare() == null) {
-                        if(fareRule.getId() == null){
-                            //stopTime.getStop().setFare(databaseController.getFareAttributeFactory().getFareAttributeById(hashMap.get("fare_id")));
-                            fareRule.setId(stopTime.getStop().getId());
+                        if (databaseController.getFareRuleFactory().getFareRuleById(
+                                stopTime.getStop().getId()) == null) {
+                            fareRule = fareRuleFactory.createFareRule(stopTime.getStop().getId());
+                            fareRule.setFareAttribute(databaseController.getFareAttributeFactory().getFareAttributeById(hashMap.get("fare_id")));
+                            Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
+                                    "Inseri FareRule ByRoute"
+                                    + fareRule.getFareAttribute().getFareId());
                         }
                     }
                 }
-                /*route.setFare(databaseController.getFareAttributeFactory().getFareAttributeById(
-                hashMap.get("fare_id")));*/
 
-            } else if (hashMap.containsKey("origin_id")
-                    && !hashMap.get("origin_id").isEmpty()
-                    && hashMap.containsKey("destination_id")
-                    && !hashMap.get("destination_id").isEmpty()) {
-                for (Stop stop : allstops) {
-                    if (stop.getZoneId().equals(hashMap.get("origin_id"))) {
-                        fareRule.setId(stop.getId());
-                        fareRule.setSource(stop);
+            } else {
+
+                if (hashMap.containsKey("origin_id")
+                        && !hashMap.get("origin_id").isEmpty()
+                        && hashMap.containsKey("destination_id")
+                        && !hashMap.get("destination_id").isEmpty()) {
+                    for (Stop stop : allstops) {
+                        if (stop.getZoneId().equals(hashMap.get("origin_id"))) {
+                            fareRuleId += stop.getId();
+                        }
                     }
-                    if (stop.getZoneId().equals(hashMap.get("destination_id"))) {
-                        fareRule.setTarget(stop);
-                        fareRule.setId(fareRule.getId() + stop.getId());
+                    for (Stop stop : allstops) {
+                        if (stop.getZoneId().equals(hashMap.get("destination_id"))) {
+                            fareRuleId += stop.getId();
+                        }
                     }
+                    //fareRule = fareRuleFactory.createFareRule(fareRuleId);
+
+                } else if (hashMap.containsKey("origin_id")
+                        && !hashMap.get("origin_id").isEmpty()) {
+                    for (Stop stop : allstops) {
+                        if (stop.getZoneId().equals(hashMap.get("origin_id"))) {
+                            fareRuleId += stop.getId();
+                        }
+                    }
+
+                } else if (hashMap.containsKey("destination_id")
+                        && !hashMap.get("destination_id").isEmpty()) {
+                    for (Stop stop : allstops) {
+                        if (stop.getZoneId().equals(hashMap.get("destination_id"))) {
+                            fareRuleId += stop.getId();
+                        }
+                    }
+                } else if (hashMap.containsKey("contains_id")
+                        && !hashMap.get("contains_id").isEmpty()) {
                 }
 
-            } else if (hashMap.containsKey("origin_id")
-                    && !hashMap.get("origin_id").isEmpty()) {
-                for (Stop stop : allstops) {
-                    if (stop.getZoneId().equals(hashMap.get("origin_id"))) {
-                        fareRule.setId(stop.getId());
-                        fareRule.setSource(stop);
-                    }
-                }
+                fareRule = fareRuleFactory.createFareRule(fareRuleId);
+                fareRule.setFareAttribute(databaseController.getFareAttributeFactory().getFareAttributeById(hashMap.get("fare_id")));
 
-            } else if (hashMap.containsKey("destination_id")
-                    && !hashMap.get("destination_id").isEmpty()) {
-                for (Stop stop : allstops) {
-                    if (stop.getZoneId().equals(hashMap.get("destination_id"))) {
-                        fareRule.setTarget(stop);
-                        fareRule.setId(fareRule.getId() + stop.getId());
-                    }
-                }
-            } else if (hashMap.containsKey("contains_id")
-                    && !hashMap.get("contains_id").isEmpty()) {
+                Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
+                        "Inseri FareRule Origin/Dest"
+                        + fareRule.getFareAttribute().getFareId());
             }
-
-            Logger.getLogger(GTFSImporter.class.getName()).log(Level.INFO,
-                    "Inseri FareRule "
-                    + fareRule.getFareAttribute().getFareId());
 
             hashMap.clear();
         }

@@ -226,6 +226,7 @@ public final class DatabaseController {
                     oldTripId = ((TransportConnection) connection).getTripId();
                 }
                 if (((TransportConnection) connection).getTripId().equals(oldTripId)) {
+                    tripChanged = false;
                     if (countTransfers == -1) {
                         continue;
                     } else if (countTransfers > 0) {

@@ -7,7 +7,7 @@ public interface FareRuleFactory {
 
     public Collection<FareRule> getAllFareRules();
 
-    public FareRule createFareRule();
+    public FareRule createFareRule(String id);
 
     public FareRule getFareRuleById(String id);
 }

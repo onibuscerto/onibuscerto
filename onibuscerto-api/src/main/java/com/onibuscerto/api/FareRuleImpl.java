@@ -14,6 +14,11 @@ public class FareRuleImpl implements FareRule {
     static final String KEY_FARE_ATTRIBUTE_ID = "fare_attribute_id";
     static final String KEY_ID = "fare_rule_id";
 
+    FareRuleImpl(Node underlyingNode, String id) {
+        this.underlyingNode = underlyingNode;
+        this.setId(id);
+    }
+
     FareRuleImpl(Node underlyingNode) {
         this.underlyingNode = underlyingNode;
         this.setId("");
