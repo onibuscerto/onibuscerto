@@ -2,6 +2,7 @@ package com.onibuscerto.api;
 
 import com.onibuscerto.api.entities.Location;
 import com.onibuscerto.api.entities.WalkingConnection;
+import com.onibuscerto.api.utils.Constants;
 import org.neo4j.graphdb.Relationship;
 
 class WalkingConnectionImpl implements WalkingConnection {
@@ -21,8 +22,7 @@ class WalkingConnectionImpl implements WalkingConnection {
     @Override
     public void setWalkingDistance(double distance) {
         this.underlyingRelationship.setProperty(KEY_WALKING_DISTANCE, distance);
-        //supondo velocidade de caminhada 1 m/s
-        setTimeCost((int) distance);
+        setTimeCost((int) (distance/Constants.WALKING_VELOCITY));
     }
 
     @Override

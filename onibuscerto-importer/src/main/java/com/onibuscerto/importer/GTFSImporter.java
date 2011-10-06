@@ -2,7 +2,6 @@ package com.onibuscerto.importer;
 
 import au.com.bytecode.opencsv.CSVReader;
 import com.onibuscerto.api.DatabaseController;
-import com.onibuscerto.api.StopTimeImpl;
 import com.onibuscerto.api.entities.Calendar;
 import com.onibuscerto.api.entities.FareAttribute;
 import com.onibuscerto.api.entities.FareRule;
@@ -22,6 +21,7 @@ import com.onibuscerto.api.factories.ShapePointFactory;
 import com.onibuscerto.api.factories.LocationFactory;
 import com.onibuscerto.api.factories.StopTimeFactory;
 import com.onibuscerto.api.factories.TripFactory;
+import com.onibuscerto.api.utils.Constants;
 import com.onibuscerto.api.utils.GlobalPosition;
 import java.io.FileReader;
 import java.io.IOException;
@@ -38,7 +38,6 @@ import java.util.logging.Logger;
 public class GTFSImporter {
 
     private DatabaseController databaseController;
-    private static final int MAX_WALKING_DISTANCE = 1000;
 
     public GTFSImporter(DatabaseController databaseController) {
         this.databaseController = databaseController;
@@ -529,7 +528,7 @@ public class GTFSImporter {
                             stopTime.getNext().getStop().getLatitude(), stopTime.getNext().getStop().getLatitude());
                     walkingDistance = gp.getDistanceTo(gp2);
 
-                    if (walkingDistance <= MAX_WALKING_DISTANCE) {
+                    if (walkingDistance <= Constants.MAX_WALKING_DISTANCE) {
                         WalkingConnection wConnection = connectionFactory.createWalkingConnection(
                                 stopTime.getStop(), stopTime.getNext().getStop());
                         wConnection.setWalkingDistance(walkingDistance);

@@ -15,6 +15,7 @@ import com.onibuscerto.api.factories.ShapePointFactory;
 import com.onibuscerto.api.factories.LocationFactory;
 import com.onibuscerto.api.factories.StopTimeFactory;
 import com.onibuscerto.api.factories.TripFactory;
+import com.onibuscerto.api.utils.Constants;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,7 +27,6 @@ import org.neo4j.kernel.EmbeddedGraphDatabase;
 
 public final class DatabaseController {
 
-    private static final String DEFAULT_DATABASE_PATH = "target/db";
     protected final GraphDatabaseService graphDb;
     protected final LocationFactory locationFactory;
     protected final RouteFactory routeFactory;
@@ -60,7 +60,7 @@ public final class DatabaseController {
     }
 
     public DatabaseController() {
-        this(DEFAULT_DATABASE_PATH);
+        this(Constants.DEFAULT_DATABASE_PATH);
     }
 
     public void close() {
@@ -200,13 +200,14 @@ public final class DatabaseController {
         boolean tripChanged = true;
         Stop firstSource = null;
         Stop firstTarget = null;
+        int i = 1;
 
         for (Connection connection : path) {
             if (connection instanceof TransportConnection) {
                 if (init) {
                     if (tripChanged) {
-                        firstSource = (StopImpl) (((Connection) (((LinkedList) path).get(0))).getSource());
-                        firstTarget = (StopImpl) (((Connection) (((LinkedList) path).get(0))).getTarget());
+                        firstSource = (StopImpl) (((Connection) (((LinkedList) path).get(i))).getSource());
+                        firstTarget = (StopImpl) (((Connection) (((LinkedList) path).get(i))).getTarget());
                     }
                     Stop source = (Stop) connection.getSource();
                     Stop target = (Stop) connection.getTarget();
@@ -242,6 +243,7 @@ public final class DatabaseController {
             } else {
                 continue;
             }
+            i += 1;
         }
         return price;
     }
