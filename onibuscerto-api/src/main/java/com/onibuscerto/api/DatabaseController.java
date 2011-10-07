@@ -141,7 +141,7 @@ public final class DatabaseController {
                             && !((TransportConnection) previousConnection).getTripId().
                             equals(((TransportConnection) c).getTripId())) {
                         // aplica uma folga de 5 minutos
-                        slack = 5 * 60;
+                        slack = Constants.SLACK_TIME;
                     }
 
                     if (waitingTime < slack) {
