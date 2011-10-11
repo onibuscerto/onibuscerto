@@ -1,6 +1,6 @@
 package com.onibuscerto.core.entities;
 
-import com.onibuscerto.core.utils.GlobalPosition;
+import com.onibuscerto.api.GlobalPosition;
 
 /**
  * Interface que define um ponto de uma polilinha. A polilinha define um

@@ -2,7 +2,7 @@ package com.onibuscerto.core;
 
 import com.onibuscerto.core.entities.Connection;
 import com.onibuscerto.core.entities.Location;
-import com.onibuscerto.core.utils.GlobalPosition;
+import com.onibuscerto.api.GlobalPosition;
 import java.util.Collection;
 import java.util.LinkedList;
 import org.neo4j.graphdb.Direction;

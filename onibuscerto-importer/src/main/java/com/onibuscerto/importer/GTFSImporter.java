@@ -22,7 +22,7 @@ import com.onibuscerto.core.factories.LocationFactory;
 import com.onibuscerto.core.factories.StopTimeFactory;
 import com.onibuscerto.core.factories.TripFactory;
 import com.onibuscerto.core.utils.Constants;
-import com.onibuscerto.core.utils.GlobalPosition;
+import com.onibuscerto.api.GlobalPosition;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;

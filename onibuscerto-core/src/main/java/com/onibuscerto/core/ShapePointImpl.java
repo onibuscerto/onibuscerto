@@ -1,7 +1,7 @@
 package com.onibuscerto.core;
 
 import com.onibuscerto.core.entities.ShapePoint;
-import com.onibuscerto.core.utils.GlobalPosition;
+import com.onibuscerto.api.GlobalPosition;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;

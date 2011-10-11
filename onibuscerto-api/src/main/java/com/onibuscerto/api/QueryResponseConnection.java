@@ -1,4 +1,6 @@
-package com.onibuscerto.core.utils;
+package com.onibuscerto.api;
+
+import com.onibuscerto.api.GlobalPosition;
 
 public final class QueryResponseConnection {
 

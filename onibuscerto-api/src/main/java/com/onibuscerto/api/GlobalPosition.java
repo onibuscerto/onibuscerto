@@ -1,4 +1,4 @@
-package com.onibuscerto.core.utils;
+package com.onibuscerto.api;
 
 /**
  * Um par latitude, longitude representando uma posição global.
