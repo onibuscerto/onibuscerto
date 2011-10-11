@@ -1,6 +1,6 @@
 package com.onibuscerto.importer;
 
-import com.onibuscerto.api.DatabaseController;
+import com.onibuscerto.core.DatabaseController;
 
 public class ImporterMain {
 

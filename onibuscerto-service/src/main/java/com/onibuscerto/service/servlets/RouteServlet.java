@@ -1,15 +1,15 @@
 package com.onibuscerto.service.servlets;
 
-import com.onibuscerto.api.DatabaseController;
-import com.onibuscerto.api.entities.Connection;
-import com.onibuscerto.api.entities.Location;
-import com.onibuscerto.api.entities.Stop;
-import com.onibuscerto.api.entities.TransportConnection;
-import com.onibuscerto.api.entities.Trip;
-import com.onibuscerto.api.entities.WalkingConnection;
-import com.onibuscerto.api.factories.ConnectionFactory;
-import com.onibuscerto.api.utils.GlobalPosition;
-import com.onibuscerto.api.utils.QueryResponseConnection;
+import com.onibuscerto.core.DatabaseController;
+import com.onibuscerto.core.entities.Connection;
+import com.onibuscerto.core.entities.Location;
+import com.onibuscerto.core.entities.Stop;
+import com.onibuscerto.core.entities.TransportConnection;
+import com.onibuscerto.core.entities.Trip;
+import com.onibuscerto.core.entities.WalkingConnection;
+import com.onibuscerto.core.factories.ConnectionFactory;
+import com.onibuscerto.core.utils.GlobalPosition;
+import com.onibuscerto.core.utils.QueryResponseConnection;
 import flexjson.JSONSerializer;
 import java.io.IOException;
 import java.io.PrintWriter;

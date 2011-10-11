@@ -16,7 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>onibuscerto-api</artifactId>
+            <artifactId>onibuscerto-core</artifactId>
             <version>${project.version}</version>
         </dependency>
 

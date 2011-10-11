@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>onibuscerto-api</module>
+        <module>onibuscerto-core</module>
         <module>onibuscerto-importer</module>
         <module>onibuscerto-service</module>
     </modules>
